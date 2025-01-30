@@ -40,9 +40,12 @@ const StyledHeroSection = styled.section`
     max-width: 540px;
   }
 
-  .email-link {
+  .read-more-button {
     ${({ theme }) => theme.mixins.bigButton};
     margin-top: 50px;
+    &:hover {
+      cursor: pointer;
+    }
   }
 `;
 
@@ -59,30 +62,34 @@ const Hero = () => {
     return () => clearTimeout(timeout);
   }, []);
 
+  const scrollToAbout = () => {
+    const aboutSection = document.getElementById('about');
+    aboutSection?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   const one = <h1>Hi, my name is</h1>;
-  const two = <h2 className="big-heading">Brittany Chiang.</h2>;
-  const three = <h3 className="big-heading">I build things for the web.</h3>;
+  const two = <h2 className="big-heading">Peter Shamoun.</h2>;
+  const three = <h3 className="big-heading">I build things with data.</h3>;
   const four = (
     <>
       <p>
-        I’m a software engineer specializing in building (and occasionally designing) exceptional
-        digital experiences. Currently, I’m focused on building accessible, human-centered products
-        at{' '}
-        <a href="https://upstatement.com/" target="_blank" rel="noreferrer">
-          Upstatement
-        </a>
-        .
+        I'm an undergraduate <strong style={{ color: '#d6defd' }}>data science</strong> student and
+        researcher at the{' '}
+        <strong style={{ color: '#d6defd' }}>University of California, San Diego</strong>. My work
+        spans <strong style={{ color: '#d6defd' }}>deep learning</strong>,{' '}
+        <strong style={{ color: '#d6defd' }}>data compression</strong>,{' '}
+        <strong style={{ color: '#d6defd' }}>natural language processing</strong>, and{' '}
+        <strong style={{ color: '#d6defd' }}>geospatial analysis</strong>. Currently, I'm developing
+        tools to enhance college student learning experiences. My research focuses on{' '}
+        <strong style={{ color: '#d6defd' }}>geospatial analysis</strong> and{' '}
+        <strong style={{ color: '#d6defd' }}>facility optimization</strong>.
       </p>
     </>
   );
   const five = (
-    <a
-      className="email-link"
-      href="https://www.newline.co/courses/build-a-spotify-connected-app"
-      target="_blank"
-      rel="noreferrer">
-      Check out my course!
-    </a>
+    <button className="read-more-button" onClick={scrollToAbout}>
+      Read More
+    </button>
   );
 
   const items = [one, two, three, four, five];

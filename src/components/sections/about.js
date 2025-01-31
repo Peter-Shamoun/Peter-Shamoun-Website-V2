@@ -145,8 +145,9 @@ const About = () => {
               <a href="https://ucsd.edu/">UC San Diego</a>, where I've had the opportunity to work
               on exciting research projects with the{' '}
               <a href="https://www.datasciencealliance.org/">Data Science Alliance</a> and{' '}
-              <a href="https://www.sdsc.edu/">San Diego Supercomputer Center</a>. My work spans
-              across deep learning, data compression, and geospatial analysis.
+              <a href="https://www.sdsc.edu/">San Diego Supercomputer Center</a>. I've also had the
+              pleasure of working as a data analyst for{' '}
+              <a href="https://www.nexon.com/main/en">Nexon America</a>.
             </p>
 
             <p>

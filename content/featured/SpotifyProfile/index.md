@@ -1,15 +1,13 @@
 ---
 date: '2'
-title: 'Spotify Profile'
-cover: './demo.png'
-github: 'https://github.com/bchiang7/spotify-profile'
-external: 'https://spotify-profile.herokuapp.com/'
+title: 'Graph Theory'
+cover: './graph4.png'
+github: 'https://github.com/peter-shamoun/Graph-Theory'
+external: 'https://peter-shamoun.github.io/Graph-Theory/'
 tech:
   - React
-  - Styled Components
-  - Express
-  - Spotify API
-  - Heroku
+  - D3.js
+  - CSS/HTML
 ---
 
-A web app for visualizing personalized Spotify data. View your top artists, top tracks, recently played tracks, and detailed audio information about each track. Create and save new playlists of recommended tracks based on your existing playlists and more.
+An interactive web application that visualizes graph theory algorithms. Built to make learning graph theory more intuitive by letting you watch algorithms like BFS, DFS, Dijkstra's and more run in real-time on your custom graphs.

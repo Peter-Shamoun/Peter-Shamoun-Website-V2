@@ -1,14 +1,13 @@
 ---
-date: '2020-03-27'
-title: 'Integrating Algolia Search with WordPress Multisite'
-github: ''
-external: 'https://medium.com/stories-from-upstatement/integrating-algolia-search-with-wordpress-multisite-e2dea3ed449c'
+date: '2024-11-1'
+title: 'Sharp Healthcare AI Voice Assistant'
+github: 'https://github.com/Peter-Shamoun/Sharp-Healthcare-AI-Voice-Assistant'
+external: 'https://github.com/Peter-Shamoun/Sharp-Healthcare-AI-Voice-Assistant'
 tech:
-  - Algolia
-  - WordPress
-  - PHP
-company: 'Upstatement'
+  - Node.js
+  - OpenAI API
+  - Twilio Voice API
 showInProjects: true
 ---
 
-Building a custom multisite compatible WordPress plugin to build global search with Algolia
+A voice assistant that enables natural conversations with an AI using built for integration with the Sharp Healthcare app.

@@ -1,12 +1,14 @@
 ---
-date: '2018-12-29'
-title: 'Google Keep Clone'
-github: 'https://github.com/bchiang7/google-keep-vue-firebase'
-external: 'https://keep-vue.netlify.com/'
+date: '2023-08-15'
+title: 'Hotel Review Sentiment Analysis'
+github: 'https://github.com/Peter-Shamoun/Tripadvisor-Sentiment-Analysis'
+external: ''
 tech:
-  - Vue
-  - Firebase
+  - TensorFlow
+  - Keras
+  - Flask
+  - HTML/CSS/JavaScript
 showInProjects: true
 ---
 
-A simple Google Keep clone built with Vue and Firebase.
+A deep learning web application trained on 20,000+ hotel reviews that predicts hotel review ratings (1-5 stars) based on user input text.

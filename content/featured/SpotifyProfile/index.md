@@ -5,7 +5,7 @@ cover: './graph4.png'
 github: 'https://github.com/peter-shamoun/Graph-Theory'
 external: 'https://peter-shamoun.github.io/Graph-Theory/'
 tech:
-  - React
+  - React JS
   - D3.js
   - CSS/HTML
 ---

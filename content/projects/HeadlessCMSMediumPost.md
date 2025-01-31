@@ -1,15 +1,14 @@
 ---
-date: '2019-11-12'
-title: 'Building a Headless Mobile App CMS From Scratch'
-github: ''
-external: 'https://medium.com/stories-from-upstatement/building-a-headless-mobile-app-cms-from-scratch-bab2d17744d9'
+date: '2024-11-15'
+title: 'Email Summarizer'
+github: 'https://github.com/Peter-Shamoun/Email-Summarizer'
+external: ''
 tech:
-  - Node
-  - Express
-  - Firebase
-  - Vue
-company: 'Upstatement'
+  - React
+  - Flask
+  - Gmail API
+  - OpenAI API
 showInProjects: true
 ---
 
-Find out how we built a custom headless CMS with Node, Express, and Firebase for a project at Upstatement
+A web application that uses AI to provide concise summaries of your Gmail inbox from the last 24 hours, built with React, Flask, and OpenAI's API.

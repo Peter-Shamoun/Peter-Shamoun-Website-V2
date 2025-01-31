@@ -1,14 +1,14 @@
 ---
-date: '2020-01-10'
-title: 'Time to Have More Fun'
-github: 'https://github.com/bchiang7/time-to-have-more-fun'
-external: 'https://time-to-have-more-fun.now.sh/'
+date: '2024-9-20'
+title: 'Deal Finder'
+github: 'https://github.com/Peter-Shamoun/Deal-Finder'
+external: ''
 tech:
-  - Next.js
-  - Tailwind CSS
-  - Firebase
+  - Python
+  - Segment Anything Model
+  - Web Scraping
 company: ''
 showInProjects: true
 ---
 
-A single page web app for helping me choose where to travel, built with Next.js, Firebase, and Tailwind CSS
+A webscraper that uses the Segment Anything Model to extract prices from grocery store advertisements, helping users find the best deals at local supermarkets.

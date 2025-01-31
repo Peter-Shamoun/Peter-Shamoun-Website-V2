@@ -1,13 +1,14 @@
 ---
-date: '2019-07-15'
-title: 'OctoProfile'
-github: 'https://github.com/bchiang7/octoprofile'
-external: 'https://octoprofile.now.sh'
+date: '2024-04-15'
+title: 'Jurassic Classifier'
+github: 'https://github.com/Peter-Shamoun/Jurassic-Classifier'
+external: ''
 tech:
-  - Next.js
-  - Chart.js
-  - GitHub API
+  - TensorFlow
+  - Keras
+  - Flask
+  - HTML/CSS/React
 showInProjects: true
 ---
 
-A nicer look at your GitHub profile and repo stats. Includes data visualizations of your top languages, starred repositories, and sort through your top repos by number of stars, forks, and size.
+A deep learning web application that identifies 15 different dinosaur species from uploaded images using an ensemble of convolutional neural networks.

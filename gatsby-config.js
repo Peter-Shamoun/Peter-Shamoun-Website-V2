@@ -13,7 +13,18 @@ module.exports = {
     `gatsby-plugin-react-helmet`,
     `gatsby-plugin-styled-components`,
     `gatsby-plugin-image`,
-    `gatsby-plugin-sharp`,
+    {
+      resolve: `gatsby-plugin-sharp`,
+      options: {
+        defaults: {
+          formats: ['auto', 'webp'],
+          placeholder: 'none',
+          quality: 100,
+          breakpoints: [750, 1080, 1366, 1920],
+          backgroundColor: 'transparent',
+        },
+      },
+    },
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sitemap`,
     `gatsby-plugin-robots-txt`,
@@ -74,10 +85,11 @@ module.exports = {
             // https://www.gatsbyjs.org/packages/gatsby-remark-images
             resolve: 'gatsby-remark-images',
             options: {
-              maxWidth: 700,
+              maxWidth: 1000,
               linkImagesToOriginal: true,
-              quality: 90,
-              tracedSVG: { color: config.colors.green },
+              quality: 100,
+              withWebp: true,
+              backgroundColor: 'transparent',
             },
           },
           {

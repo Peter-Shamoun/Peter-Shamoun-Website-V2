@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useStaticQuery, graphql } from 'gatsby';
+import { GatsbyImage, getImage } from 'gatsby-plugin-image';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import styled from 'styled-components';
 import { srConfig } from '@config';
@@ -187,6 +188,11 @@ const Projects = () => {
           }
         }
       }
+      courseworkImage: file(relativePath: { eq: "coursework.png" }) {
+        childImageSharp {
+          gatsbyImageData(width: 800, placeholder: BLURRED, formats: [AUTO, WEBP, AVIF])
+        }
+      }
     }
   `);
 
@@ -210,6 +216,8 @@ const Projects = () => {
   const projects = data.projects.edges.filter(({ node }) => node);
   const firstSix = projects.slice(0, GRID_LIMIT);
   const projectsToShow = showMore ? projects : firstSix;
+
+  const courseworkImage = getImage(data.courseworkImage);
 
   const projectInner = node => {
     const { frontmatter, html } = node;
@@ -305,6 +313,27 @@ const Projects = () => {
       {/* <button className="more-button" onClick={() => setShowMore(!showMore)}>
         Show {showMore ? 'Less' : 'More'}
       </button> */}
+
+      <div style={{ marginTop: '100px', textAlign: 'center' }}>
+        <h2>Coursework</h2>
+        <div
+          style={{
+            maxWidth: '800px',
+            margin: '20px auto 0',
+            borderRadius: 'var(--border-radius)',
+            overflow: 'hidden',
+            boxShadow: 'var(--box-shadow)',
+          }}>
+          <GatsbyImage
+            image={courseworkImage}
+            alt="Coursework"
+            style={{
+              maxWidth: '100%',
+              height: 'auto',
+            }}
+          />
+        </div>
+      </div>
     </StyledProjectsSection>
   );
 };

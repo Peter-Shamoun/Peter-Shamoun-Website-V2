@@ -1,5 +1,5 @@
 ---
-date: '2025-01-30'
+date: '2025-01-01'
 title: 'Research Assistant'
 company: 'San Diego Supercomputer Center'
 location: 'San Diego, CA'

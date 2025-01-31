@@ -1,5 +1,5 @@
 ---
-date: '2024-03-20'
+date: '2025-02-01'
 title: 'Data Analyst Intern'
 company: 'Nexon America'
 location: 'El Segundo, CA'

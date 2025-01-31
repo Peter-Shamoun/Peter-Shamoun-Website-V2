@@ -1,5 +1,5 @@
 ---
-date: '2025-01-30'
+date: '2025-03-01'
 title: 'Undergraduate Researcher'
 company: 'Data Science Alliance'
 location: 'San Diego, CA'

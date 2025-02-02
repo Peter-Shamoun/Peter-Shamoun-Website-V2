@@ -2,12 +2,17 @@ const config = require('./src/config');
 
 module.exports = {
   siteMetadata: {
-    title: 'Peter Shamoun',
+    title: 'Peter Shamoun | Data Scientist & Researcher',
     description:
-      'Brittany Chiang is a software engineer who specializes in building (and occasionally designing) exceptional digital experiences.',
-    siteUrl: 'https://brittanychiang.com', // No trailing slash allowed!
-    image: '/og.png', // Path to your image you placed in the 'static' folder
-    twitterUsername: '@bchiang7',
+      'Peter Shamoun is a Data Science undergraduate researcher at UC San Diego, specializing in deep learning, data compression, NLP, and geospatial analysis. Currently developing tools for enhanced college learning experiences and conducting research in geospatial analysis and facility optimization at the Data Science Alliance.',
+    keywords:
+      'data science, machine learning, deep learning, NLP, geospatial analysis, UCSD, facility optimization, Python, JavaScript, SQL, ArcGIS, undergraduate researcher, San Diego, data compression, college education technology, Data Science Alliance, Nexon America, San Diego Supercomputer Center',
+    siteUrl: 'https://petershamoun.com', // No trailing slash allowed!
+    image: '/og.png', // This image is used for social media cards (Open Graph) when your site is shared on platforms like LinkedIn, Twitter, or Facebook
+    twitterUsername: '',
+    email: 'petershamoun80@gmail.com',
+    location: 'San Diego, CA',
+    organization: 'University of California, San Diego',
   },
   plugins: [
     `gatsby-plugin-react-helmet`,

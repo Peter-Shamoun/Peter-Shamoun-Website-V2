@@ -1,13 +1,11 @@
 ---
-date: '2025-02-01'
-title: 'Data Analyst Intern'
+date: '2024-09-01'
+title: 'Data Science Intern'
 company: 'Nexon America'
-location: 'El Segundo, CA'
-range: 'June - August 2024'
+location: 'Los Angeles, CA'
+range: 'Jun 2024 - Sep 2024'
 url: 'https://www.nexon.com/main/en'
 ---
 
-- Led development of a Lifetime Value analysis system for MapleStory players using Snowflake SQL and Tableau
-- Created cohort analysis systems and collaborated with Data Science team on player classification models
-- Built comprehensive dashboards to visualize player behavior and campaign performance metrics
-- Published findings in company newsletter and presented analysis that now informs marketing strategy and game development
+- Engineered a data pipeline in Snowflake to process large-scale, longitudinal player data; trained and deployed clustering models using AWS SageMaker to predict Lifetime Value and inform player engagement strategy
+- Developed a sentiment analysis tool by fine-tuning a foundation model accessed via AWS Bedrock; implemented a RAG pipeline to summarize unstructured community feedback, delivering actionable insights to product teams

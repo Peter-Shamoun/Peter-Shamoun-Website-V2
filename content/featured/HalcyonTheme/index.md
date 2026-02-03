@@ -4,10 +4,11 @@ title: 'Cheat Sheet AI'
 cover: './cheatsheetaitheme.png'
 external: 'https://cheat-sheet-ai.com/'
 tech:
-  - React JS
   - Python
+  - NLP
   - Flask
-  - OpenAI
+  - Docker
+  - Oracle Cloud
 ---
 
-An AI-powered cheat sheet generator that builds cheat sheets based on a students course material.
+An AI-powered study tool using fine-tuned LLMs and prompt engineering to generate personalized cheat sheets, serving over 1400+ users. Deployed as a scalable, containerized Flask backend using Docker on Oracle Cloud.

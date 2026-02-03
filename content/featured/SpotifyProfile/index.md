@@ -1,13 +1,13 @@
 ---
 date: '2'
-title: 'Graph Theory'
+title: 'Graph Theory Visualizer'
 cover: './graph4.png'
 github: 'https://github.com/peter-shamoun/Graph-Theory'
 external: 'https://peter-shamoun.github.io/Graph-Theory/'
 tech:
-  - React JS
+  - React.js
   - D3.js
-  - CSS/HTML
+  - HTML/CSS
 ---
 
-An interactive web application that visualizes graph theory algorithms. Built to make learning graph theory more intuitive by letting you watch algorithms like BFS, DFS, Dijkstra's and more run in real-time on your custom graphs.
+An interactive D3.js web app to visualize graph algorithms (BFS, DFS, Dijkstra's); officially adopted as an instructional tool in UCSD's DSC40B course.

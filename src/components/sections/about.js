@@ -125,7 +125,7 @@ const About = () => {
     sr.reveal(revealContainer.current, srConfig());
   }, []);
 
-  const skills = ['Python', 'JavaScript', 'SQL', 'Arc GIS'];
+  const skills = ['Python', 'SQL', 'TensorFlow', 'AWS', 'Docker', 'React'];
 
   return (
     <StyledAboutSection id="about" ref={revealContainer}>
@@ -135,25 +135,28 @@ const About = () => {
         <StyledText>
           <div>
             <p>
-              Hello! My name is Peter Shamoun and it has been two years since I started my data
-              science journey. I've explored a wide range of topics in data science since then, and
-              here's where I'll showcase them!
+              Hello! My name is Peter Shamoun and I'm passionate about data science, machine
+              learning, and AI safety research. I've explored a wide range of topics from NLP to
+              geospatial analysis, and here's where I'll showcase them!
             </p>
 
             <p>
               Today, I'm a Data Science undergraduate at{' '}
-              <a href="https://ucsd.edu/">UC San Diego</a>, where I've had the opportunity to work
-              on exciting research projects with the{' '}
+              <a href="https://ucsd.edu/">UC San Diego</a> (graduating June 2027), where I'm
+              conducting AI safety research at the{' '}
+              <a href="https://datascience.ucsd.edu/">HDSI Data Smith Lab</a>. I've had the pleasure
+              of working as a Data Science Intern at{' '}
+              <a href="https://www.lpl.com/">LPL Financial</a> and{' '}
+              <a href="https://www.nexon.com/main/en">Nexon America</a>, and previously contributed
+              to research at the{' '}
               <a href="https://www.datasciencealliance.org/">Data Science Alliance</a> and{' '}
-              <a href="https://www.sdsc.edu/">San Diego Supercomputer Center</a>. I've also had the
-              pleasure of working as a data analyst for{' '}
-              <a href="https://www.nexon.com/main/en">Nexon America</a>.
+              <a href="https://www.sdsc.edu/">San Diego Supercomputer Center</a>.
             </p>
 
             <p>
-              Along my jouney, I fell in love with building projects that helped those around me.
-              While my projects today focus on helping college students, my catalog of projects can
-              be seen <a href="#projects">here</a>.
+              Along my journey, I fell in love with building projects that helped those around me.
+              My projects today focus on helping college students—check out my catalog of projects{' '}
+              <a href="#projects">here</a>.
             </p>
 
             <p>Here are a few technologies I've been working with recently:</p>

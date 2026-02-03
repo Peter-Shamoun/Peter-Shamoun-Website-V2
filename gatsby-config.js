@@ -2,11 +2,11 @@ const config = require('./src/config');
 
 module.exports = {
   siteMetadata: {
-    title: 'Peter Shamoun | Data Scientist & Researcher',
+    title: 'Peter Shamoun | Data Scientist & AI Researcher',
     description:
-      'Peter Shamoun is a Data Science undergraduate researcher at UC San Diego, specializing in deep learning, data compression, NLP, and geospatial analysis. Currently developing tools for enhanced college learning experiences and conducting research in geospatial analysis and facility optimization at the Data Science Alliance.',
+      'Peter Shamoun is a Data Science undergraduate at UC San Diego, specializing in AI safety, NLP, machine learning, and cloud computing. Currently conducting AI safety research at HDSI Data Smith Lab and previously worked as a Data Science Intern at LPL Financial and Nexon America.',
     keywords:
-      'data science, machine learning, deep learning, NLP, geospatial analysis, UCSD, facility optimization, Python, JavaScript, SQL, ArcGIS, undergraduate researcher, San Diego, data compression, college education technology, Data Science Alliance, Nexon America, San Diego Supercomputer Center',
+      'data science, machine learning, AI safety, NLP, LLM, Python, AWS, Docker, TensorFlow, UCSD, undergraduate researcher, San Diego, LPL Financial, Nexon America, Data Science Alliance, cloud computing, data engineering',
     siteUrl: 'https://petershamoun.com', // No trailing slash allowed!
     image: '/og.png', // This image is used for social media cards (Open Graph) when your site is shared on platforms like LinkedIn, Twitter, or Facebook
     twitterUsername: '',

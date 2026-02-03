@@ -142,10 +142,9 @@ const About = () => {
 
             <p>
               Today, I'm a Data Science undergraduate at{' '}
-              <a href="https://ucsd.edu/">UC San Diego</a> (graduating June 2027), where I'm
-              conducting AI safety research at the{' '}
-              <a href="https://datascience.ucsd.edu/">HDSI Data Smith Lab</a>. I've had the pleasure
-              of working as a Data Science Intern at{' '}
+              <a href="https://ucsd.edu/">UC San Diego</a>, where I'm conducting AI safety research
+              at the <a href="https://datascience.ucsd.edu/">HDSI Data Smith Lab</a>. I've had the
+              pleasure of working as a Data Science Intern at{' '}
               <a href="https://www.lpl.com/">LPL Financial</a> and{' '}
               <a href="https://www.nexon.com/main/en">Nexon America</a>, and previously contributed
               to research at the{' '}

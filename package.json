@@ -1,12 +1,8 @@
 {
-  "name": "v4",
-  "description": "Personal Website V4",
+  "name": "peter-shamoun-website",
+  "description": "Personal website of Peter Shamoun",
   "version": "1.0.0",
-  "author": "Brittany Chiang <brittany.chiang@gmail.com>",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/bchiang7/v4"
-  },
+  "author": "Peter Shamoun <petershamoun80@gmail.com>",
   "keywords": [
     "gatsby"
   ],

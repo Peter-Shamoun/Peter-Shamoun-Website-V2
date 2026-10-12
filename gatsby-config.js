@@ -2,11 +2,11 @@ const config = require('./src/config');
 
 module.exports = {
   siteMetadata: {
-    title: 'Peter Shamoun | Data Scientist & AI Researcher',
+    title: 'Peter Shamoun | AI Engineer',
     description:
-      'Peter Shamoun is a Data Science undergraduate at UC San Diego, specializing in AI safety, NLP, machine learning, and cloud computing. Currently conducting AI safety research at HDSI Data Smith Lab and previously worked as a Data Science Intern at LPL Financial and Nexon America.',
+      'Peter Shamoun is an AI Engineer at Xifin building agentic AI workflows, and a UC San Diego Data Science graduate. He researches AI safety for large language models at the HDSI Data Smith Lab and previously interned in data science at LPL Financial, the Data Science Alliance and Nexon America.',
     keywords:
-      'data science, machine learning, AI safety, NLP, LLM, Python, AWS, Docker, TensorFlow, UCSD, undergraduate researcher, San Diego, LPL Financial, Nexon America, Data Science Alliance, cloud computing, data engineering',
+      'AI engineer, agentic AI, data science, machine learning, AI safety, NLP, LLM, Python, AWS, Docker, TensorFlow, LangChain, UCSD, San Diego, Xifin, LPL Financial, Nexon America, Data Science Alliance, cloud computing',
     siteUrl: 'https://petershamoun.com', // No trailing slash allowed!
     image: '/og.png', // This image is used for social media cards (Open Graph) when your site is shared on platforms like LinkedIn, Twitter, or Facebook
     twitterUsername: '',
@@ -39,8 +39,8 @@ module.exports = {
         name: 'Peter Shamoun',
         short_name: 'Peter Shamoun',
         start_url: '/',
-        background_color: config.colors.darkNavy,
-        theme_color: config.colors.navy,
+        background_color: config.colors.bg,
+        theme_color: config.colors.bg,
         display: 'minimal-ui',
         icon: 'src/images/logo.png',
       },
@@ -58,13 +58,6 @@ module.exports = {
       options: {
         name: 'content',
         path: `${__dirname}/content/`,
-      },
-    },
-    {
-      resolve: `gatsby-source-filesystem`,
-      options: {
-        name: `posts`,
-        path: `${__dirname}/content/posts`,
       },
     },
     {
@@ -164,12 +157,6 @@ module.exports = {
             },
           },
         ],
-      },
-    },
-    {
-      resolve: `gatsby-plugin-google-analytics`,
-      options: {
-        trackingId: 'UA-45666519-2',
       },
     },
   ],

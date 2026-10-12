@@ -9,3 +9,6 @@ package-lock.json
 .DS_Store
 
 .vscode/
+
+# Python bytecode from scripts/
+__pycache__/

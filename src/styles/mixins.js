@@ -1,170 +1,60 @@
 import { css } from 'styled-components';
 
-const button = css`
-  color: var(--green);
-  background-color: transparent;
-  border: 1px solid var(--green);
-  border-radius: var(--border-radius);
-  font-size: var(--fz-xs);
-  font-family: var(--font-mono);
-  line-height: 1;
-  text-decoration: none;
-  padding: 1.25rem 1.75rem;
-  transition: var(--transition);
+// Raised edge: light on the top and left, shadow on the right and bottom.
+export const bevel = css`
+  border-style: solid;
+  border-width: var(--bevel-w);
+  border-color: var(--border-light-color) var(--border-shadow-color) var(--border-shadow-color)
+    var(--border-light-color);
+`;
 
-  &:hover,
-  &:focus-visible {
-    outline: none;
-    box-shadow: 4px 4px 0 0 var(--green);
-    transform: translate(-5px, -5px);
+// Pressed state for anything that already has the bevel.
+export const bevelPressed = css`
+  border-color: var(--border-shadow-color) var(--border-light-color) var(--border-light-color)
+    var(--border-shadow-color);
+  background-color: var(--window-active-color);
+`;
+
+// Sunken white panel.
+export const inset = css`
+  background: #fff;
+  border-style: solid;
+  border-width: var(--bevel-w);
+  border-color: var(--border-shadow-color) var(--border-light-color) var(--border-light-color)
+    var(--border-shadow-color);
+`;
+
+// Applied to every scroller.
+export const retroScrollbar = css`
+  &::-webkit-scrollbar {
+    width: 30px;
+    height: 30px;
   }
-  &:after {
-    display: none !important;
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--scroll-thumb);
+    border-radius: 1px;
+    border-top: 1px solid white;
+    border-left: 1px solid white;
+    border-bottom: 1px solid var(--scroll-edge);
+    border-right: 1px solid var(--scroll-edge);
+    box-shadow: inset 2px 2px 2px rgba(255, 255, 255, 0.25), inset -2px -2px 2px rgba(0, 0, 0, 0.25);
+  }
+  &::-webkit-scrollbar-track {
+    background-color: var(--scroll-track);
+  }
+  /* Firefox only: in Chromium a scrollbar-color value switches the rules above off. */
+  @supports not selector(::-webkit-scrollbar) {
+    scrollbar-color: var(--scroll-thumb) var(--scroll-track);
   }
 `;
 
-const mixins = {
-  flexCenter: css`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  `,
-
-  flexBetween: css`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  `,
-
-  link: css`
-    display: inline-block;
-    text-decoration: none;
-    text-decoration-skip-ink: auto;
-    color: inherit;
-    position: relative;
-    transition: var(--transition);
-
-    &:hover,
-    &:focus-visible {
-      color: var(--green);
-      outline: 0;
-    }
-  `,
-
-  inlineLink: css`
-    display: inline-block;
-    position: relative;
-    color: var(--green);
-    transition: var(--transition);
-
-    &:hover,
-    &:focus-visible {
-      color: var(--green);
-      outline: 0;
-      &:after {
-        width: 100%;
-      }
-      & > * {
-        color: var(--green) !important;
-        transition: var(--transition);
-      }
-    }
-    &:after {
-      content: '';
-      display: block;
-      width: 0;
-      height: 1px;
-      position: relative;
-      bottom: 0.37em;
-      background-color: var(--green);
-      opacity: 0.5;
-      @media (prefers-reduced-motion: no-preference) {
-        transition: var(--transition);
-      }
-    }
-  `,
-
-  button,
-
-  smallButton: css`
-    color: var(--green);
-    background-color: transparent;
-    border: 1px solid var(--green);
-    border-radius: var(--border-radius);
-    padding: 0.75rem 1rem;
-    font-size: var(--fz-xs);
-    font-family: var(--font-mono);
-    line-height: 1;
-    text-decoration: none;
-    transition: var(--transition);
-
-    &:hover,
-    &:focus-visible {
-      outline: none;
-      box-shadow: 3px 3px 0 0 var(--green);
-      transform: translate(-4px, -4px);
-    }
-    &:after {
-      display: none !important;
-    }
-  `,
-
-  bigButton: css`
-    color: var(--green);
-    background-color: transparent;
-    border: 1px solid var(--green);
-    border-radius: var(--border-radius);
-    padding: 1.25rem 1.75rem;
-    font-size: var(--fz-sm);
-    font-family: var(--font-mono);
-    line-height: 1;
-    text-decoration: none;
-    transition: var(--transition);
-
-    &:hover,
-    &:focus-visible {
-      outline: none;
-      box-shadow: 4px 4px 0 0 var(--green);
-      transform: translate(-5px, -5px);
-    }
-    &:after {
-      display: none !important;
-    }
-  `,
-
-  boxShadow: css`
-    box-shadow: 0 10px 30px -15px var(--navy-shadow);
-    transition: var(--transition);
-
-    &:hover,
-    &:focus-visible {
-      box-shadow: 0 20px 30px -15px var(--navy-shadow);
-    }
-  `,
-
-  fancyList: css`
-    padding: 0;
-    margin: 0;
-    list-style: none;
-    font-size: var(--fz-lg);
-    li {
-      position: relative;
-      padding-left: 30px;
-      margin-bottom: 10px;
-      &:before {
-        content: '▹';
-        position: absolute;
-        left: 0;
-        color: var(--green);
-      }
-    }
-  `,
-
-  resetList: css`
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  `,
-};
-
-export default mixins;
+export const visuallyHidden = css`
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+`;

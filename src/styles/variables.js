@@ -2,51 +2,59 @@ import { css } from 'styled-components';
 
 const variables = css`
   :root {
-    --dark-navy: #020c1b;
-    --navy: #0a192f;
-    --light-navy: #112240;
-    --lightest-navy: #233554;
-    --navy-shadow: rgba(2, 12, 27, 0.7);
-    --dark-slate: #495670;
-    --slate: #8892b0;
-    --light-slate: #a8b2d1;
-    --lightest-slate: #ccd6f6;
-    --white: #e6f1ff;
-    --green: #64ffda;
-    --green-tint: rgba(100, 255, 218, 0.1);
-    --pink: #f57dff;
-    --blue: #57cbff;
+    /* colour */
+    --main-color: #000000;
+    --window-color: #cccccc;
+    --window-active-color: #afafaf;
+    --border-color: #707070;
+    --border-light-color: #ffffff;
+    --border-shadow-color: #333333;
+    --bg-color: #0b17b4;
+    --window-title-bar-color: #011e75;
+    --text-light: #ffffff;
+    --bsod-color: #0000aa;
+    --glyph-bg: #22527f;
+    --glyph-bg-active: #174a7a;
+    --siteinfo-bg: #e5e5e5;
+    --scroll-thumb: #02020d;
+    --scroll-track: #1b1b3f;
+    --scroll-edge: #757574;
 
-    --font-sans: 'Calibre', 'Inter', 'San Francisco', 'SF Pro Text', -apple-system, system-ui,
-      sans-serif;
-    --font-mono: 'SF Mono', 'Fira Code', 'Fira Mono', 'Roboto Mono', monospace;
+    /* fonts */
+    --main-font: 'Web437 ANK16', 'Courier New', Courier, monospace;
+    --main-large-font: 'Web437 ANK24', 'Courier New', Courier, monospace;
+    --window-title-font: 'Silkscreen', 'Courier New', Courier, monospace;
+    --link-font: 'Times New Roman', Times, serif;
+    --bsod-font: 'Courier New', Courier, monospace;
+    --font-base-size: 1.6rem;
 
-    --fz-xxs: 12px;
-    --fz-xs: 13px;
-    --fz-sm: 14px;
-    --fz-md: 16px;
-    --fz-lg: 18px;
-    --fz-xl: 20px;
-    --fz-xxl: 22px;
-    --fz-heading: 32px;
+    /* sizes */
+    --icon-size: 6.2rem;
+    --icon-size-xs: 5.2rem;
+    --topbar-h: 32px;
+    --bevel-w: 1px;
+    --titlebar-h: 3.4rem;
+    --chrome-btn: 2.5rem;
+    --icon-bar-reserve: 0px;
 
-    --border-radius: 4px;
-    --nav-height: 100px;
-    --nav-scroll-height: 70px;
+    /* layers */
+    --z-icons: 1;
+    --z-scene: 500;
+    --z-popup-phone: 900;
+    --z-window-base: 1000; /* JS sets z-index inline from the topZ counter, which starts here */
+    --z-topbar: 10000;
+    --z-bsod: 99999;
+    --z-boot: 100000;
+  }
 
-    --tab-height: 42px;
-    --tab-width: 120px;
-
-    --easing: cubic-bezier(0.645, 0.045, 0.355, 1);
-    --transition: all 0.25s cubic-bezier(0.645, 0.045, 0.355, 1);
-
-    --hamburger-width: 30px;
-
-    --ham-before: top 0.1s ease-in 0.25s, opacity 0.1s ease-in;
-    --ham-before-active: top 0.1s ease-out, opacity 0.1s ease-out 0.12s;
-    --ham-after: bottom 0.1s ease-in 0.25s, transform 0.22s cubic-bezier(0.55, 0.055, 0.675, 0.19);
-    --ham-after-active: bottom 0.1s ease-out,
-      transform 0.22s cubic-bezier(0.215, 0.61, 0.355, 1) 0.12s;
+  @media (max-width: 36em) {
+    :root {
+      --topbar-h: 52px;
+      --bevel-w: 2px;
+      --titlebar-h: 5.2rem;
+      --chrome-btn: 4.4rem;
+      --icon-bar-reserve: 170px;
+    }
   }
 `;
 

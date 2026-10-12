@@ -1,71 +1,69 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'gatsby';
-import { Helmet } from 'react-helmet';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { navDelay } from '@utils';
+import { Helmet } from 'react-helmet';
 import { Layout } from '@components';
-import { usePrefersReducedMotion } from '@hooks';
+import { BevelLink, Text } from '@components/desktop/ui';
+import { GlyphApp } from '@components/desktop/icons';
 
-const StyledMainContainer = styled.main`
-  ${({ theme }) => theme.mixins.flexCenter};
-  flex-direction: column;
+// A blue desktop with one static window. There is no desktop state on this page,
+// so the window is drawn with the shared window classes, not with the Window component.
+
+const Main = styled.main`
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.6rem;
+  overflow: auto;
+
+  &:focus {
+    outline: none;
+  }
 `;
-const StyledTitle = styled.h1`
-  color: var(--green);
-  font-family: var(--font-mono);
-  font-size: clamp(100px, 25vw, 200px);
-  line-height: 1;
-`;
-const StyledSubtitle = styled.h2`
-  font-size: clamp(30px, 5vw, 50px);
-  font-weight: 400;
-`;
-const StyledHomeButton = styled(Link)`
-  ${({ theme }) => theme.mixins.bigButton};
-  margin-top: 40px;
+
+const Content = styled.div`
+  padding: 2rem 0.5rem 1.6rem;
+  text-align: center;
 `;
 
-const NotFoundPage = ({ location }) => {
-  const [isMounted, setIsMounted] = useState(false);
-  const prefersReducedMotion = usePrefersReducedMotion();
+const Code = styled.h1`
+  margin: 0 0 1.6rem;
+  font: 72px/1 var(--main-large-font);
+  letter-spacing: 0;
+`;
 
-  useEffect(() => {
-    if (prefersReducedMotion) {
-      return;
-    }
-
-    const timeout = setTimeout(() => setIsMounted(true), navDelay);
-    return () => clearTimeout(timeout);
-  }, []);
-
-  const content = (
-    <StyledMainContainer className="fillHeight">
-      <StyledTitle>404</StyledTitle>
-      <StyledSubtitle>Page Not Found</StyledSubtitle>
-      <StyledHomeButton to="/">Go Home</StyledHomeButton>
-    </StyledMainContainer>
-  );
-
-  return (
-    <Layout location={location}>
-      <Helmet title="Page Not Found" />
-
-      {prefersReducedMotion ? (
-        <>{content}</>
-      ) : (
-        <TransitionGroup component={null}>
-          {isMounted && (
-            <CSSTransition timeout={500} classNames="fadeup">
-              {content}
-            </CSSTransition>
-          )}
-        </TransitionGroup>
-      )}
-    </Layout>
-  );
-};
+const NotFoundPage = ({ location }) => (
+  <Layout location={location}>
+    <Helmet title="Page Not Found" meta={[{ name: 'robots', content: 'noindex' }]} />
+    <Main id="content" tabIndex={-1}>
+      <section className="win win--static" aria-labelledby="error-window-title">
+        <header className="win__chrome">
+          <div className="win__titlebar">
+            <span className="win__glyph" aria-hidden="true">
+              <GlyphApp />
+            </span>
+            <div className="win__title" id="error-window-title">
+              Error
+            </div>
+          </div>
+        </header>
+        <div className="win__body">
+          <div className="win__area">
+            <Content>
+              <Code>404</Code>
+              <Text>
+                This file is not on the disk. It may have been moved, renamed, or never existed.
+              </Text>
+              <BevelLink href="/">Back to desktop</BevelLink>
+            </Content>
+          </div>
+        </div>
+      </section>
+    </Main>
+  </Layout>
+);
 
 NotFoundPage.propTypes = {
   location: PropTypes.object.isRequired,

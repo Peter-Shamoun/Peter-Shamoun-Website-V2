@@ -1,451 +1,522 @@
 import { createGlobalStyle } from 'styled-components';
 import fonts from './fonts';
 import variables from './variables';
-import TransitionStyles from './TransitionStyles';
-import PrismStyles from './PrismStyles';
+import { media } from './media';
+import { bevel, bevelPressed, retroScrollbar } from './mixins';
 
 const GlobalStyle = createGlobalStyle`
   ${fonts};
   ${variables};
 
-  html {
-    box-sizing: border-box;
-    width: 100%;
-    scroll-behavior: smooth;
-  }
+  /* ---------- base ---------- */
 
   *,
-  *:before,
-  *:after {
-    box-sizing: inherit;
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
 
-  ::selection {
-    background-color: var(--lightest-navy);
-    color: var(--lightest-slate);
-  }
-
-  /* Provide basic, default focus styles.*/
-  :focus {
-    outline: 2px dashed var(--green);
-    outline-offset: 3px;
-  }
-
-  /*
-    Remove default focus styles for mouse users ONLY if
-    :focus-visible is supported on this platform.
-  */
-  :focus:not(:focus-visible) {
-    outline: none;
-    outline-offset: 0px;
-  }
-
-  /*
-    Optionally: If :focus-visible is supported on this
-    platform, provide enhanced focus styles for keyboard
-    focus.
-  */
-  :focus-visible {
-    outline: 2px dashed var(--green);
-    outline-offset: 3px;
-  }
-
-  /* Scrollbar Styles */
   html {
-    scrollbar-width: thin;
-    scrollbar-color: var(--dark-slate) var(--navy);
-  }
-  ::-webkit-scrollbar {
-    width: 12px;
-  }
-  ::-webkit-scrollbar-track {
-    background: var(--navy);
-  }
-  ::-webkit-scrollbar-thumb {
-    background-color: var(--dark-slate);
-    border: 3px solid var(--navy);
-    border-radius: 10px;
+    font-size: 62.5%; /* 1rem = 10px */
   }
 
   body {
     margin: 0;
-    width: 100%;
-    min-height: 100%;
-    overflow-x: hidden;
-    -moz-osx-font-smoothing: grayscale;
-    -webkit-font-smoothing: antialiased;
-    background-color: var(--navy);
-    color: var(--slate);
-    font-family: var(--font-sans);
-    font-size: var(--fz-xl);
-    line-height: 1.3;
-
-    @media (max-width: 480px) {
-      font-size: var(--fz-lg);
-    }
-
-    &.hidden {
-      overflow: hidden;
-    }
-
-    &.blur {
-      overflow: hidden;
-
-      header {
-        background-color: transparent;
-      }
-
-      #content > * {
-        filter: blur(5px) brightness(0.7);
-        transition: var(--transition);
-        pointer-events: none;
-        user-select: none;
-      }
-    }
+    font-family: var(--main-font);
+    font-size: var(--font-base-size);
+    color: var(--text-light);
+    background-color: var(--bg-color);
+    letter-spacing: 0.5px;
+    overflow: hidden;
   }
 
-  #root {
-    min-height: 100vh;
-    display: grid;
-    grid-template-rows: 1fr auto;
-    grid-template-columns: 100%;
+  p,
+  a,
+  li,
+  dd,
+  dt {
+    font-size: var(--font-base-size);
+    line-height: 1.25;
   }
 
-  main {
-    margin: 0 auto;
-    width: 100%;
-    max-width: 1600px;
-    min-height: 100vh;
-    padding: 200px 150px;
-
-    @media (max-width: 1080px) {
-      padding: 200px 100px;
-    }
-    @media (max-width: 768px) {
-      padding: 150px 50px;
-    }
-    @media (max-width: 480px) {
-      padding: 125px 25px;
-    }
-
-    &.fillHeight {
-      padding: 0 150px;
-
-      @media (max-width: 1080px) {
-        padding: 0 100px;
-      }
-      @media (max-width: 768px) {
-        padding: 0 50px;
-      }
-      @media (max-width: 480px) {
-        padding: 0 25px;
-      }
-    }
-  }
-
-  section {
-    margin: 0 auto;
-    padding: 100px 0;
-    max-width: 1000px;
-
-    @media (max-width: 768px) {
-      padding: 80px 0;
-    }
-
-    @media (max-width: 480px) {
-      padding: 60px 0;
-    }
-  }
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    margin: 0 0 10px 0;
-    font-weight: 600;
-    color: var(--lightest-slate);
-    line-height: 1.1;
-  }
-
-  .big-heading {
-    margin: 0;
-    font-size: clamp(40px, 8vw, 80px);
-  }
-
-  .medium-heading {
-    margin: 0;
-    font-size: clamp(40px, 8vw, 60px);
-  }
-
-  .numbered-heading {
-    display: flex;
-    align-items: center;
-    position: relative;
-    margin: 10px 0 40px;
-    width: 100%;
-    font-size: clamp(26px, 5vw, var(--fz-heading));
-    white-space: nowrap;
-
-    &:before {
-      position: relative;
-      bottom: 4px;
-      counter-increment: section;
-      content: '0' counter(section) '.';
-      margin-right: 10px;
-      color: var(--green);
-      font-family: var(--font-mono);
-      font-size: clamp(var(--fz-md), 3vw, var(--fz-xl));
-      font-weight: 400;
-
-      @media (max-width: 480px) {
-        margin-bottom: -3px;
-        margin-right: 5px;
-      }
-    }
-
-    &:after {
-      content: '';
-      display: block;
-      position: relative;
-      top: -5px;
-      width: 300px;
-      height: 1px;
-      margin-left: 20px;
-      background-color: var(--lightest-navy);
-
-      @media (max-width: 1080px) {
-        width: 200px;
-      }
-      @media (max-width: 768px) {
-        width: 100%;
-      }
-      @media (max-width: 600px) {
-        margin-left: 10px;
-      }
-    }
-  }
-
-  img,
-  svg,
-  .gatsby-image-wrapper {
-    width: 100%;
-    max-width: 100%;
-    vertical-align: middle;
-  }
-
-  img[alt=""],
-  img:not([alt]) {
-    filter: blur(5px);
-  }
-
-  svg {
-    width: 100%;
-    height: 100%;
-    fill: currentColor;
-    vertical-align: middle;
-
-    &.feather {
-      fill: none;
-    }
-  }
-
-  a {
-    display: inline-block;
-    text-decoration: none;
-    text-decoration-skip-ink: auto;
-    color: inherit;
-    position: relative;
-    transition: var(--transition);
-
-    &:hover,
-    &:focus {
-      color: var(--green);
-    }
-
-    &.inline-link {
-      ${({ theme }) => theme.mixins.inlineLink};
-    }
+  ::selection {
+    background: var(--bg-color);
+    color: #ffffff;
+    text-shadow: none;
   }
 
   button {
-    cursor: pointer;
-    border: 0;
-    border-radius: 0;
+    font: inherit;
+    color: inherit;
+    letter-spacing: inherit;
   }
 
-  input, textarea {
-    border-radius: 0;
-    outline: 0;
-
-    &:focus {
-      outline: 0;
-    }
-    &:focus,
-    &:active {
-      &::placeholder {
-        opacity: 0.5;
-      }
-    }
+  /*
+   * currentColor, not a fixed black: the ring has to show on the blue desktop and in the
+   * black windows as well as on white and grey. Controls on grey chrome set their own
+   * 1px dotted #000 ring.
+   */
+  :focus-visible {
+    outline: 2px dotted currentColor;
+    outline-offset: 2px;
   }
 
-  p {
-    margin: 0 0 15px 0;
+  /* ---------- skip link ---------- */
 
-    &:last-child,
-    &:last-of-type {
-      margin: 0;
-    }
-
-    & > a {
-      ${({ theme }) => theme.mixins.inlineLink};
-    }
-
-    & > code {
-      background-color: var(--light-navy);
-      color: var(--white);
-      font-size: var(--fz-sm);
-      border-radius: var(--border-radius);
-      padding: 0.3em 0.5em;
-    }
-  }
-
-  ul {
-    &.fancy-list {
-      padding: 0;
-      margin: 0;
-      list-style: none;
-      font-size: var(--fz-lg);
-      li {
-        position: relative;
-        padding-left: 30px;
-        margin-bottom: 10px;
-        &:before {
-          content: '▹';
-          position: absolute;
-          left: 0;
-          color: var(--green);
-        }
-      }
-    }
-  }
-
-  blockquote {
-    border-left-color: var(--green);
-    border-left-style: solid;
-    border-left-width: 1px;
-    margin-left: 0px;
-    margin-right: 0px;
-    padding-left: 1.5rem;
-
-    p {
-      font-style: italic;
-      font-size: 24px;
-    }
-  }
-
-  hr {
-    background-color: var(--lightest-navy);
-    height: 1px;
-    border-width: 0px;
-    border-style: initial;
-    border-color: initial;
-    border-image: initial;
-    margin: 1rem;
-  }
-
-  code {
-    font-family: var(--font-mono);
-    font-size: var(--fz-md);
-  }
-
-  .skip-to-content {
-    ${({ theme }) => theme.mixins.button};
-    position: absolute;
-    top: auto;
-    left: -999px;
+  .skip-link {
+    position: fixed;
+    top: 4px;
+    left: 4px;
+    z-index: calc(var(--z-boot) + 1);
+    padding: 0.4rem 1rem;
+    background: var(--window-color);
+    color: var(--main-color);
+    text-decoration: none;
+    ${bevel};
+    clip-path: inset(50%);
     width: 1px;
     height: 1px;
     overflow: hidden;
-    z-index: -99;
+    white-space: nowrap;
 
-    &:hover,
     &:focus {
-      background-color: var(--green);
-      color: var(--navy);
-      top: 0;
-      left: 0;
+      clip-path: none;
       width: auto;
       height: auto;
-      overflow: auto;
-      z-index: 99;
-      box-shadow: none;
-      transform: none;
+      overflow: visible;
+      outline: 1px dotted #000;
+      outline-offset: -4px;
     }
   }
 
-  #logo {
-    color: var(--green);
+  /* ---------- window frame ---------- */
+  /*
+   * Window.js sets these custom properties inline:
+   *   --win-w (px)  --win-maxh  --win-x (%)  --win-y (%)  --win-h (measured px)
+   *   --win-dx / --win-dy (drag offset, whole px)  --win-fixed-h (only with .win--fixed)
+   * and writes --win-fx / --win-fy (sub-pixel correction) straight onto the element.
+   */
+
+  .win {
+    --win-wr: min(var(--win-w, 540px), 100vw - 16px);
+    position: fixed;
+    left: calc(
+      clamp(
+          calc(var(--win-wr) / 2 + 8px),
+          var(--win-x, 50%),
+          calc(100% - var(--win-wr) / 2 - 8px)
+        ) - var(--win-wr) / 2
+    );
+    top: calc(
+      clamp(
+          calc(var(--topbar-h) + 8px + var(--win-h, 0px) / 2),
+          var(--win-y, 50%),
+          calc(100% - var(--win-h, 0px) / 2 - 8px)
+        ) - var(--win-h, 0px) / 2
+    );
+    width: var(--win-wr);
+    max-height: min(var(--win-maxh, 60vh), 100vh - var(--topbar-h) - 16px);
+    max-height: min(var(--win-maxh, 60vh), 100dvh - var(--topbar-h) - 16px);
+    transform: translate(
+      calc(var(--win-dx, 0px) + var(--win-fx, 0px)),
+      calc(var(--win-dy, 0px) + var(--win-fy, 0px))
+    );
+    z-index: var(--z-window-base);
+    display: flex;
+    flex-direction: column;
+    background: var(--border-light-color);
+    color: #fff;
+    border-radius: 0;
   }
 
-  .overline {
-    color: var(--green);
-    font-family: var(--font-mono);
-    font-size: var(--fz-md);
-    font-weight: 400;
+  .win--fixed {
+    height: min(var(--win-fixed-h, 360px), 100vh - var(--topbar-h) - 16px);
+    height: min(var(--win-fixed-h, 360px), 100dvh - var(--topbar-h) - 16px);
   }
 
-  .subtitle {
-    color: var(--green);
-    margin: 0 0 20px 0;
-    font-size: var(--fz-md);
-    font-family: var(--font-mono);
-    font-weight: 400;
-    line-height: 1.5;
-    @media (max-width: 1080px) {
-      font-size: var(--fz-sm);
-    }
-    @media (max-width: 768px) {
-      font-size: var(--fz-xs);
-    }
-
-    a {
-      ${({ theme }) => theme.mixins.inlineLink};
-      line-height: 1.5;
-    }
+  /* A window drawn in normal flow (the 404 page). */
+  .win--static {
+    position: relative;
+    left: auto;
+    top: auto;
+    transform: none;
+    max-width: 100%;
   }
 
-  .breadcrumb {
+  .win__chrome {
+    position: relative;
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    background: var(--window-color);
+    ${bevel};
+  }
+
+  .win__titlebar {
     display: flex;
     align-items: center;
-    margin-bottom: 50px;
-    color: var(--green);
+    height: var(--titlebar-h);
+    padding: 0 0.4rem;
+    gap: 0.5rem;
+    cursor: move;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
 
-    .arrow {
-      display: block;
-      margin-right: 10px;
-      padding-top: 4px;
+  .win__glyph {
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--chrome-btn);
+    height: var(--chrome-btn);
+    background: var(--glyph-bg);
+    pointer-events: none;
+  }
+
+  .win__title {
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+    height: 2.5rem;
+    padding-left: 1rem;
+    background: var(--window-title-bar-color);
+    color: #fff;
+    font: 700 16px/calc(2.5rem - 2 * var(--bevel-w)) var(--window-title-font);
+    letter-spacing: 0;
+    pointer-events: none;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    ${bevel};
+  }
+
+  .win__close,
+  .win__menu {
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--chrome-btn);
+    height: var(--chrome-btn);
+    padding: 0;
+    background: var(--window-color);
+    color: var(--main-color);
+    cursor: pointer;
+    ${bevel};
+
+    &:active {
+      ${bevelPressed};
     }
 
-    a {
-      ${({ theme }) => theme.mixins.inlineLink};
-      font-family: var(--font-mono);
-      font-size: var(--fz-sm);
-      font-weight: 600;
-      line-height: 1.5;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
+    &:focus-visible {
+      outline: 1px dotted #000;
+      outline-offset: -4px;
     }
   }
 
-  .gatsby-image-outer-wrapper {
-    height: 100%;
+  .win__menu {
+    display: none;
   }
 
-  ${TransitionStyles};
+  /* ---------- tab row ---------- */
 
-  ${PrismStyles};
+  .win__tabs {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding-top: 0.3rem;
+  }
+
+  .win__tab {
+    background: transparent;
+    border: none;
+    padding: 0 1.5rem 1rem 1.1rem;
+    font: 400 16px var(--window-title-font);
+    letter-spacing: 0;
+    color: #000;
+    cursor: pointer;
+    text-decoration: none;
+    white-space: nowrap;
+
+    span {
+      position: relative;
+      display: inline-block;
+      border-bottom: 1px solid transparent;
+    }
+
+    /* the short stub under the first letter */
+    span::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -1px;
+      width: 9px;
+      height: 1px;
+      background: #000;
+    }
+
+    &:hover span,
+    &[aria-current] span {
+      border-bottom-color: #000;
+    }
+
+    &:focus-visible {
+      outline: 1px dotted #000;
+      outline-offset: -2px;
+    }
+  }
+
+  /* corner mark for a tab that leaves the site */
+  .win__tab--ext span::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    right: -8px;
+    width: 6px;
+    height: 6px;
+    border-top: 1px solid #000;
+    border-right: 1px solid #000;
+  }
+
+  /* ---------- window body ---------- */
+
+  .win__body {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+  }
+
+  .win__area {
+    flex: 1;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 1rem 1.5rem;
+    color: var(--bg-color);
+    border: var(--bevel-w) solid var(--border-color);
+    text-align: left;
+    overflow-wrap: break-word;
+    ${retroScrollbar};
+  }
+
+  /* :where() keeps these at the specificity of a bare element selector, so any class wins */
+  :where(.win__area) a {
+    color: var(--bg-color);
+    text-decoration: underline;
+  }
+
+  .win--flush .win__area {
+    padding: 0;
+  }
+
+  .win--dark .win__area {
+    background: #000;
+    color: #fff;
+    padding: 0;
+  }
+
+  :where(.win--dark .win__area) a {
+    color: #fff;
+  }
+
+  .win__footer {
+    flex: none;
+    padding: 0.5rem 1rem;
+    font-size: 16px;
+    text-transform: uppercase;
+    color: var(--bg-color);
+    text-align: center;
+    border-top: 1px solid var(--border-color);
+  }
+
+  :where(.win__footer) a {
+    color: inherit;
+    text-decoration: underline;
+  }
+
+  /* ---------- popup frame (used by Popup.js) ---------- */
+
+  .popup {
+    position: fixed;
+    z-index: var(--z-window-base);
+    display: flex;
+    flex-direction: column;
+    max-width: calc(100vw - 16px);
+    background: var(--window-color);
+    color: #000;
+    border-radius: 0;
+    ${bevel};
+  }
+
+  .popup .win__chrome {
+    border: 0;
+  }
+
+  /* Popup titles are whole sentences, so they use the narrower body face to fit the strip. */
+  .popup .win__title {
+    font: 400 16px / calc(2.5rem - 2 * var(--bevel-w)) var(--main-font);
+    text-transform: uppercase;
+  }
+
+  .popup__body {
+    padding: 10px 8px;
+    color: #000;
+    text-align: center;
+  }
+
+  .popup__art {
+    display: block;
+    width: 100%;
+    height: auto;
+    image-rendering: pixelated;
+  }
+
+  /* ---------- phone ---------- */
+
+  ${media.phone} {
+    .win {
+      left: 0;
+      top: 80px;
+      bottom: calc(var(--icon-bar-reserve) + env(safe-area-inset-bottom, 0px));
+      width: 100%;
+      height: auto;
+      max-height: none;
+      transform: none;
+    }
+
+    .win--static {
+      top: auto;
+      bottom: auto;
+    }
+
+    .win__titlebar {
+      cursor: default;
+    }
+
+    .win__glyph svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .win__title {
+      height: 4.4rem;
+      font-size: 24px;
+      line-height: calc(4.4rem - 2 * var(--bevel-w));
+    }
+
+    .win__menu {
+      display: flex;
+    }
+
+    .win__tabs {
+      display: none;
+    }
+
+    /* the tab row becomes the dropdown opened by the title-bar menu button */
+    .win__tabs.is-open {
+      position: absolute;
+      top: 0.7rem;
+      right: 5rem;
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      width: 19rem;
+      padding-top: 0.5rem;
+      background: var(--window-color);
+      ${bevel};
+    }
+
+    .win__tab {
+      width: 100%;
+      min-height: 44px;
+      padding: 0.5rem 2rem;
+      font-size: 24px;
+      text-align: left;
+    }
+
+    /* a footer link stands alone, so the footer is one 44px row and the link fills its height */
+    .win__footer {
+      padding: 0 1rem;
+    }
+
+    .win__footer a {
+      display: inline-block;
+      padding: 12px 0;
+    }
+
+    .win__footer a:focus-visible {
+      outline-offset: -10px;
+    }
+
+    .popup {
+      width: 260px;
+      z-index: var(--z-popup-phone);
+    }
+
+    .popup .win__glyph {
+      display: none;
+    }
+
+    .popup .win__title {
+      font-size: 16px;
+      line-height: calc(4.4rem - 2 * var(--bevel-w));
+    }
+
+    /* the 24px phone button face is too wide for a 260px popup */
+    .popup__body a,
+    .popup__body button {
+      max-width: 100%;
+      font: 16px var(--main-font);
+      white-space: normal;
+    }
+  }
+
+  /* ---------- short landscape phones ---------- */
+
+  ${media.landscape} {
+    .win {
+      left: 0;
+      top: calc(var(--topbar-h) + 4px);
+      bottom: 60px;
+      width: 100%;
+      height: auto;
+      max-height: none;
+      transform: none;
+    }
+
+    .win--static {
+      top: auto;
+      bottom: auto;
+    }
+
+    .win__titlebar {
+      cursor: default;
+    }
+  }
+
+  /* ---------- motion ---------- */
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation: none !important;
+      transition: none !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* keep this the last rule */
+  [hidden] {
+    display: none !important;
+  }
 `;
 
 export default GlobalStyle;

@@ -1,5 +1,1 @@
-/**
- * Implement Gatsby's Browser APIs in this file.
- *
- * See: https://www.gatsbyjs.org/docs/browser-apis/
- */
+// No browser APIs are needed here; the offline service worker is set up by its own plugin.

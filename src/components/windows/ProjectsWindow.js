@@ -28,7 +28,7 @@ const TitleRow = styled.div`
   column-gap: 1rem;
   margin: 1.6rem 0 0.8rem;
   padding-bottom: 0.3rem;
-  border-bottom: 1px solid var(--bg-color);
+  border-bottom: 1px solid var(--bevel-shadow);
 `;
 
 const ArticleTitle = styled(SubHeading)`
@@ -56,7 +56,7 @@ const Cover = styled(Inset)`
 // Markdown body HTML. A div, because the markdown already wraps its text in <p>.
 const Body = styled.div`
   font-size: 16px;
-  line-height: 1.25;
+  line-height: 1.5;
   overflow-wrap: anywhere;
 
   p {
@@ -74,7 +74,7 @@ const List = styled.ul`
 const Entry = styled.li`
   padding: 1rem 0;
   font-size: 16px;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--bevel-light);
 
   p {
     margin: 0 0 0.8rem;
@@ -86,7 +86,7 @@ const EntryTitle = styled.h5`
   margin: 0 0 0.4rem;
   font: 16px/1.25 var(--main-font);
   font-weight: normal;
-  color: var(--window-title-bar-color);
+  text-transform: uppercase;
 `;
 
 const EntryLinks = styled.div`

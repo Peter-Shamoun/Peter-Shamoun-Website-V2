@@ -1,50 +1,78 @@
 import { css } from 'styled-components';
 
-// Raised edge: light on the top and left, shadow on the right and bottom.
+// The classic two-pixel edges, drawn as inset shadows so the dark lines run the full length of
+// the bottom and right sides. A shadow sits under the content, so anything with one of these
+// needs at least 2px of padding (1px for the thin ones).
+
+// Raised edge of a button.
 export const bevel = css`
-  border-style: solid;
-  border-width: var(--bevel-w);
-  border-color: var(--border-light-color) var(--border-shadow-color) var(--border-shadow-color)
-    var(--border-light-color);
+  border: 0;
+  border-radius: 0;
+  box-shadow: inset -1px -1px var(--bevel-dark), inset 1px 1px var(--bevel-hi),
+    inset -2px -2px var(--bevel-shadow), inset 2px 2px var(--bevel-light);
+`;
+
+// Raised edge of a window frame: the two light lines are the other way round.
+export const bevelWindow = css`
+  border: 0;
+  border-radius: 0;
+  box-shadow: inset -1px -1px var(--bevel-dark), inset 1px 1px var(--bevel-light),
+    inset -2px -2px var(--bevel-shadow), inset 2px 2px var(--bevel-hi);
 `;
 
 // Pressed state for anything that already has the bevel.
 export const bevelPressed = css`
-  border-color: var(--border-shadow-color) var(--border-light-color) var(--border-light-color)
-    var(--border-shadow-color);
-  background-color: var(--window-active-color);
+  box-shadow: inset -1px -1px var(--bevel-hi), inset 1px 1px var(--bevel-dark),
+    inset -2px -2px var(--bevel-light), inset 2px 2px var(--bevel-shadow);
+`;
+
+// Sunken edge of a field.
+export const sunken = css`
+  border: 0;
+  border-radius: 0;
+  box-shadow: inset -1px -1px var(--bevel-hi), inset 1px 1px var(--bevel-shadow),
+    inset -2px -2px var(--bevel-light), inset 2px 2px var(--bevel-dark);
+`;
+
+// One-pixel sunken edge: the status bar and the tray.
+export const sunkenThin = css`
+  border: 0;
+  border-radius: 0;
+  box-shadow: inset -1px -1px var(--bevel-hi), inset 1px 1px var(--bevel-shadow);
 `;
 
 // Sunken white panel.
 export const inset = css`
-  background: #fff;
-  border-style: solid;
-  border-width: var(--bevel-w);
-  border-color: var(--border-shadow-color) var(--border-light-color) var(--border-light-color)
-    var(--border-shadow-color);
+  padding: 2px;
+  background: var(--field);
+  ${sunken};
+`;
+
+// The focus rectangle of a control that sits on grey chrome.
+export const focusRect = css`
+  &:focus-visible {
+    outline: 1px dotted var(--text);
+    outline-offset: -4px;
+  }
 `;
 
 // Applied to every scroller.
 export const retroScrollbar = css`
   &::-webkit-scrollbar {
-    width: 30px;
-    height: 30px;
+    width: 16px;
+    height: 16px;
   }
   &::-webkit-scrollbar-thumb {
-    background-color: var(--scroll-thumb);
-    border-radius: 1px;
-    border-top: 1px solid white;
-    border-left: 1px solid white;
-    border-bottom: 1px solid var(--scroll-edge);
-    border-right: 1px solid var(--scroll-edge);
-    box-shadow: inset 2px 2px 2px rgba(255, 255, 255, 0.25), inset -2px -2px 2px rgba(0, 0, 0, 0.25);
+    background-color: var(--chrome);
+    ${bevel};
   }
-  &::-webkit-scrollbar-track {
-    background-color: var(--scroll-track);
+  &::-webkit-scrollbar-track,
+  &::-webkit-scrollbar-corner {
+    background-color: var(--chrome);
   }
   /* Firefox only: in Chromium a scrollbar-color value switches the rules above off. */
   @supports not selector(::-webkit-scrollbar) {
-    scrollbar-color: var(--scroll-thumb) var(--scroll-track);
+    scrollbar-color: var(--bevel-shadow) var(--chrome);
   }
 `;
 

@@ -6,6 +6,7 @@ import { TitleBar, useDrag, getBounds } from './Window';
 import { BevelButton, BevelLink, ButtonRow } from './ui';
 import { ART } from './icons';
 import { POPUPS } from './popupData';
+import { frontZ } from './state';
 
 const clamp = (value, lo, hi) => Math.max(lo, Math.min(value, hi));
 
@@ -15,10 +16,11 @@ const Copy = styled.p`
 
 const Actions = styled(ButtonRow)`
   justify-content: center;
-  margin-top: 0.6rem;
+  margin-top: 0;
 `;
 
-// A promo popup: window chrome, a small picture, one sentence or two, one bevelled action.
+// A promo popup: the window frame, a small picture, one sentence or two, one bevelled action.
+// Popups only come from the free_ram.exe icon.
 // popup is a state entry { key, dataId, x, y, w, z }. On phones the CSS sets the width and
 // the z-index (.popup in GlobalStyle), so the inline values are left out there, and dragging
 // is off.
@@ -91,6 +93,11 @@ const Popup = ({ popup }) => {
     return null;
   }
 
+  const classes = ['popup'];
+  if (popup.z === frontZ(state)) {
+    classes.push('is-active');
+  }
+
   const style = { left: popup.x, top: popup.y };
   if (!viewport.phone) {
     style.width = popup.w;
@@ -107,23 +114,22 @@ const Popup = ({ popup }) => {
   return (
     <section
       ref={ref}
-      className="popup"
+      className={classes.join(' ')}
       role="dialog"
       aria-labelledby={titleId}
       data-popup={data.id}
       data-popup-key={popup.key}
       style={style}
       {...hiddenProps}
-      onPointerDown={() => actions.raisePopup(popup.key)}>
-      <header className="win__chrome">
-        <TitleBar
-          title={data.title}
-          titleId={titleId}
-          closeLabel={`Close ${data.title}`}
-          onClose={() => actions.closePopup(popup.key)}
-          dragProps={dragProps}
-        />
-      </header>
+      onPointerDown={() => actions.raisePopup(popup.key)}
+      onFocus={() => actions.raisePopup(popup.key)}>
+      <TitleBar
+        title={data.title}
+        titleId={titleId}
+        closeLabel={`Close ${data.title}`}
+        onClose={() => actions.closePopup(popup.key)}
+        dragProps={dragProps}
+      />
       <div className="popup__body">
         {Art ? <Art className="popup__art" /> : null}
         <Copy>{data.body}</Copy>

@@ -3,57 +3,61 @@ import { css } from 'styled-components';
 const variables = css`
   :root {
     /* colour */
-    --main-color: #000000;
-    --window-color: #cccccc;
-    --window-active-color: #afafaf;
-    --border-color: #707070;
-    --border-light-color: #ffffff;
-    --border-shadow-color: #333333;
-    --bg-color: #0b17b4;
-    --window-title-bar-color: #011e75;
-    --text-light: #ffffff;
-    --bsod-color: #0000aa;
-    --glyph-bg: #22527f;
-    --glyph-bg-active: #174a7a;
-    --siteinfo-bg: #e5e5e5;
-    --scroll-thumb: #02020d;
-    --scroll-track: #1b1b3f;
-    --scroll-edge: #757574;
+    --desktop: #3a6ea5;
+    --chrome: #c0c0c0;
+    --bevel-hi: #ffffff;
+    --bevel-light: #dfdfdf;
+    --bevel-shadow: #808080;
+    --bevel-dark: #000000;
+    --title-active: #000080;
+    --title-active-text: #ffffff;
+    --title-inactive: #808080;
+    --title-inactive-text: #c0c0c0;
+    --field: #ffffff;
+    --text: #000000;
+    --text-on-desktop: #ffffff;
+    --shadow-on-desktop: 1px 1px 1px rgba(0, 0, 0, 0.95), 0 0 4px rgba(0, 0, 0, 0.55);
+    --link: #000080;
+    --select: #000080;
+    --select-text: #ffffff;
+    --bsod-color: #000080;
 
     /* fonts */
     --main-font: 'Web437 ANK16', 'Courier New', Courier, monospace;
     --main-large-font: 'Web437 ANK24', 'Courier New', Courier, monospace;
     --window-title-font: 'Silkscreen', 'Courier New', Courier, monospace;
-    --link-font: 'Times New Roman', Times, serif;
     --bsod-font: 'Courier New', Courier, monospace;
     --font-base-size: 1.6rem;
 
     /* sizes */
-    --icon-size: 6.2rem;
-    --icon-size-xs: 5.2rem;
-    --topbar-h: 32px;
-    --bevel-w: 1px;
-    --titlebar-h: 3.4rem;
-    --chrome-btn: 2.5rem;
-    --icon-bar-reserve: 0px;
+    --taskbar-h: 34px;
+    --taskbar-total: calc(var(--taskbar-h) + env(safe-area-inset-bottom, 0px));
+    --titlebar-h: 24px;
+    --chrome-btn: 20px;
+    --icon-size: 64px;
+    --cascade-step: 28px;
 
     /* layers */
+    --z-wallpaper: 0;
     --z-icons: 1;
-    --z-scene: 500;
     --z-popup-phone: 900;
     --z-window-base: 1000; /* JS sets z-index inline from the topZ counter, which starts here */
-    --z-topbar: 10000;
+    --z-taskbar: 10000;
     --z-bsod: 99999;
-    --z-boot: 100000;
+    --z-skip: 100000;
   }
 
   @media (max-width: 36em) {
     :root {
-      --topbar-h: 52px;
-      --bevel-w: 2px;
-      --titlebar-h: 5.2rem;
-      --chrome-btn: 4.4rem;
-      --icon-bar-reserve: 170px;
+      --taskbar-h: 44px;
+      --titlebar-h: 40px;
+      --chrome-btn: 36px;
+    }
+  }
+
+  @media (max-height: 500px) {
+    :root {
+      --icon-size: 32px;
     }
   }
 `;

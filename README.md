@@ -1,6 +1,6 @@
 # Peter Shamoun: personal website
 
-The personal site of Peter Shamoun, live at [petershamoun.com](https://petershamoun.com). It is laid out as a 1990s desktop: a top bar, a few desktop icons, windows for About, Experience, Projects, Research and Contact, and a few popups.
+The personal site of Peter Shamoun, live at [petershamoun.com](https://petershamoun.com). It is laid out as a calm 1990s desktop: the Windows XP hill-and-sky wallpaper, a column of desktop icons, a taskbar with a Start menu and a clock along the bottom, and grey bevelled windows for About, Experience, Projects, Research and Contact.
 
 Built with [Gatsby](https://www.gatsbyjs.org/) 3, React 17 and styled-components. Content is kept in Markdown files.
 
@@ -37,15 +37,16 @@ Pages panel on Vercel's free plan. The address bar never changes. Virtual paths:
 | Path                                            | Meaning                                                                       |
 | ----------------------------------------------- | ----------------------------------------------------------------------------- |
 | `/`                                             | A real visit                                                                  |
-| `/window/<id>`                                  | The visitor opened that window (the automatic About window is not counted)    |
+| `/window/<id>`                                  | The visitor opened that window (About, open on arrival, is not counted)       |
 | `/click/resume`, `/click/email`                 | Opened the résumé, clicked an email link                                      |
 | `/click/file`, `/click/phone`                   | Opened another file on the site, clicked a phone link                         |
 | `/out/<host>/<path>`                            | Clicked a link to another site                                                |
-| `/popup/<id>`                                   | Clicked the button in a promo popup                                           |
+| `/popup/<id>`                                   | Clicked the button in a popup (popups only come from `free_ram.exe`)          |
 | `/egg/click`, `/egg/bluescreen`                 | Clicked `free_ram.exe`, reached the blue screen                               |
 | `/engaged/15s`, `/engaged/60s`, `/engaged/180s` | Kept the tab visible that long                                                |
 | `/from/<source>`                                | Arrived through a tagged link such as `https://petershamoun.com/?from=resume` |
-| `/panel/world-time`, `/click/reset`             | Opened the clock panel, clicked the name button                               |
+| `/panel/world-time`, `/panel/start`             | Opened the clock panel, opened the Start menu                                 |
+| `/click/reset`                                  | Chose "Tidy desktop" in the Start menu                                        |
 | `/error/js`, `/error/promise`                   | A script error happened on the page                                           |
 
 Because of the virtual paths, the dashboard's total page-view number counts actions as well as

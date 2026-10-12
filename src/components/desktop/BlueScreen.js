@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { media } from '@styles';
 import { useDesktop, getEggOpener } from './DesktopProvider';
 
-// Full-screen blue screen (BUILD_PLAN 2.9 and 4.4). The whole screen is one real <button>, so a
+// Full-screen blue screen. The whole screen is one real <button>, so a
 // click, a tap, Enter or Space all dismiss it, and the first focusable thing in it is that button.
 // Escape is handled by the provider (ESCAPE action), so it is not handled here.
 
@@ -25,7 +25,7 @@ const Hit = styled.button`
   border: 0;
   border-radius: 0;
   background: none;
-  color: #fff;
+  color: var(--select-text);
   font: 14px/1.6 var(--bsod-font);
   letter-spacing: 0;
   text-align: left;

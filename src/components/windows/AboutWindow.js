@@ -19,9 +19,9 @@ import { BannerAbout } from '@components/desktop/icons';
 // Banner strip across the top of the window. Decorative; the heading sits over it.
 const Banner = styled.div`
   position: relative;
-  height: 160px;
+  height: 120px;
   overflow: hidden;
-  background: var(--window-title-bar-color);
+  background: var(--title-active);
 
   & > svg {
     display: block;
@@ -30,34 +30,37 @@ const Banner = styled.div`
   }
 
   ${media.phone} {
-    height: 100px;
+    height: 96px;
   }
 `;
 
 const BannerHeading = styled(Heading)`
   position: absolute;
-  left: 1.5rem;
+  left: 2rem;
   bottom: 1.2rem;
   margin: 0;
-  color: #ffffff;
+  color: var(--title-active-text);
   pointer-events: none;
 
   ${media.phone} {
-    left: 1rem;
+    left: 1.4rem;
     bottom: 0.8rem;
   }
 `;
 
 const Content = styled.div`
-  padding: 1.5rem;
+  padding: 1.6rem 2rem;
+
+  ${media.phone} {
+    padding: 1.4rem;
+  }
 `;
 
 // Headshot in a sunken frame: floated right on desktop, stacked above the text on phones.
 const Headshot = styled(Inset)`
   float: right;
-  margin: 0 0 1rem 1.5rem;
+  margin: 0 0 1rem 2rem;
   padding: 0.4rem;
-  background: #ffffff;
 
   img {
     display: block;

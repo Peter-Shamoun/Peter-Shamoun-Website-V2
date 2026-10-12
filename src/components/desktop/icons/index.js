@@ -6,10 +6,7 @@ import {
   IconProjects,
   IconResearch,
   IconResume,
-  IconSelection,
 } from './desktop';
-import { GlyphApp, GlyphClose, GlyphExternal, GlyphMenu } from './glyphs';
-import { BannerAbout, SceneSprite, SceneTuft } from './scene';
 import {
   ArtCheatSheet,
   ArtGithub,
@@ -29,9 +26,8 @@ export {
   IconContact,
   IconResume,
   IconEgg,
-  IconSelection,
 } from './desktop';
-export { GlyphApp, GlyphClose, GlyphMenu, GlyphExternal } from './glyphs';
+export { GlyphApp, GlyphClose, GlyphMenu } from './glyphs';
 export {
   ArtCheatSheet,
   ArtGraph,
@@ -42,9 +38,9 @@ export {
   ArtMail,
   ArtRam,
 } from './art';
-export { SceneSprite, SceneTuft, BannerAbout } from './scene';
+export { BannerAbout } from './banner';
 
-// Lookups by name. Icon, glyph, scene and banner components, and the popup pictures.
+// Lookups by name: the desktop icons and the popup pictures.
 export const ICONS = {
   IconAbout,
   IconExperience,
@@ -53,14 +49,6 @@ export const ICONS = {
   IconContact,
   IconResume,
   IconEgg,
-  IconSelection,
-  GlyphApp,
-  GlyphClose,
-  GlyphMenu,
-  GlyphExternal,
-  SceneSprite,
-  SceneTuft,
-  BannerAbout,
 };
 
 export const ART = {

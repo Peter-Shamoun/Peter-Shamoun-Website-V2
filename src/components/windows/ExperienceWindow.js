@@ -18,7 +18,11 @@ const statusFor = range => {
 const StripHeading = styled(Heading)`
   margin: 0;
   padding: 1.6rem 2rem 1.2rem;
-  border-bottom: 1px solid #ffffff;
+  border-bottom: 1px solid var(--bevel-shadow);
+
+  ${media.phone} {
+    padding: 1.4rem 1.4rem 1rem;
+  }
 `;
 
 const List = styled.ol`
@@ -29,8 +33,15 @@ const List = styled.ol`
 
 const Row = styled.li`
   padding: 1.4rem 2rem;
-  border-bottom: 1px solid #ffffff;
-  color: #ffffff;
+  border-bottom: 1px solid var(--bevel-shadow);
+
+  &:last-child {
+    border-bottom: 0;
+  }
+
+  ${media.phone} {
+    padding: 1.4rem;
+  }
 `;
 
 const Grid = styled.div`
@@ -41,8 +52,7 @@ const Grid = styled.div`
 
   ${media.phone} {
     grid-template-columns: minmax(0, 1fr);
-    row-gap: 0.6rem;
-    text-align: center;
+    row-gap: 0.4rem;
   }
 `;
 
@@ -51,6 +61,11 @@ const Range = styled.p`
   font-size: 16px;
   text-transform: uppercase;
   overflow-wrap: anywhere;
+`;
+
+// One end of the range. The range only ever breaks after the dash.
+const RangePart = styled.span`
+  white-space: nowrap;
 `;
 
 const Details = styled.div`
@@ -92,7 +107,6 @@ const Bullets = styled.div`
     margin: 0 0 0.6rem;
     padding-left: 1.6rem;
     font-size: 16px;
-    color: #cccccc;
   }
 
   li:last-child {
@@ -142,7 +156,6 @@ const ExperienceWindow = () => {
   return (
     <Window
       id="experience"
-      dark
       flush
       footer={
         <FooterLine>
@@ -154,7 +167,14 @@ const ExperienceWindow = () => {
         {jobs.map(({ id, frontmatter, html }) => (
           <Row key={id}>
             <Grid>
-              <Range>{frontmatter.range}</Range>
+              <Range>
+                {(frontmatter.range || '').split(' - ').map((part, i, parts) => (
+                  <React.Fragment key={part}>
+                    <RangePart>{i < parts.length - 1 ? `${part} -` : part}</RangePart>
+                    {i < parts.length - 1 ? ' ' : null}
+                  </React.Fragment>
+                ))}
+              </Range>
               <Details>
                 <JobTitle>{frontmatter.title}</JobTitle>
                 <Meta>

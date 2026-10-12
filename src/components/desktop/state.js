@@ -2,12 +2,10 @@ import { WINDOWS } from './registry';
 
 // Action types. Components never dispatch these directly; they call actions.* from useDesktop().
 export const A = {
-  BOOT_DONE: 'BOOT_DONE',
   VIEWPORT: 'VIEWPORT',
   REDUCED_MOTION: 'REDUCED_MOTION',
   OPEN: 'OPEN',
   CLOSE: 'CLOSE',
-  TOGGLE: 'TOGGLE',
   RAISE: 'RAISE',
   MOVE: 'MOVE',
   RESET: 'RESET',
@@ -19,35 +17,57 @@ export const A = {
   BSOD_DISMISS: 'BSOD_DISMISS',
   TOGGLE_WORLD_TIME: 'TOGGLE_WORLD_TIME',
   CLOSE_WORLD_TIME: 'CLOSE_WORLD_TIME',
-  TOGGLE_MENU: 'TOGGLE_MENU',
+  TOGGLE_START: 'TOGGLE_START',
+  CLOSE_START: 'CLOSE_START',
   ESCAPE: 'ESCAPE',
 };
 
 export const MAX_POPUPS = 12;
-export const EGG_BSOD_AT = 3;
-export const PHONE_MAX = 576;
-export const TABLET_MAX = 1024;
+const EGG_BSOD_AT = 3;
+const PHONE_MAX = 576;
+
+const BASE_Z = 1000;
+// The window that is already open when the page appears. It is open in the first render, so it
+// is in the server's HTML and nothing moves on load.
+const OPEN_AT_START = 'about';
 
 const makeWindows = () =>
   WINDOWS.reduce((acc, w) => {
-    acc[w.id] = { open: false, z: 0, dx: 0, dy: 0 };
+    const open = w.id === OPEN_AT_START;
+    acc[w.id] = { open, z: open ? BASE_Z + 1 : 0, dx: 0, dy: 0, order: open ? 1 : 0 };
     return acc;
   }, {});
 
 export const initialState = {
-  bootDone: false,
   reducedMotion: false, // set after mount from matchMedia
-  viewport: { w: 0, h: 0, phone: false, tablet: false, ready: false },
-  windows: makeWindows(), // one entry per registry id: { open, z, dx, dy }
-  topZ: 1000,
+  viewport: { w: 0, h: 0, phone: false, ready: false },
+  windows: makeWindows(), // one entry per registry id: { open, z, dx, dy, order }
+  topZ: BASE_Z + 1,
+  openCount: 1, // source of windows[id].order, which sorts the taskbar buttons
   popups: [], // { key, dataId, x, y, w, z }
   popupEpoch: 0, // bumped by RESET, the blue screen and BSOD_DISMISS; the spawner cancels timers
   eggClicks: 0, // never reset
   bsod: false,
   worldTimeOpen: false,
-  menuOpenFor: null, // window id whose phone menu is open
-  wordmarkRun: 0, // bumped by BOOT_DONE and RESET; the wordmark replays on change
+  startOpen: false,
   focusTick: null, // { kind: 'window' | 'bsod', id, n } - a request to move focus
+};
+
+// The z of whatever is in front, a window or a popup. 0 when nothing is open.
+export const frontZ = state => {
+  let z = 0;
+  Object.keys(state.windows).forEach(id => {
+    const w = state.windows[id];
+    if (w.open && w.z > z) {
+      z = w.z;
+    }
+  });
+  state.popups.forEach(p => {
+    if (p.z > z) {
+      z = p.z;
+    }
+  });
+  return z;
 };
 
 const nextTick = (state, kind, id) => ({
@@ -71,13 +91,21 @@ const openWindow = (state, id, focus) => {
   const windows = mapWindows(state.windows, (w, key) =>
     state.viewport.phone && key !== id && w.open ? { ...w, open: false } : w,
   );
-  windows[id] = { ...windows[id], open: true, z: topZ };
+  const wasOpen = windows[id].open;
+  const openCount = wasOpen ? state.openCount : state.openCount + 1;
+  windows[id] = {
+    ...windows[id],
+    open: true,
+    z: topZ,
+    order: wasOpen ? windows[id].order : openCount,
+  };
   return {
     ...state,
     windows,
     topZ,
+    openCount,
     worldTimeOpen: false,
-    menuOpenFor: null,
+    startOpen: false,
     focusTick: focus ? nextTick(state, 'window', id) : state.focusTick,
   };
 };
@@ -90,7 +118,6 @@ const closeWindow = (state, id) => {
   return {
     ...state,
     windows: { ...state.windows, [id]: { ...win, open: false } },
-    menuOpenFor: state.menuOpenFor === id ? null : state.menuOpenFor,
   };
 };
 
@@ -102,7 +129,8 @@ const closePopup = (state, key) => {
 const dismissBsod = state =>
   state.bsod ? { ...state, bsod: false, popups: [], popupEpoch: state.popupEpoch + 1 } : state;
 
-// Escape closes whichever open window or popup is in front.
+// Escape closes whichever open window or popup is in front. Keyboard focus brings its window
+// or popup to the front, so that is also the one holding focus.
 const closeTop = state => {
   let top = null;
   Object.keys(state.windows).forEach(id => {
@@ -124,15 +152,9 @@ const closeTop = state => {
 
 export const reducer = (state, action) => {
   switch (action.type) {
-    case A.BOOT_DONE:
-      return state.bootDone
-        ? state
-        : { ...state, bootDone: true, wordmarkRun: state.wordmarkRun + 1 };
-
     case A.VIEWPORT: {
       const { w, h } = action;
       const phone = w <= PHONE_MAX;
-      const tablet = w > PHONE_MAX && w <= TABLET_MAX;
       let { windows } = state;
       if (phone && !state.viewport.phone) {
         // Entering the phone layout: keep only the front window open.
@@ -144,12 +166,7 @@ export const reducer = (state, action) => {
           );
         }
       }
-      return {
-        ...state,
-        windows,
-        viewport: { w, h, phone, tablet, ready: true },
-        menuOpenFor: null,
-      };
+      return { ...state, windows, viewport: { w, h, phone, ready: true } };
     }
 
     case A.REDUCED_MOTION:
@@ -163,21 +180,23 @@ export const reducer = (state, action) => {
     case A.CLOSE:
       return closeWindow(state, action.id);
 
-    case A.TOGGLE: {
-      const win = state.windows[action.id];
-      if (!win) {
-        return state;
-      }
-      return win.open ? closeWindow(state, action.id) : openWindow(state, action.id, action.focus);
-    }
-
+    // focus: true also moves keyboard focus into the window (a taskbar button).
     case A.RAISE: {
       const win = state.windows[action.id];
-      if (!win || !win.open || win.z === state.topZ) {
+      if (!win || !win.open) {
         return state;
       }
+      const focusTick = action.focus ? nextTick(state, 'window', action.id) : state.focusTick;
+      if (win.z === state.topZ) {
+        return action.focus ? { ...state, focusTick } : state;
+      }
       const topZ = state.topZ + 1;
-      return { ...state, topZ, windows: { ...state.windows, [action.id]: { ...win, z: topZ } } };
+      return {
+        ...state,
+        topZ,
+        focusTick,
+        windows: { ...state.windows, [action.id]: { ...win, z: topZ } },
+      };
     }
 
     case A.MOVE: {
@@ -197,9 +216,8 @@ export const reducer = (state, action) => {
         windows: mapWindows(state.windows, w => ({ ...w, open: false, dx: 0, dy: 0 })),
         popups: [],
         popupEpoch: state.popupEpoch + 1,
-        wordmarkRun: state.wordmarkRun + 1,
         worldTimeOpen: false,
-        menuOpenFor: null,
+        startOpen: false,
       };
 
     case A.SPAWN: {
@@ -254,7 +272,7 @@ export const reducer = (state, action) => {
         bsod: true,
         popupEpoch: state.popupEpoch + 1,
         worldTimeOpen: false,
-        menuOpenFor: null,
+        startOpen: false,
         focusTick: nextTick(state, 'bsod', null),
       };
     }
@@ -263,24 +281,23 @@ export const reducer = (state, action) => {
       return dismissBsod(state);
 
     case A.TOGGLE_WORLD_TIME:
-      return { ...state, worldTimeOpen: !state.worldTimeOpen, menuOpenFor: null };
+      return { ...state, worldTimeOpen: !state.worldTimeOpen, startOpen: false };
 
     case A.CLOSE_WORLD_TIME:
       return state.worldTimeOpen ? { ...state, worldTimeOpen: false } : state;
 
-    case A.TOGGLE_MENU:
-      return {
-        ...state,
-        menuOpenFor: state.menuOpenFor === action.id ? null : action.id,
-        worldTimeOpen: false,
-      };
+    case A.TOGGLE_START:
+      return { ...state, startOpen: !state.startOpen, worldTimeOpen: false };
+
+    case A.CLOSE_START:
+      return state.startOpen ? { ...state, startOpen: false } : state;
 
     case A.ESCAPE:
       if (state.bsod) {
         return dismissBsod(state);
       }
-      if (state.worldTimeOpen || state.menuOpenFor) {
-        return { ...state, worldTimeOpen: false, menuOpenFor: null };
+      if (state.worldTimeOpen || state.startOpen) {
+        return { ...state, worldTimeOpen: false, startOpen: false };
       }
       return closeTop(state);
 

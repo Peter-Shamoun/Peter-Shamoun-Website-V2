@@ -1,6 +1,7 @@
 import { expandRows, fromGrid, makeIcon } from './pixel';
 
-// Title-bar and tab glyphs. Run-length rows, see expandRows.
+// Small glyphs for the title bar, the Start button and the Start menu. Run-length rows, see
+// expandRows.
 
 const draw = rows => fromGrid(expandRows(rows));
 
@@ -62,18 +63,6 @@ const MENU = [
   '.16',
 ];
 
-const EXTERNAL = [
-  '.3 K5',
-  '.5 K3',
-  '.4 K2 .1 K1',
-  '.3 K2 .2 K1',
-  '.2 K2 .3 K1',
-  '.1 K2 .4 K1',
-  '.1 K1 .6',
-  '.8',
-];
-
 export const GlyphApp = makeIcon('GlyphApp', [16, 16], 16, draw(APP));
 export const GlyphClose = makeIcon('GlyphClose', [16, 16], 16, draw(CLOSE));
 export const GlyphMenu = makeIcon('GlyphMenu', [16, 16], 16, draw(MENU));
-export const GlyphExternal = makeIcon('GlyphExternal', [8, 8], 8, draw(EXTERNAL));

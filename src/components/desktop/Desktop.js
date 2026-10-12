@@ -1,13 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import DesktopProvider from './DesktopProvider';
-import Boot from './Boot';
-import TopBar from './TopBar';
-import Wordmark from './Wordmark';
-import Scene from './Scene';
+import Wallpaper from './Wallpaper';
 import DesktopIcons from './DesktopIcons';
 import PopupSpawner from './PopupSpawner';
-import SiteFooter from './SiteFooter';
+import Taskbar from './Taskbar';
 import BlueScreen from './BlueScreen';
 import {
   AboutWindow,
@@ -18,14 +15,14 @@ import {
   SiteInfoWindow,
 } from '../windows';
 
-// The desktop area under the top bar. It is its own stacking context (z-index: 1), so windows
-// and popups inside it always sit above the page footer and below the top bar.
+// The desktop area above the taskbar. It is its own stacking context (z-index: 1), so windows
+// and popups inside it always sit below the taskbar and its menus.
 const StyledDesktop = styled.main`
   position: fixed;
-  top: var(--topbar-h);
+  top: 0;
   left: 0;
   right: 0;
-  bottom: 0;
+  bottom: var(--taskbar-total);
   z-index: 1;
   overflow: hidden;
 
@@ -36,14 +33,11 @@ const StyledDesktop = styled.main`
   }
 `;
 
-// DOM order is the tab order.
+// DOM order is the tab order: the desktop icons, the open windows, then the taskbar.
 const Desktop = () => (
   <DesktopProvider>
-    <Boot />
-    <TopBar />
     <StyledDesktop id="content" tabIndex={-1}>
-      <Wordmark />
-      <Scene />
+      <Wallpaper />
       <DesktopIcons />
       <AboutWindow />
       <ExperienceWindow />
@@ -53,7 +47,7 @@ const Desktop = () => (
       <SiteInfoWindow />
       <PopupSpawner />
     </StyledDesktop>
-    <SiteFooter />
+    <Taskbar />
     <BlueScreen />
   </DesktopProvider>
 );

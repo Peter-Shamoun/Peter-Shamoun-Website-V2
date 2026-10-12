@@ -1,7 +1,7 @@
-// Promo popups. Copy is final (BUILD_PLAN section 2.8). Entry shape:
-// { id, title, body, cta, href?, opensWindow?, art, w, h, hPhone?, auto: [viewport classes] }
-// h is the rendered desktop height in px, rounded up; placement uses it to keep the icon row clear.
-// hPhone is the same for the 260px phone popup (only the popup that phones show has one).
+// Promo popups. They never appear by themselves: free_ram.exe spawns them. Entry shape:
+// { id, title, body, cta, href?, opensWindow?, art, w, h, hPhone? }
+// h is the rendered desktop height in px, rounded up; placement uses it to stay above the taskbar.
+// hPhone is the same for the 260px phone popup, where it has been measured.
 // art is a key of ART in ./icons. w is the desktop width in px (phones use PHONE_W from
 // ./placement). Each w is wide enough for the whole title to show in the title strip.
 export const POPUPS = [
@@ -15,7 +15,6 @@ export const POPUPS = [
     w: 300,
     h: 330,
     hPhone: 345,
-    auto: ['desktop', 'tablet', 'phone'],
   },
   {
     id: 'graph',
@@ -26,7 +25,6 @@ export const POPUPS = [
     art: 'ArtGraph',
     w: 300,
     h: 350,
-    auto: ['desktop', 'tablet'],
   },
   {
     id: 'resume',
@@ -37,7 +35,6 @@ export const POPUPS = [
     art: 'ArtResume',
     w: 260,
     h: 268,
-    auto: ['desktop', 'tablet'],
   },
   {
     id: 'github',
@@ -48,7 +45,6 @@ export const POPUPS = [
     art: 'ArtGithub',
     w: 240,
     h: 256,
-    auto: ['desktop'],
   },
   {
     id: 'research',
@@ -59,7 +55,6 @@ export const POPUPS = [
     art: 'ArtResearch',
     w: 300,
     h: 330,
-    auto: ['desktop'],
   },
   {
     id: 'linkedin',
@@ -70,7 +65,6 @@ export const POPUPS = [
     art: 'ArtLinkedin',
     w: 300,
     h: 290,
-    auto: [],
   },
   {
     id: 'mail',
@@ -81,7 +75,6 @@ export const POPUPS = [
     art: 'ArtMail',
     w: 300,
     h: 290,
-    auto: [],
   },
   {
     id: 'ram',
@@ -92,13 +85,17 @@ export const POPUPS = [
     art: 'ArtRam',
     w: 300,
     h: 290,
-    auto: [],
   },
 ];
 
-// Popups that appear by themselves, in order, per viewport class.
-export const AUTO = {
-  desktop: ['cheatsheet', 'graph', 'resume', 'github', 'research'],
-  tablet: ['cheatsheet', 'graph', 'resume'],
-  phone: ['cheatsheet'],
-};
+// The order free_ram.exe hands them out in: up to three per click.
+export const EGG_POOL = [
+  'linkedin',
+  'mail',
+  'ram',
+  'cheatsheet',
+  'graph',
+  'resume',
+  'github',
+  'research',
+];

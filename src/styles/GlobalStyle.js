@@ -2,7 +2,7 @@ import { createGlobalStyle } from 'styled-components';
 import fonts from './fonts';
 import variables from './variables';
 import { media } from './media';
-import { bevel, bevelPressed, retroScrollbar } from './mixins';
+import { bevel, bevelPressed, bevelWindow, retroScrollbar, sunken, sunkenThin } from './mixins';
 
 const GlobalStyle = createGlobalStyle`
   ${fonts};
@@ -26,10 +26,26 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
     font-family: var(--main-font);
     font-size: var(--font-base-size);
-    color: var(--text-light);
-    background-color: var(--bg-color);
+    color: var(--text);
+    background-color: var(--desktop);
     letter-spacing: 0.5px;
     overflow: hidden;
+  }
+
+  /* The wallpaper photograph, fixed behind everything. --desktop shows while it loads. */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-image: url('/wallpaper.jpg');
+    background-image: image-set(
+      url('/wallpaper.webp') type('image/webp'),
+      url('/wallpaper.jpg') type('image/jpeg')
+    );
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
   }
 
   p,
@@ -38,12 +54,12 @@ const GlobalStyle = createGlobalStyle`
   dd,
   dt {
     font-size: var(--font-base-size);
-    line-height: 1.25;
+    line-height: 1.5;
   }
 
   ::selection {
-    background: var(--bg-color);
-    color: #ffffff;
+    background: var(--select);
+    color: var(--select-text);
     text-shadow: none;
   }
 
@@ -53,13 +69,19 @@ const GlobalStyle = createGlobalStyle`
     letter-spacing: inherit;
   }
 
+  /* A tap gets the pressed bevel, not the browser's grey flash, and no double-tap zoom delay. */
+  a,
+  button {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
   /*
-   * currentColor, not a fixed black: the ring has to show on the blue desktop and in the
-   * black windows as well as on white and grey. Controls on grey chrome set their own
-   * 1px dotted #000 ring.
+   * The classic dotted focus rectangle. currentColor, so it shows on the white of a window as
+   * well as on the desktop. Controls on grey chrome draw theirs inset (focusRect in mixins).
    */
   :focus-visible {
-    outline: 2px dotted currentColor;
+    outline: 1px dotted currentColor;
     outline-offset: 2px;
   }
 
@@ -69,10 +91,10 @@ const GlobalStyle = createGlobalStyle`
     position: fixed;
     top: 4px;
     left: 4px;
-    z-index: calc(var(--z-boot) + 1);
-    padding: 0.4rem 1rem;
-    background: var(--window-color);
-    color: var(--main-color);
+    z-index: var(--z-skip);
+    padding: 0.6rem 1.2rem;
+    background: var(--chrome);
+    color: var(--text);
     text-decoration: none;
     ${bevel};
     clip-path: inset(50%);
@@ -86,7 +108,7 @@ const GlobalStyle = createGlobalStyle`
       width: auto;
       height: auto;
       overflow: visible;
-      outline: 1px dotted #000;
+      outline: 1px dotted var(--text);
       outline-offset: -4px;
     }
   }
@@ -94,46 +116,62 @@ const GlobalStyle = createGlobalStyle`
   /* ---------- window frame ---------- */
   /*
    * Window.js sets these custom properties inline:
-   *   --win-w (px)  --win-maxh  --win-x (%)  --win-y (%)  --win-h (measured px)
-   *   --win-dx / --win-dy (drag offset, whole px)  --win-fixed-h (only with .win--fixed)
+   *   --win-w (px)  --win-maxh  --win-step (place in the cascade, 0 = About)
+   *   --win-h (measured px)  --win-dx / --win-dy (drag offset, whole px)
    * and writes --win-fx / --win-fy (sub-pixel correction) straight onto the element.
+   *
+   * Step 0 is centred in the space above the taskbar (worked out from the height About has
+   * when it is as tall as it may be, so it is right before any script has run). Every other
+   * window opens one step further down and to the right, so no title bar starts under another.
+   * --win-clear is the width the desktop icons take: one column, or two when the desktop is too
+   * short for all seven in one (under 728px). A window opens to the right of it and gives up
+   * some width for that, down to 440px.
    */
 
-  .win {
-    --win-wr: min(var(--win-w, 540px), 100vw - 16px);
+  .win,
+  .popup {
     position: fixed;
-    left: calc(
-      clamp(
-          calc(var(--win-wr) / 2 + 8px),
-          var(--win-x, 50%),
-          calc(100% - var(--win-wr) / 2 - 8px)
-        ) - var(--win-wr) / 2
+    z-index: var(--z-window-base);
+    display: flex;
+    flex-direction: column;
+    padding: 4px; /* 2px of bevel and 2px of chrome */
+    background: var(--chrome);
+    color: var(--text);
+    ${bevelWindow};
+  }
+
+  .win {
+    --win-clear: 128px;
+    --win-wr: min(
+      var(--win-w, 540px),
+      100vw - 16px,
+      max(440px, 100vw - var(--win-clear) - 8px)
     );
-    top: calc(
-      clamp(
-          calc(var(--topbar-h) + 8px + var(--win-h, 0px) / 2),
-          var(--win-y, 50%),
-          calc(100% - var(--win-h, 0px) / 2 - 8px)
-        ) - var(--win-h, 0px) / 2
+    --win-room: calc(100vh - var(--taskbar-total));
+    --win-top0: calc((var(--win-room) - min(64vh, var(--win-room) - 16px)) / 2);
+    --win-shift: calc(var(--win-step, 0) * var(--cascade-step));
+    left: clamp(
+      8px,
+      calc(max(var(--win-clear), 50% - 302px) + var(--win-shift)),
+      calc(100% - var(--win-wr) - 8px)
+    );
+    top: clamp(
+      8px,
+      calc(var(--win-top0) + var(--win-shift)),
+      calc(var(--win-room) - var(--win-h, 0px) - 8px)
     );
     width: var(--win-wr);
-    max-height: min(var(--win-maxh, 60vh), 100vh - var(--topbar-h) - 16px);
-    max-height: min(var(--win-maxh, 60vh), 100dvh - var(--topbar-h) - 16px);
+    max-height: min(var(--win-maxh, 60vh), var(--win-room) - 16px);
     transform: translate(
       calc(var(--win-dx, 0px) + var(--win-fx, 0px)),
       calc(var(--win-dy, 0px) + var(--win-fy, 0px))
     );
-    z-index: var(--z-window-base);
-    display: flex;
-    flex-direction: column;
-    background: var(--border-light-color);
-    color: #fff;
-    border-radius: 0;
   }
 
-  .win--fixed {
-    height: min(var(--win-fixed-h, 360px), 100vh - var(--topbar-h) - 16px);
-    height: min(var(--win-fixed-h, 360px), 100dvh - var(--topbar-h) - 16px);
+  @media (max-height: 727px) {
+    .win {
+      --win-clear: 232px;
+    }
   }
 
   /* A window drawn in normal flow (the 404 page). */
@@ -143,59 +181,44 @@ const GlobalStyle = createGlobalStyle`
     top: auto;
     transform: none;
     max-width: 100%;
-  }
-
-  .win__chrome {
-    position: relative;
-    flex: none;
-    display: flex;
-    flex-direction: column;
-    background: var(--window-color);
-    ${bevel};
+    max-height: none;
   }
 
   .win__titlebar {
+    flex: none;
     display: flex;
     align-items: center;
     height: var(--titlebar-h);
-    padding: 0 0.4rem;
-    gap: 0.5rem;
-    cursor: move;
+    padding: 0 2px 0 4px;
+    gap: 4px;
+    background: var(--title-inactive);
+    color: var(--title-inactive-text);
+    cursor: default;
     touch-action: none;
     user-select: none;
     -webkit-user-select: none;
   }
 
-  .win__glyph {
-    flex: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: var(--chrome-btn);
-    height: var(--chrome-btn);
-    background: var(--glyph-bg);
-    pointer-events: none;
+  /* The window in front. */
+  .is-active > .win__titlebar {
+    background: var(--title-active);
+    color: var(--title-active-text);
   }
 
   .win__title {
     flex: 1;
     min-width: 0;
     margin: 0;
-    height: 2.5rem;
-    padding-left: 1rem;
-    background: var(--window-title-bar-color);
-    color: #fff;
-    font: 700 16px/calc(2.5rem - 2 * var(--bevel-w)) var(--window-title-font);
+    font: 700 16px/1 var(--window-title-font);
     letter-spacing: 0;
     pointer-events: none;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    ${bevel};
   }
 
-  .win__close,
-  .win__menu {
+  .win__close {
+    position: relative;
     flex: none;
     display: flex;
     align-items: center;
@@ -203,9 +226,9 @@ const GlobalStyle = createGlobalStyle`
     width: var(--chrome-btn);
     height: var(--chrome-btn);
     padding: 0;
-    background: var(--window-color);
-    color: var(--main-color);
-    cursor: pointer;
+    background: var(--chrome);
+    color: var(--text);
+    cursor: default;
     ${bevel};
 
     &:active {
@@ -213,73 +236,9 @@ const GlobalStyle = createGlobalStyle`
     }
 
     &:focus-visible {
-      outline: 1px dotted #000;
-      outline-offset: -4px;
+      outline: 1px dotted var(--text);
+      outline-offset: -3px;
     }
-  }
-
-  .win__menu {
-    display: none;
-  }
-
-  /* ---------- tab row ---------- */
-
-  .win__tabs {
-    display: flex;
-    align-items: center;
-    margin: 0;
-    padding-top: 0.3rem;
-  }
-
-  .win__tab {
-    background: transparent;
-    border: none;
-    padding: 0 1.5rem 1rem 1.1rem;
-    font: 400 16px var(--window-title-font);
-    letter-spacing: 0;
-    color: #000;
-    cursor: pointer;
-    text-decoration: none;
-    white-space: nowrap;
-
-    span {
-      position: relative;
-      display: inline-block;
-      border-bottom: 1px solid transparent;
-    }
-
-    /* the short stub under the first letter */
-    span::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      bottom: -1px;
-      width: 9px;
-      height: 1px;
-      background: #000;
-    }
-
-    &:hover span,
-    &[aria-current] span {
-      border-bottom-color: #000;
-    }
-
-    &:focus-visible {
-      outline: 1px dotted #000;
-      outline-offset: -2px;
-    }
-  }
-
-  /* corner mark for a tab that leaves the site */
-  .win__tab--ext span::before {
-    content: '';
-    position: absolute;
-    top: 2px;
-    right: -8px;
-    width: 6px;
-    height: 6px;
-    border-top: 1px solid #000;
-    border-right: 1px solid #000;
   }
 
   /* ---------- window body ---------- */
@@ -289,7 +248,10 @@ const GlobalStyle = createGlobalStyle`
     min-height: 0;
     display: flex;
     flex-direction: column;
-    background: #fff;
+    margin-top: 2px;
+    padding: 2px;
+    background: var(--field);
+    ${sunken};
   }
 
   .win__area {
@@ -297,17 +259,18 @@ const GlobalStyle = createGlobalStyle`
     min-height: 0;
     overflow-x: hidden;
     overflow-y: auto;
-    padding: 1rem 1.5rem;
-    color: var(--bg-color);
-    border: var(--bevel-w) solid var(--border-color);
+    overscroll-behavior: contain;
+    padding: 1.6rem 2rem;
+    line-height: 1.5;
     text-align: left;
     overflow-wrap: break-word;
     ${retroScrollbar};
   }
 
   /* :where() keeps these at the specificity of a bare element selector, so any class wins */
-  :where(.win__area) a {
-    color: var(--bg-color);
+  :where(.win__area, .win__footer) a,
+  :where(.win__area, .win__footer) a:visited {
+    color: var(--link);
     text-decoration: underline;
   }
 
@@ -315,58 +278,30 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
   }
 
-  .win--dark .win__area {
-    background: #000;
-    color: #fff;
-    padding: 0;
-  }
-
-  :where(.win--dark .win__area) a {
-    color: #fff;
-  }
-
+  /* The status bar under the content. */
   .win__footer {
     flex: none;
-    padding: 0.5rem 1rem;
+    margin-top: 2px;
+    padding: 3px 8px;
     font-size: 16px;
-    text-transform: uppercase;
-    color: var(--bg-color);
-    text-align: center;
-    border-top: 1px solid var(--border-color);
-  }
-
-  :where(.win__footer) a {
-    color: inherit;
-    text-decoration: underline;
+    line-height: 1.25;
+    ${sunkenThin};
   }
 
   /* ---------- popup frame (used by Popup.js) ---------- */
 
   .popup {
-    position: fixed;
-    z-index: var(--z-window-base);
-    display: flex;
-    flex-direction: column;
     max-width: calc(100vw - 16px);
-    background: var(--window-color);
-    color: #000;
-    border-radius: 0;
-    ${bevel};
-  }
-
-  .popup .win__chrome {
-    border: 0;
   }
 
   /* Popup titles are whole sentences, so they use the narrower body face to fit the strip. */
   .popup .win__title {
-    font: 400 16px / calc(2.5rem - 2 * var(--bevel-w)) var(--main-font);
+    font: 400 16px/1 var(--main-font);
     text-transform: uppercase;
   }
 
   .popup__body {
-    padding: 10px 8px;
-    color: #000;
+    padding: 12px 8px 10px;
     text-align: center;
   }
 
@@ -374,16 +309,18 @@ const GlobalStyle = createGlobalStyle`
     display: block;
     width: 100%;
     height: auto;
+    margin-bottom: 10px;
     image-rendering: pixelated;
   }
 
   /* ---------- phone ---------- */
 
   ${media.phone} {
+    /* Full screen: from the top of the screen down to the taskbar. */
     .win {
       left: 0;
-      top: 80px;
-      bottom: calc(var(--icon-bar-reserve) + env(safe-area-inset-bottom, 0px));
+      top: 0;
+      bottom: var(--taskbar-total);
       width: 100%;
       height: auto;
       max-height: none;
@@ -395,64 +332,34 @@ const GlobalStyle = createGlobalStyle`
       bottom: auto;
     }
 
-    .win__titlebar {
-      cursor: default;
+    /* The icons are behind a full-screen window: out of the tab order and the reading order. */
+    #content:has(> .win:not([hidden])) > [data-desktop-icons] {
+      visibility: hidden;
     }
 
-    .win__glyph svg {
-      width: 20px;
-      height: 20px;
+    .win__area {
+      padding: 1.4rem;
     }
 
-    .win__title {
-      height: 4.4rem;
-      font-size: 24px;
-      line-height: calc(4.4rem - 2 * var(--bevel-w));
-    }
-
-    .win__menu {
-      display: flex;
-    }
-
-    .win__tabs {
-      display: none;
-    }
-
-    /* the tab row becomes the dropdown opened by the title-bar menu button */
-    .win__tabs.is-open {
+    /* the close button keeps a 44px touch target inside the 40px title bar */
+    .win__close::after {
+      content: '';
       position: absolute;
-      top: 0.7rem;
-      right: 5rem;
-      z-index: 5;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      width: 19rem;
-      padding-top: 0.5rem;
-      background: var(--window-color);
-      ${bevel};
+      inset: -4px;
     }
 
-    .win__tab {
-      width: 100%;
-      min-height: 44px;
-      padding: 0.5rem 2rem;
-      font-size: 24px;
-      text-align: left;
+    .win--flush .win__area {
+      padding: 0;
     }
 
-    /* a footer link stands alone, so the footer is one 44px row and the link fills its height */
+    /* a footer link stands alone, so the link fills a 44px row */
     .win__footer {
-      padding: 0 1rem;
+      padding: 0 8px;
     }
 
     .win__footer a {
       display: inline-block;
-      padding: 12px 0;
-    }
-
-    .win__footer a:focus-visible {
-      outline-offset: -10px;
+      padding: 10px 0;
     }
 
     .popup {
@@ -460,20 +367,9 @@ const GlobalStyle = createGlobalStyle`
       z-index: var(--z-popup-phone);
     }
 
-    .popup .win__glyph {
-      display: none;
-    }
-
-    .popup .win__title {
-      font-size: 16px;
-      line-height: calc(4.4rem - 2 * var(--bevel-w));
-    }
-
-    /* the 24px phone button face is too wide for a 260px popup */
     .popup__body a,
     .popup__body button {
       max-width: 100%;
-      font: 16px var(--main-font);
       white-space: normal;
     }
   }
@@ -483,8 +379,8 @@ const GlobalStyle = createGlobalStyle`
   ${media.landscape} {
     .win {
       left: 0;
-      top: calc(var(--topbar-h) + 4px);
-      bottom: 60px;
+      top: 0;
+      bottom: var(--taskbar-total);
       width: 100%;
       height: auto;
       max-height: none;
@@ -496,8 +392,9 @@ const GlobalStyle = createGlobalStyle`
       bottom: auto;
     }
 
-    .win__titlebar {
-      cursor: default;
+    /* The icons are behind a full-screen window: out of the tab order and the reading order. */
+    #content:has(> .win:not([hidden])) > [data-desktop-icons] {
+      visibility: hidden;
     }
   }
 

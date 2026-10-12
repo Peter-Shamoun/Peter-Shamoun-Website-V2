@@ -11,7 +11,7 @@ export const PALETTE = {
   G: '#CCCCCC',
   D: '#707070',
   S: '#333333',
-  B: '#0B17B4',
+  B: '#000080',
   N: '#011E75',
   T: '#22527F',
   L: '#60CD46',
@@ -97,8 +97,6 @@ export const shield = (x0, y0, w, h, key) => {
   }
   return ops;
 };
-
-export const shift = (ops, dx, dy) => ops.map(([x, y, w, h, c]) => [x + dx, y + dy, w, h, c]);
 
 const toRects = ops =>
   ops.map(([x, y, w, h, fill], i) => <rect key={i} x={x} y={y} width={w} height={h} fill={fill} />);

@@ -13,17 +13,17 @@ const sharp = require('sharp');
 
 const SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 32 32" shape-rendering="crispEdges">
   <rect x="2" y="2" width="28" height="23" fill="#000000"/>
-  <rect x="3" y="3" width="26" height="21" fill="#CCCCCC"/>
+  <rect x="3" y="3" width="26" height="21" fill="#C0C0C0"/>
   <rect x="3" y="3" width="26" height="1" fill="#FFFFFF"/>
   <rect x="3" y="3" width="1" height="21" fill="#FFFFFF"/>
-  <rect x="3" y="23" width="26" height="1" fill="#707070"/>
-  <rect x="28" y="3" width="1" height="21" fill="#707070"/>
+  <rect x="3" y="23" width="26" height="1" fill="#808080"/>
+  <rect x="28" y="3" width="1" height="21" fill="#808080"/>
   <rect x="6" y="6" width="20" height="14" fill="#000000"/>
-  <rect x="7" y="7" width="18" height="12" fill="#0B17B4"/>
+  <rect x="7" y="7" width="18" height="12" fill="#008080"/>
   <rect x="10" y="9" width="11" height="7" fill="#FFFFFF"/>
-  <rect x="10" y="9" width="11" height="2" fill="#011E75"/>
-  <rect x="13" y="25" width="6" height="2" fill="#707070"/>
-  <rect x="9" y="27" width="14" height="2" fill="#333333"/>
+  <rect x="10" y="9" width="11" height="2" fill="#000080"/>
+  <rect x="13" y="25" width="6" height="2" fill="#808080"/>
+  <rect x="9" y="27" width="14" height="2" fill="#000000"/>
 </svg>`;
 
 const OUT = path.join(__dirname, '..', 'src', 'images', 'logo.png');

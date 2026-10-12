@@ -1,6 +1,6 @@
-import { PALETTE, expandRows, fromGrid, makeIcon } from './pixel';
+import { expandRows, fromGrid, makeIcon } from './pixel';
 
-// Desktop icons (32 x 32 grid, drawn at 62 px). Rows are run-length encoded, see expandRows.
+// Desktop icons (32 x 32 grid, drawn at 64 px, two screen pixels to a cell). Rows are run-length encoded, see expandRows.
 // Letters are palette keys, '.' is transparent.
 
 const ICON = [32, 32];
@@ -251,21 +251,10 @@ const EGG = [
   '.32',
 ];
 
-// Hover overlay: a 2 px checkerboard of the highlight blue over the whole square.
-const SELECTION = [];
-for (let cy = 0; cy < 16; cy += 1) {
-  for (let cx = 0; cx < 16; cx += 1) {
-    if ((cx + cy) % 2 === 0) {
-      SELECTION.push([cx * 2, cy * 2, 2, 2, PALETTE.B]);
-    }
-  }
-}
-
-export const IconAbout = makeIcon('IconAbout', ICON, 62, draw(ABOUT));
-export const IconExperience = makeIcon('IconExperience', ICON, 62, draw(EXPERIENCE));
-export const IconProjects = makeIcon('IconProjects', ICON, 62, draw(PROJECTS));
-export const IconResearch = makeIcon('IconResearch', ICON, 62, draw(RESEARCH));
-export const IconContact = makeIcon('IconContact', ICON, 62, draw(CONTACT));
-export const IconResume = makeIcon('IconResume', ICON, 62, draw(RESUME));
-export const IconEgg = makeIcon('IconEgg', ICON, 62, draw(EGG));
-export const IconSelection = makeIcon('IconSelection', ICON, 62, SELECTION);
+export const IconAbout = makeIcon('IconAbout', ICON, 64, draw(ABOUT));
+export const IconExperience = makeIcon('IconExperience', ICON, 64, draw(EXPERIENCE));
+export const IconProjects = makeIcon('IconProjects', ICON, 64, draw(PROJECTS));
+export const IconResearch = makeIcon('IconResearch', ICON, 64, draw(RESEARCH));
+export const IconContact = makeIcon('IconContact', ICON, 64, draw(CONTACT));
+export const IconResume = makeIcon('IconResume', ICON, 64, draw(RESUME));
+export const IconEgg = makeIcon('IconEgg', ICON, 64, draw(EGG));

@@ -4,9 +4,8 @@ import styled from 'styled-components';
 import { Helmet } from 'react-helmet';
 import { Layout } from '@components';
 import { BevelLink, Text } from '@components/desktop/ui';
-import { GlyphApp } from '@components/desktop/icons';
 
-// A blue desktop with one static window. There is no desktop state on this page,
+// The desktop colour with one static window. There is no desktop state on this page,
 // so the window is drawn with the shared window classes, not with the Window component.
 
 const Main = styled.main`
@@ -30,7 +29,7 @@ const Content = styled.div`
 
 const Code = styled.h1`
   margin: 0 0 1.6rem;
-  font: 72px/1 var(--main-large-font);
+  font: 48px/1 var(--main-large-font);
   letter-spacing: 0;
 `;
 
@@ -38,15 +37,10 @@ const NotFoundPage = ({ location }) => (
   <Layout location={location}>
     <Helmet title="Page Not Found" meta={[{ name: 'robots', content: 'noindex' }]} />
     <Main id="content" tabIndex={-1}>
-      <section className="win win--static" aria-labelledby="error-window-title">
-        <header className="win__chrome">
-          <div className="win__titlebar">
-            <span className="win__glyph" aria-hidden="true">
-              <GlyphApp />
-            </span>
-            <div className="win__title" id="error-window-title">
-              Error
-            </div>
+      <section className="win win--static is-active" aria-labelledby="error-window-title">
+        <header className="win__titlebar">
+          <div className="win__title" id="error-window-title">
+            Error
           </div>
         </header>
         <div className="win__body">

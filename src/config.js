@@ -16,7 +16,7 @@ module.exports = {
   ],
 
   colors: {
-    bg: '#0B17B4',
-    chrome: '#CCCCCC',
+    bg: '#3a6ea5',
+    chrome: '#C0C0C0',
   },
 };

@@ -26,7 +26,7 @@ from playwright.sync_api import sync_playwright
 URL = sys.argv[1] if len(sys.argv) > 1 else "http://localhost:9000/"
 WIDTH = 1200
 HEIGHT = 630
-SETTLE_MS = 4000
+SETTLE_MS = 1500
 
 ROOT = Path(__file__).resolve().parent.parent
 STATIC = ROOT / "static"
@@ -39,7 +39,7 @@ def capture(browser, scale, filename):
     )
     try:
         page.goto(URL, wait_until="load")
-        # Let the typing animation of the wordmark and the boot overlay finish.
+        # Nothing animates on load; this only gives the fonts and the picture time to arrive.
         page.wait_for_timeout(SETTLE_MS)
         target = STATIC / filename
         page.screenshot(path=str(target), full_page=False)

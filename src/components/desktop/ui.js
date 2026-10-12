@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled, { css } from 'styled-components';
-import { media, bevel, bevelPressed, inset } from '@styles';
+import { media, bevel, bevelPressed, focusRect, inset } from '@styles';
 
 // Links that leave the page (absolute http(s) addresses and PDFs) open in a new tab.
 const isExternal = href => typeof href === 'string' && /^(https?:\/\/.+|.*\.pdf)$/i.test(href);
@@ -13,29 +13,23 @@ const bevelControl = css`
   align-items: center;
   justify-content: center;
   height: 25px;
-  padding: 0 1rem;
-  background: var(--window-color);
-  color: var(--main-color);
+  padding: 0 1.2rem;
+  background: var(--chrome);
+  color: var(--text);
   font: 16px/1 var(--main-font);
   letter-spacing: 0.5px;
   text-decoration: none;
   white-space: nowrap;
   cursor: default;
-  transition: all 100ms;
   ${bevel};
+  ${focusRect};
 
   &:active {
     ${bevelPressed};
   }
 
-  &:focus-visible {
-    outline: 1px dotted #000;
-    outline-offset: -4px;
-  }
-
   ${media.phone} {
     height: 44px;
-    font: 24px/1 var(--main-large-font);
   }
 `;
 
@@ -68,7 +62,7 @@ export const SubHeading = styled.h4`
   font: 16px/1.25 var(--main-font);
   letter-spacing: 0.5px;
   text-transform: uppercase;
-  border-bottom: 1px solid var(--bg-color);
+  border-bottom: 1px solid var(--bevel-shadow);
 `;
 
 /** Body paragraph. */
@@ -131,7 +125,7 @@ export const ButtonRow = styled.div`
 `;
 
 const StyledExtLink = styled.a`
-  color: inherit;
+  color: var(--link);
   text-decoration: underline;
 `;
 

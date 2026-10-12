@@ -1,9 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import { bevel, media } from '@styles';
+import { bevelWindow, media } from '@styles';
 import { useMinuteNow } from '@hooks';
 import { useDesktop } from './DesktopProvider';
-import { BevelButton } from './ui';
 
 const pad = n => String(n).padStart(2, '0');
 
@@ -28,41 +27,63 @@ const ZONES = [
 // Intl puts a narrow no-break space before AM/PM; the pixel font needs a plain space.
 const NARROW_SPACES = /[\u00a0\u202f]/g;
 
-const WorldTimePanel = styled.div`
-  position: absolute;
-  top: 3.1rem;
-  right: 3.4rem;
+// A flat button that fills the sunken tray at the right end of the taskbar.
+const ClockButton = styled.button.attrs({ type: 'button' })`
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 62px;
+  height: 100%;
+  padding: 0 9px;
+  background: none;
+  border: 0;
+  color: var(--text);
+  font: 16px/1 var(--main-font);
+  cursor: default;
 
+  &:focus-visible {
+    outline: 1px dotted var(--text);
+    outline-offset: -2px;
+  }
+
+  /* the touch area is the full height of the taskbar */
   ${media.phone} {
-    top: 5.4rem;
-    right: 0.4rem;
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: -4px 0 -2px;
+    }
   }
 `;
 
-const WorldRow = styled.div`
+// Opens upward from the tray.
+const WorldTimePanel = styled.div`
+  position: absolute;
+  right: 2px;
+  bottom: 100%;
   display: flex;
-  align-items: center;
-  height: 25px;
-  padding: 0 1rem;
-  background: var(--window-color);
-  color: var(--main-color);
-  font: 16px/1 var(--main-font);
-  letter-spacing: 0.5px;
+  flex-direction: column;
+  padding: 6px 12px;
+  background: var(--chrome);
+  color: var(--text);
+  ${bevelWindow};
+`;
+
+const WorldRow = styled.div`
+  font: 16px/24px var(--main-font);
   white-space: pre;
-  ${bevel};
 
   ${media.phone} {
-    height: 40px;
-    font: 24px/1 var(--main-large-font);
+    line-height: 32px;
   }
 `;
 
 const formatZone = (zone, now) =>
   now ? zone.format.format(now).replace(NARROW_SPACES, ' ') : '--:--';
 
-// The clock is a bevel button showing local time. It opens a panel with three world times.
+// The clock shows local time. It opens a panel with three world times.
 const Clock = () => {
   const { state, actions } = useDesktop();
   const now = useMinuteNow();
@@ -87,7 +108,7 @@ const Clock = () => {
 
   return (
     <>
-      <BevelButton
+      <ClockButton
         ref={buttonRef}
         data-clock
         aria-label={now ? `World time, ${formatLocal(now)}` : 'World time'}
@@ -97,7 +118,7 @@ const Clock = () => {
         <time dateTime={now ? now.toISOString() : undefined}>
           {now ? formatLocal(now) : '--:--'}
         </time>
-      </BevelButton>
+      </ClockButton>
       <WorldTimePanel
         ref={panelRef}
         id="world-time"

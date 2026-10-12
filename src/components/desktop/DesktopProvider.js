@@ -65,7 +65,7 @@ const makeActions = dispatch => ({
   // `from` is the element to return focus to when the window closes
   openWindow: (id, { from, focus = true } = {}) => {
     rememberOpener(id, from);
-    // focus: false is the automatic open after boot, which is not something the visitor did.
+    // focus: false is an open the visitor did not ask for, so it is not counted.
     if (focus) {
       openIntent.set(id, from || null);
     }
@@ -75,13 +75,9 @@ const makeActions = dispatch => ({
     closeVia.set(`win:${id}`, 'button');
     dispatch({ type: A.CLOSE, id });
   },
-  toggleWindow: (id, { from } = {}) => {
-    rememberOpener(id, from);
-    openIntent.set(id, from || null);
-    closeVia.set(`win:${id}`, 'button');
-    dispatch({ type: A.TOGGLE, id, focus: true });
-  },
   raiseWindow: id => dispatch({ type: A.RAISE, id }),
+  // a taskbar button: bring the window to the front and move focus into it
+  focusWindow: id => dispatch({ type: A.RAISE, id, focus: true }),
   // auto: the window was pulled back on screen after a resize, not dragged
   moveWindow: (id, dx, dy, { auto = false } = {}) => {
     if (!auto) {
@@ -111,10 +107,10 @@ const makeActions = dispatch => ({
     dispatch({ type: A.EGG_CLICK });
   },
   dismissBsod: () => dispatch({ type: A.BSOD_DISMISS }),
-  bootDone: () => dispatch({ type: A.BOOT_DONE }),
   toggleWorldTime: () => dispatch({ type: A.TOGGLE_WORLD_TIME }),
   closeWorldTime: () => dispatch({ type: A.CLOSE_WORLD_TIME }),
-  toggleMenu: id => dispatch({ type: A.TOGGLE_MENU, id }),
+  toggleStart: () => dispatch({ type: A.TOGGLE_START }),
+  closeStart: () => dispatch({ type: A.CLOSE_START }),
 });
 
 const RESIZE_DEBOUNCE = 150;
@@ -173,10 +169,21 @@ const DesktopProvider = ({ children }) => {
   // Analytics, read from what the state actually did rather than from what was clicked: a
   // window counts as opened only when it goes from closed to open, and every close is counted
   // however it happened (button, Escape, a reset, or a phone switching to another window).
-  const { eggClicks, bsod, popups, windows, worldTimeOpen } = state;
+  const { eggClicks, bsod, popups, windows, worldTimeOpen, startOpen } = state;
   const shownPopups = useRef(new Set());
   const seen = useRef({ windows, popups });
   const openedAt = useRef(new Map());
+
+  // The window that is open when the page appears is not counted as opened, but its close is
+  // counted, so its time on screen starts here.
+  useEffect(() => {
+    Object.keys(windows).forEach(id => {
+      if (windows[id].open && !openedAt.current.has(id)) {
+        openedAt.current.set(id, Date.now());
+      }
+    });
+    // Once, for the windows of the first render.
+  }, []);
   const wasBsod = useRef(false);
 
   useEffect(() => {
@@ -233,6 +240,12 @@ const DesktopProvider = ({ children }) => {
       record('world_time_open', { path: '/panel/world-time' });
     }
   }, [worldTimeOpen]);
+
+  useEffect(() => {
+    if (startOpen) {
+      record('start_menu_open', { path: '/panel/start', once: true });
+    }
+  }, [startOpen]);
 
   useEffect(() => {
     popups.forEach(p => {

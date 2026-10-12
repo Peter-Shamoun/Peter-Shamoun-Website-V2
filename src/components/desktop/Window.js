@@ -2,19 +2,19 @@ import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDesktop, useIsoLayoutEffect, getOpener } from './DesktopProvider';
 import { getWindow } from './registry';
-import WindowTabs from './WindowTabs';
-import { GlyphApp, GlyphClose, GlyphMenu } from './icons';
+import { frontZ } from './state';
+import { GlyphClose } from './icons';
 
 const clamp = (value, lo, hi) => Math.max(lo, Math.min(value, hi));
 
 /**
- * The rectangle things may be dragged within: the viewport below the top bar.
+ * The rectangle things may be dragged within: the viewport above the taskbar.
  * Browser only.
  */
 export const getBounds = () => {
-  const root = document.documentElement;
-  const topbar = parseFloat(window.getComputedStyle(root).getPropertyValue('--topbar-h')) || 32;
-  return { left: 0, top: topbar, right: window.innerWidth, bottom: window.innerHeight };
+  const taskbar = document.querySelector('[data-taskbar]');
+  const bottom = taskbar ? taskbar.getBoundingClientRect().top : window.innerHeight;
+  return { left: 0, top: 0, right: window.innerWidth, bottom };
 };
 
 const canTakeFocus = el => !!el && document.contains(el) && el.getClientRects().length > 0;
@@ -84,37 +84,13 @@ export const useDrag = ({ enabled = true, onStart, onMove, onEnd } = {}) => {
 };
 
 /**
- * The title strip shared by windows and popups. Render it inside <header class="win__chrome">.
+ * The title strip shared by windows and popups: the title at the left, close at the right.
  */
-export const TitleBar = ({
-  title,
-  titleId,
-  onClose,
-  closeLabel,
-  dragProps,
-  showMenu,
-  onMenu,
-  menuOpen,
-  menuControls,
-}) => (
-  <div className="win__titlebar" data-drag-handle {...dragProps}>
-    <span className="win__glyph" aria-hidden="true">
-      <GlyphApp />
-    </span>
+export const TitleBar = ({ title, titleId, onClose, closeLabel, dragProps }) => (
+  <header className="win__titlebar" data-drag-handle {...dragProps}>
     <h2 className="win__title" id={titleId}>
       {title}
     </h2>
-    {showMenu && (
-      <button
-        type="button"
-        className="win__menu"
-        aria-label="Sections"
-        aria-expanded={!!menuOpen}
-        aria-controls={menuControls}
-        onClick={onMenu}>
-        <GlyphMenu />
-      </button>
-    )}
     <button
       type="button"
       className="win__close"
@@ -122,7 +98,7 @@ export const TitleBar = ({
       onClick={onClose}>
       <GlyphClose />
     </button>
-  </div>
+  </header>
 );
 
 TitleBar.propTypes = {
@@ -131,13 +107,9 @@ TitleBar.propTypes = {
   onClose: PropTypes.func,
   closeLabel: PropTypes.string,
   dragProps: PropTypes.object,
-  showMenu: PropTypes.bool,
-  onMenu: PropTypes.func,
-  menuOpen: PropTypes.bool,
-  menuControls: PropTypes.string,
 };
 
-const Window = ({ id, flush, dark, footer, children }) => {
+const Window = ({ id, flush, footer, children }) => {
   const { state, actions } = useDesktop();
   const def = getWindow(id);
   const win = state.windows[id];
@@ -222,7 +194,7 @@ const Window = ({ id, flush, dark, footer, children }) => {
         const target = [
           getOpener(id),
           document.querySelector(`[data-icon-for="${id}"]`),
-          document.querySelector('[data-name-button]'),
+          document.querySelector('[data-start-button]'),
         ].find(canTakeFocus);
         if (target) {
           target.focus({ preventScroll: true });
@@ -269,29 +241,22 @@ const Window = ({ id, flush, dark, footer, children }) => {
   if (flush) {
     classes.push('win--flush');
   }
-  if (dark) {
-    classes.push('win--dark');
-  }
-  if (def.h) {
-    classes.push('win--fixed');
+  // The title bar is navy on the window in front and grey on the others.
+  if (win.open && win.z === frontZ(state)) {
+    classes.push('is-active');
   }
 
   const style = {
     '--win-w': `${def.w}px`,
     '--win-maxh': def.maxH,
-    '--win-x': `${def.x}%`,
-    '--win-y': `${def.y}%`,
+    '--win-step': def.step,
     '--win-h': `${height}px`,
     '--win-dx': `${win.dx}px`,
     '--win-dy': `${win.dy}px`,
     zIndex: win.z || undefined,
   };
-  if (def.h) {
-    style['--win-fixed-h'] = `${def.h}px`;
-  }
 
   const titleId = `win-${id}-title`;
-  const tabsId = `win-${id}-tabs`;
 
   return (
     <section
@@ -303,25 +268,19 @@ const Window = ({ id, flush, dark, footer, children }) => {
       tabIndex={-1}
       hidden={!win.open}
       style={style}
-      onPointerDown={() => actions.raiseWindow(id)}>
-      <header className="win__chrome">
-        <TitleBar
-          title={def.title}
-          titleId={titleId}
-          onClose={() => actions.closeWindow(id)}
-          closeLabel={`Close ${def.title}`}
-          dragProps={{ ...dragProps, onDoubleClick: () => actions.moveWindow(id, 0, 0) }}
-          showMenu
-          onMenu={() => actions.toggleMenu(id)}
-          menuOpen={state.menuOpenFor === id}
-          menuControls={tabsId}
-        />
-        <WindowTabs current={id} />
-      </header>
+      onPointerDown={() => actions.raiseWindow(id)}
+      onFocus={() => actions.raiseWindow(id)}>
+      <TitleBar
+        title={def.title}
+        titleId={titleId}
+        onClose={() => actions.closeWindow(id)}
+        closeLabel={`Close ${def.title}`}
+        dragProps={{ ...dragProps, onDoubleClick: () => actions.moveWindow(id, 0, 0) }}
+      />
       <div className="win__body">
         <div className="win__area">{children}</div>
-        {footer ? <div className="win__footer">{footer}</div> : null}
       </div>
+      {footer ? <div className="win__footer">{footer}</div> : null}
     </section>
   );
 };
@@ -329,14 +288,12 @@ const Window = ({ id, flush, dark, footer, children }) => {
 Window.propTypes = {
   id: PropTypes.string.isRequired,
   flush: PropTypes.bool,
-  dark: PropTypes.bool,
   footer: PropTypes.node,
   children: PropTypes.node,
 };
 
 Window.defaultProps = {
   flush: false,
-  dark: false,
   footer: null,
   children: null,
 };

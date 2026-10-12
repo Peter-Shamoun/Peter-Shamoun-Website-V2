@@ -126,7 +126,7 @@ export const record = (name, { path, props, once = false } = {}) => {
 };
 
 // Where a click happened: 'popup:<id>', 'window:<id>' or 'desktop'.
-export const contextOf = el => {
+const contextOf = el => {
   if (!el || !el.closest) {
     return 'desktop';
   }
@@ -147,11 +147,11 @@ export const recordWindowOpen = (id, from) => {
     if (from.closest('[data-popup]')) {
       via = 'popup';
     } else if (from.closest('[data-window]')) {
-      via = 'tab';
+      via = 'tab'; // a button inside another window
     } else if (from.hasAttribute('data-icon-for')) {
       via = 'icon';
-    } else {
-      via = 'topbar';
+    } else if (from.closest('[data-start-menu]')) {
+      via = 'start';
     }
   }
   if (via === 'popup') {

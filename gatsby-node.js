@@ -12,7 +12,6 @@ exports.createSchemaCustomization = ({ actions }) => {
   actions.createTypes(`
     type MarkdownRemarkFrontmatter {
       show: Boolean
-      showInProjects: Boolean
       github: String
       external: String
       tech: [String]

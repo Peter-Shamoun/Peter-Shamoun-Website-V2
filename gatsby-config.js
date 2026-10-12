@@ -3,8 +3,7 @@ const config = require('./src/config');
 module.exports = {
   siteMetadata: {
     title: 'Peter Shamoun | AI Engineer',
-    description:
-      'Peter Shamoun, AI Engineer in San Diego. Building agents, researching AI safety, finding fraud in data.',
+    description: 'Peter Shamoun, AI Engineer in San Diego. I build and study AI systems.',
     keywords:
       'AI engineer, agentic AI, data science, machine learning, AI safety, NLP, LLM, Python, AWS, Docker, TensorFlow, LangChain, UCSD, San Diego, Xifin, LPL Financial, Nexon America, Data Science Alliance, cloud computing',
     siteUrl: 'https://petershamoun.com', // No trailing slash allowed!
@@ -58,13 +57,6 @@ module.exports = {
       options: {
         name: 'content',
         path: `${__dirname}/content/`,
-      },
-    },
-    {
-      resolve: `gatsby-source-filesystem`,
-      options: {
-        name: `projects`,
-        path: `${__dirname}/content/projects`,
       },
     },
     {

@@ -17,16 +17,6 @@ export const POPUPS = [
     hPhone: 345,
   },
   {
-    id: 'graph',
-    title: 'SHORTEST PATH FOUND',
-    body: `Graph Theory Visualizer: an interactive D3.js web app that visualizes BFS, DFS and Dijkstra's. Used as a teaching tool in UC San Diego's DSC 40B.`,
-    cta: 'RUN IT',
-    href: 'https://peter-shamoun.github.io/Graph-Theory/',
-    art: 'ArtGraph',
-    w: 300,
-    h: 350,
-  },
-  {
     id: 'github',
     title: 'FREE SOURCE CODE!!!',
     body: 'It was always free. That is how GitHub works.',
@@ -79,4 +69,4 @@ export const POPUPS = [
 ];
 
 // The order free_ram.exe hands them out in: up to three per click.
-export const EGG_POOL = ['linkedin', 'mail', 'ram', 'cheatsheet', 'graph', 'github', 'research'];
+export const EGG_POOL = ['linkedin', 'mail', 'ram', 'cheatsheet', 'github', 'research'];

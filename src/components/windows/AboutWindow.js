@@ -6,13 +6,7 @@ const AboutWindow = () => (
     <Heading>Hi, I&apos;m Peter.</Heading>
     <Lines>
       <li>
-        <span>Building agents</span>
-      </li>
-      <li>
-        <span>Researching AI safety</span>
-      </li>
-      <li>
-        <span>Finding fraud in data</span>
+        <span>I build and study AI systems.</span>
       </li>
     </Lines>
   </Window>

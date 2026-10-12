@@ -20,11 +20,10 @@ npx gatsby serve       # preview the production build, or: npm run serve
 
 ## Content
 
-Everything the windows show comes from three folders under `content/`.
+Everything the windows show comes from two folders under `content/`.
 
 - `content/jobs/`: one folder per role, newest first. Each `index.md` has `title`, `company`, `location`, `range`, `url` and `show`. Set `show: false` to hide a role. The bullets are the body.
-- `content/featured/`: the two featured projects in the Projects window. Each has `title`, `period`, `cover` (an image in the same folder), `external` or `github`, and `tech`. The body is the description.
-- `content/projects/`: one Markdown file per entry in "Also on GitHub". Set `showInProjects: false` to hide an entry.
+- `content/featured/`: the projects in the Projects window, in `date` order. Each `index.md` has `title`, `external` (the link) and `summary` (the short phrase).
 
 ## Analytics
 

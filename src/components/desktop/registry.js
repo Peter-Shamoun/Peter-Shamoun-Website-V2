@@ -25,7 +25,6 @@ export const DESKTOP_ICONS = [
   { key: 'projects', label: 'Projects', kind: 'window', target: 'projects', icon: 'IconProjects' },
   { key: 'research', label: 'Research', kind: 'window', target: 'research', icon: 'IconResearch' },
   { key: 'contact', label: 'Contact', kind: 'window', target: 'contact', icon: 'IconContact' },
-  { key: 'resume', label: 'Resume', kind: 'link', href: '/resume.pdf', icon: 'IconResume' },
   { key: 'egg', label: 'free_ram.exe', kind: 'egg', icon: 'IconEgg' },
 ];
 

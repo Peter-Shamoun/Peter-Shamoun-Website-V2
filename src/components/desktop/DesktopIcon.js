@@ -84,7 +84,7 @@ Content.propTypes = {
   }).isRequired,
 };
 
-// One desktop icon. Window icons are buttons, the resume is a link, the egg is a button.
+// One desktop icon. Window icons are buttons, a link entry is a link, the egg is a button.
 const DesktopIcon = ({ item, onActivate }) => {
   if (item.kind === 'link') {
     return (

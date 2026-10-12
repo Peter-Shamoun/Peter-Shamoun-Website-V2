@@ -56,6 +56,32 @@ export const Heading = styled.h3`
   letter-spacing: 1px;
 `;
 
+// Short lines, one thought each. A row is either one phrase, or a name with a phrase beside it.
+export const Lines = styled.ul`
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 16px;
+  line-height: 1.5;
+
+  li {
+    display: grid;
+    grid-template-columns: 24rem minmax(0, 1fr);
+    column-gap: 1.6rem;
+    padding: 0.5rem 0;
+  }
+
+  li > :only-child {
+    grid-column: 1 / -1;
+  }
+
+  ${media.phone} {
+    li {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+`;
+
 export const SubHeading = styled.h4`
   margin: 1.6rem 0 0.8rem;
   padding-bottom: 0.3rem;

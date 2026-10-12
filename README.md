@@ -34,20 +34,20 @@ is in `src/components/tracking.js`.
 Each interaction is sent as a custom event and also as a virtual page view, so it appears in the
 Pages panel on Vercel's free plan. The address bar never changes. Virtual paths:
 
-| Path                                            | Meaning                                                                       |
-| ----------------------------------------------- | ----------------------------------------------------------------------------- |
-| `/`                                             | A real visit                                                                  |
-| `/window/<id>`                                  | The visitor opened that window (About, open on arrival, is not counted)       |
-| `/click/resume`, `/click/email`                 | Opened the résumé, clicked an email link                                      |
-| `/click/file`, `/click/phone`                   | Opened another file on the site, clicked a phone link                         |
-| `/out/<host>/<path>`                            | Clicked a link to another site                                                |
-| `/popup/<id>`                                   | Clicked the button in a popup (popups only come from `free_ram.exe`)          |
-| `/egg/click`, `/egg/bluescreen`                 | Clicked `free_ram.exe`, reached the blue screen                               |
-| `/engaged/15s`, `/engaged/60s`, `/engaged/180s` | Kept the tab visible that long                                                |
-| `/from/<source>`                                | Arrived through a tagged link such as `https://petershamoun.com/?from=resume` |
-| `/panel/world-time`, `/panel/start`             | Opened the clock panel, opened the Start menu                                 |
-| `/click/reset`                                  | Chose "Tidy desktop" in the Start menu                                        |
-| `/error/js`, `/error/promise`                   | A script error happened on the page                                           |
+| Path                                            | Meaning                                                                         |
+| ----------------------------------------------- | ------------------------------------------------------------------------------- |
+| `/`                                             | A real visit                                                                    |
+| `/window/<id>`                                  | The visitor opened that window (About, open on arrival, is not counted)         |
+| `/click/email`                                  | Clicked an email link                                                           |
+| `/click/file`, `/click/phone`                   | Opened another file on the site, clicked a phone link                           |
+| `/out/<host>/<path>`                            | Clicked a link to another site                                                  |
+| `/popup/<id>`                                   | Clicked the button in a popup (popups only come from `free_ram.exe`)            |
+| `/egg/click`, `/egg/bluescreen`                 | Clicked `free_ram.exe`, reached the blue screen                                 |
+| `/engaged/15s`, `/engaged/60s`, `/engaged/180s` | Kept the tab visible that long                                                  |
+| `/from/<source>`                                | Arrived through a tagged link such as `https://petershamoun.com/?from=linkedin` |
+| `/panel/world-time`, `/panel/start`             | Opened the clock panel, opened the Start menu                                   |
+| `/click/reset`                                  | Chose "Tidy desktop" in the Start menu                                          |
+| `/error/js`, `/error/promise`                   | A script error happened on the page                                             |
 
 Because of the virtual paths, the dashboard's total page-view number counts actions as well as
 visits; the row for `/` is the number of real visits. Set `VIRTUAL_PAGEVIEWS` to `false` in

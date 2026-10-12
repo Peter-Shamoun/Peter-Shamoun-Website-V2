@@ -6,6 +6,7 @@ location: 'San Diego, CA'
 range: 'Jan 2024 - Jun 2024'
 url: 'https://stemzlearning.com/'
 show: false
+summary: ''
 ---
 
 <!-- Hidden: the profile marks this role "confirm with Peter". Set show: true to display. -->

@@ -27,16 +27,6 @@ export const POPUPS = [
     h: 350,
   },
   {
-    id: 'resume',
-    title: 'RESUME.PDF HAS ARRIVED',
-    body: 'One page. Zero viruses. Opens in a new tab.',
-    cta: 'OPEN RESUME',
-    href: '/resume.pdf',
-    art: 'ArtResume',
-    w: 260,
-    h: 268,
-  },
-  {
     id: 'github',
     title: 'FREE SOURCE CODE!!!',
     body: 'It was always free. That is how GitHub works.',
@@ -89,13 +79,4 @@ export const POPUPS = [
 ];
 
 // The order free_ram.exe hands them out in: up to three per click.
-export const EGG_POOL = [
-  'linkedin',
-  'mail',
-  'ram',
-  'cheatsheet',
-  'graph',
-  'resume',
-  'github',
-  'research',
-];
+export const EGG_POOL = ['linkedin', 'mail', 'ram', 'cheatsheet', 'graph', 'github', 'research'];

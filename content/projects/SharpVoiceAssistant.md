@@ -8,6 +8,7 @@ tech:
   - OpenAI API
   - Twilio Voice API
 showInProjects: true
+summary: 'Talking with an AI out loud'
 ---
 
 A voice assistant for natural spoken conversations with an AI, built for integration with the Sharp Healthcare app.

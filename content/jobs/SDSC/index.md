@@ -6,6 +6,7 @@ location: 'San Diego, CA'
 range: 'Sep 2023 - Jan 2024'
 url: 'https://www.sdsc.edu/'
 show: false
+summary: ''
 ---
 
 <!-- Hidden on purpose. Do not enable without Peter's say-so. -->

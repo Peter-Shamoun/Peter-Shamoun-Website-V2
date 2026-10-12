@@ -5,7 +5,6 @@ import {
   IconExperience,
   IconProjects,
   IconResearch,
-  IconResume,
 } from './desktop';
 import {
   ArtCheatSheet,
@@ -15,7 +14,6 @@ import {
   ArtMail,
   ArtRam,
   ArtResearch,
-  ArtResume,
 } from './art';
 
 export {
@@ -24,14 +22,12 @@ export {
   IconProjects,
   IconResearch,
   IconContact,
-  IconResume,
   IconEgg,
 } from './desktop';
 export { GlyphApp, GlyphClose, GlyphMenu } from './glyphs';
 export {
   ArtCheatSheet,
   ArtGraph,
-  ArtResume,
   ArtGithub,
   ArtResearch,
   ArtLinkedin,
@@ -46,14 +42,12 @@ export const ICONS = {
   IconProjects,
   IconResearch,
   IconContact,
-  IconResume,
   IconEgg,
 };
 
 export const ART = {
   ArtCheatSheet,
   ArtGraph,
-  ArtResume,
   ArtGithub,
   ArtResearch,
   ArtLinkedin,

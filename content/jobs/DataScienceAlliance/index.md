@@ -6,6 +6,7 @@ location: 'San Diego, CA'
 range: 'Sep 2024 - May 2025'
 url: 'https://www.datasciencealliance.org/'
 show: true
+summary: 'Placing food banks'
 ---
 
 - Developed geospatial optimization models in Python to identify optimal food bank placements, creating automated data pipelines with the US Census/ACS API, and brought data driven recommendations to the city of San Diego.

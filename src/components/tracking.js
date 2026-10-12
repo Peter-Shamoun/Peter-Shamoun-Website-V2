@@ -206,9 +206,7 @@ const recordLink = (link, button) => {
     return;
   }
   if (url.origin === window.location.origin) {
-    if (/\/resume\.pdf$/i.test(url.pathname)) {
-      record('resume_open', { path: '/click/resume', props: base });
-    } else if (FILE_LINK.test(url.pathname)) {
+    if (FILE_LINK.test(url.pathname)) {
       // Only the file name is sent, never the folder.
       const file = slug(url.pathname.split('/').pop(), 60);
       record('file_open', {
@@ -243,7 +241,7 @@ const onClick = e => {
   }
 };
 
-// ?from=resume, ?ref=linkedin, ?utm_source=... name where a visitor came from.
+// ?from=github, ?ref=linkedin, ?utm_source=... name where a visitor came from.
 const recordArrival = () => {
   let source = '';
   let medium = '';

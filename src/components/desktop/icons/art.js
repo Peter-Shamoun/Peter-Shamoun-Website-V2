@@ -31,21 +31,6 @@ export const ArtGraph = makeIcon('ArtGraph', [96, 54], '100%', [
   ...frame(81, 33, 7, 7, 'B'),
 ]);
 
-export const ArtResume = makeIcon('ArtResume', [96, 54], '100%', [
-  ...box(0, 0, 96, 54, 'T'),
-  ...frame(30, 6, 36, 30, 'W'),
-  ...box(36, 12, 24, 1, 'D'),
-  ...box(36, 16, 20, 1, 'D'),
-  ...box(36, 20, 24, 1, 'D'),
-  ...box(36, 24, 16, 1, 'D'),
-  ...frame(12, 28, 72, 18, 'D'),
-  ...box(14, 30, 68, 1, 'G'),
-  ...box(22, 33, 50, 2, 'K'),
-  ...box(14, 38, 68, 6, 'S'),
-  ...box(70, 40, 3, 2, 'L'),
-  ...frame(18, 46, 60, 4, 'G'),
-]);
-
 export const ArtGithub = makeIcon('ArtGithub', [96, 54], '100%', [
   ...box(0, 0, 96, 54, 'G'),
   ...frame(22, 4, 52, 46, 'N'),

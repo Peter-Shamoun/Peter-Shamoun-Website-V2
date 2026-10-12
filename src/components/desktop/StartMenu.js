@@ -126,7 +126,7 @@ const ICON = 32;
 const ITEMS = DESKTOP_ICONS.filter(entry => entry.kind !== 'egg');
 const itemsOf = menu => Array.from(menu.querySelectorAll('[role="menuitem"]'));
 
-// The Start button and its menu: every window, the resume, and the two desktop commands.
+// The Start button and its menu: every window and the two desktop commands.
 const StartMenu = () => {
   const { state, actions } = useDesktop();
   const open = state.startOpen;

@@ -9,6 +9,7 @@ tech:
   - Plotly
   - Scikit-learn
 showInProjects: true
+summary: 'Predicting match outcomes'
 ---
 
 A data science project that predicts professional League of Legends game outcomes from early-game performance metrics.

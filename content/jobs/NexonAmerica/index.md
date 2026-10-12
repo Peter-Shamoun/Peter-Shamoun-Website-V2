@@ -6,6 +6,7 @@ location: 'Los Angeles, CA'
 range: 'Jun 2024 - Sep 2024'
 url: 'https://www.nexon.com/main/en'
 show: true
+summary: 'Modeling player value'
 ---
 
 - Engineered a data pipeline in Snowflake to process large-scale, longitudinal player data; trained and deployed clustering models using AWS SageMaker to predict Lifetime Value and inform player engagement strategy.

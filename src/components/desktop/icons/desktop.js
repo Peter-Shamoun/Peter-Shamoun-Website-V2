@@ -181,41 +181,6 @@ const CONTACT = [
   '.32',
 ];
 
-const RESUME = [
-  '.32',
-  '.32',
-  '.6 K16 .10',
-  '.6 K1 W14 K2 .9',
-  '.6 K1 W14 K1 G1 K1 .8',
-  '.6 K1 W14 K1 G2 K1 .7',
-  '.6 K1 W14 K5 .6',
-  '.6 K1 W18 K1 .6',
-  '.6 K1 W18 K1 .6',
-  '.6 K1 W2 D14 W2 K1 .6',
-  '.6 K1 W18 K1 .6',
-  '.6 K1 W2 D14 W2 K1 .6',
-  '.6 K1 W18 K1 .6',
-  '.6 K1 W2 D12 W4 K1 .6',
-  '.6 K1 W18 K1 .6',
-  '.6 K1 W2 D14 W2 K1 .6',
-  '.6 K1 W18 K1 .6',
-  '.6 K1 W2 D10 W6 K1 .6',
-  '.6 K1 W18 K1 .6',
-  '.6 K1 W18 K1 .6',
-  '.6 K1 W18 K1 .6',
-  '.6 K1 W1 R2 W3 R1 W2 R2 W3 R3 W1 K1 .6',
-  '.6 K1 W1 R2 W1 R1 W1 R1 W1 R1 W1 R1 W1 R5 W1 K1 .6',
-  '.6 K1 W1 R2 W3 R1 W1 R1 W1 R1 W2 R4 W1 K1 .6',
-  '.6 K1 W1 R2 W1 R3 W1 R1 W1 R1 W1 R5 W1 K1 .6',
-  '.6 K1 W1 R2 W1 R3 W2 R2 W1 R5 W1 K1 .6',
-  '.6 K1 W18 K1 .6',
-  '.6 K1 W18 K1 .6',
-  '.6 K20 .6',
-  '.32',
-  '.32',
-  '.32',
-];
-
 const EGG = [
   '.32',
   '.32',
@@ -256,5 +221,4 @@ export const IconExperience = makeIcon('IconExperience', ICON, 64, draw(EXPERIEN
 export const IconProjects = makeIcon('IconProjects', ICON, 64, draw(PROJECTS));
 export const IconResearch = makeIcon('IconResearch', ICON, 64, draw(RESEARCH));
 export const IconContact = makeIcon('IconContact', ICON, 64, draw(CONTACT));
-export const IconResume = makeIcon('IconResume', ICON, 64, draw(RESUME));
 export const IconEgg = makeIcon('IconEgg', ICON, 64, draw(EGG));

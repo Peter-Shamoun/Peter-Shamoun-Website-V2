@@ -9,6 +9,7 @@ tech:
   - React.js
   - D3.js
   - HTML/CSS
+summary: 'Graph algorithms you can watch'
 ---
 
 An interactive D3.js web app that visualizes graph algorithms (BFS, DFS, Dijkstra's). Officially adopted as an instructional tool in UC San Diego's DSC 40B course.

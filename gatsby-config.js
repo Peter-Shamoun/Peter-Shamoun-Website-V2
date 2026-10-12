@@ -4,7 +4,7 @@ module.exports = {
   siteMetadata: {
     title: 'Peter Shamoun | AI Engineer',
     description:
-      'Peter Shamoun is an AI Engineer at Xifin building agentic AI workflows, and a UC San Diego Data Science graduate. He researches AI safety for large language models at the HDSI Data Smith Lab and previously interned in data science at LPL Financial, the Data Science Alliance and Nexon America.',
+      'Peter Shamoun, AI Engineer in San Diego. Building agents, researching AI safety, finding fraud in data.',
     keywords:
       'AI engineer, agentic AI, data science, machine learning, AI safety, NLP, LLM, Python, AWS, Docker, TensorFlow, LangChain, UCSD, San Diego, Xifin, LPL Financial, Nexon America, Data Science Alliance, cloud computing',
     siteUrl: 'https://petershamoun.com', // No trailing slash allowed!

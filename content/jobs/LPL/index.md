@@ -6,6 +6,7 @@ location: 'San Diego, CA'
 range: 'June 2025 - Feb 2026'
 url: 'https://www.lpl.com/'
 show: true
+summary: 'Finding fraud in data'
 ---
 
 - Developed NLP-based keyword extraction and sentiment analysis pipeline on advisor feedback from business findings reports, identifying organizational trends and actionable insights across the company.

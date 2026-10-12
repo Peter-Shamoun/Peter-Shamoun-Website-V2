@@ -1,7 +1,6 @@
 module.exports = {
   name: 'Peter Shamoun',
   email: 'petershamoun80@gmail.com',
-  resumeUrl: '/resume.pdf',
   siteUrl: 'https://petershamoun.com',
 
   socialMedia: [

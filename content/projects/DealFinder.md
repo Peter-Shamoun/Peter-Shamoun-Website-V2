@@ -8,6 +8,7 @@ tech:
   - Segment Anything Model
   - Web Scraping
 showInProjects: false
+summary: ''
 ---
 
 <!-- Hidden: the profile marks this project "confirm with Peter". -->

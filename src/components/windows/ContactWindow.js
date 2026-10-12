@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import config from '@config';
 import { media } from '@styles';
-import { Window, Heading, Text, BevelLink } from '@components/desktop';
+import { Window, Heading, BevelLink } from '@components/desktop';
 
 // Shows a link address without its scheme, "www." or leading or trailing slash.
 const addressOf = url =>
@@ -18,14 +18,12 @@ const ROWS = [
   { label: 'Email', href: `mailto:${config.email}`, shown: config.email },
   { label: 'GitHub', href: linkFor('GitHub'), shown: addressOf(linkFor('GitHub')) },
   { label: 'LinkedIn', href: linkFor('LinkedIn'), shown: addressOf(linkFor('LinkedIn')) },
-  { label: 'Resume', href: config.resumeUrl, shown: addressOf(config.resumeUrl) },
 ];
 
 const Rows = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
-  margin-top: 1.2rem;
 `;
 
 // A full-width bevelled link: label at the left, address at the right.
@@ -59,12 +57,7 @@ const Shown = styled.span`
 
 const ContactWindow = () => (
   <Window id="contact">
-    <Heading>Get in touch</Heading>
-
-    <Text>
-      My inbox is open. If you have a question, a project idea, or just want to say hello, I&apos;ll
-      do my best to get back to you.
-    </Text>
+    <Heading>Contact</Heading>
 
     <Rows>
       {ROWS.map(row => (

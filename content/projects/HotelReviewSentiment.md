@@ -9,6 +9,7 @@ tech:
   - Flask
   - JavaScript
 showInProjects: true
+summary: 'Guessing stars from reviews'
 ---
 
 A deep learning web app that predicts a hotel review's star rating (1 to 5) from its text.

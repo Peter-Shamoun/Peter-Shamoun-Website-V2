@@ -9,6 +9,7 @@ tech:
   - Gmail API
   - OpenAI API
 showInProjects: true
+summary: 'Summarizing an inbox'
 ---
 
 A web app that uses AI to summarize the last 24 hours of a Gmail inbox, built with React, Flask and the OpenAI API.

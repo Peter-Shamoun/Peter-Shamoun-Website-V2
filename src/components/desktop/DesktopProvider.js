@@ -5,9 +5,11 @@ import React, {
   useLayoutEffect,
   useMemo,
   useReducer,
+  useRef,
 } from 'react';
 import PropTypes from 'prop-types';
 import { A, initialState, reducer } from './state';
+import { record, recordWindowOpen } from '../tracking';
 
 const DesktopContext = createContext(null);
 
@@ -21,6 +23,38 @@ const EGG_KEY = '@egg';
 export const getOpener = id => openers.get(id) || null;
 export const getEggOpener = () => openers.get(EGG_KEY) || null;
 
+// Windows the visitor just asked to open (id -> the element they used). The state diff below
+// counts one only if it really went from closed to open.
+const openIntent = new Map();
+// Why a window or popup is about to close ('win:<id>' or 'pop:<key>' -> 'button'), and when Escape
+// or a reset last ran. The state diff below reads these to name the reason of each close.
+const closeVia = new Map();
+let escapeAt = 0;
+let resetAt = 0;
+const RECENT = 1000; // ms
+const dwellBand = start => {
+  if (!start) {
+    return 'unknown';
+  }
+  const s = (Date.now() - start) / 1000;
+  if (s < 10) {
+    return 'under 10s';
+  }
+  if (s < 60) {
+    return '10-59s';
+  }
+  return s < 300 ? '1-5m' : 'over 5m';
+};
+const reasonFor = key => {
+  if (closeVia.has(key)) {
+    return closeVia.get(key);
+  }
+  if (Date.now() - resetAt < RECENT) {
+    return 'reset';
+  }
+  return Date.now() - escapeAt < RECENT ? 'escape' : 'other';
+};
+
 const rememberOpener = (id, el) => {
   if (el && typeof el.focus === 'function') {
     openers.set(id, el);
@@ -31,20 +65,47 @@ const makeActions = dispatch => ({
   // `from` is the element to return focus to when the window closes
   openWindow: (id, { from, focus = true } = {}) => {
     rememberOpener(id, from);
+    // focus: false is the automatic open after boot, which is not something the visitor did.
+    if (focus) {
+      openIntent.set(id, from || null);
+    }
     dispatch({ type: A.OPEN, id, focus });
   },
-  closeWindow: id => dispatch({ type: A.CLOSE, id }),
+  closeWindow: id => {
+    closeVia.set(`win:${id}`, 'button');
+    dispatch({ type: A.CLOSE, id });
+  },
   toggleWindow: (id, { from } = {}) => {
     rememberOpener(id, from);
+    openIntent.set(id, from || null);
+    closeVia.set(`win:${id}`, 'button');
     dispatch({ type: A.TOGGLE, id, focus: true });
   },
   raiseWindow: id => dispatch({ type: A.RAISE, id }),
-  moveWindow: (id, dx, dy) => dispatch({ type: A.MOVE, id, dx, dy }),
-  reset: () => dispatch({ type: A.RESET }),
+  // auto: the window was pulled back on screen after a resize, not dragged
+  moveWindow: (id, dx, dy, { auto = false } = {}) => {
+    if (!auto) {
+      record('window_move', { props: { window: id }, once: true });
+    }
+    dispatch({ type: A.MOVE, id, dx, dy });
+  },
+  reset: () => {
+    record('desktop_reset', { path: '/click/reset' });
+    resetAt = Date.now();
+    dispatch({ type: A.RESET });
+  },
   spawnPopup: popup => dispatch({ type: A.SPAWN, popup }),
-  closePopup: key => dispatch({ type: A.CLOSE_POPUP, key }),
+  closePopup: key => {
+    closeVia.set(`pop:${key}`, 'button');
+    dispatch({ type: A.CLOSE_POPUP, key });
+  },
   raisePopup: key => dispatch({ type: A.RAISE_POPUP, key }),
-  movePopup: (key, x, y) => dispatch({ type: A.MOVE_POPUP, key, x, y }),
+  movePopup: (key, x, y, { auto = false } = {}) => {
+    if (!auto) {
+      record('popup_move', { once: true });
+    }
+    dispatch({ type: A.MOVE_POPUP, key, x, y });
+  },
   eggClick: fromEl => {
     rememberOpener(EGG_KEY, fromEl);
     dispatch({ type: A.EGG_CLICK });
@@ -101,12 +162,86 @@ const DesktopProvider = ({ children }) => {
   useEffect(() => {
     const onKeyDown = e => {
       if (e.key === 'Escape' || e.key === 'Esc') {
+        escapeAt = Date.now();
         dispatch({ type: A.ESCAPE });
       }
     };
     document.addEventListener('keydown', onKeyDown);
     return () => document.removeEventListener('keydown', onKeyDown);
   }, []);
+
+  // Analytics, read from what the state actually did rather than from what was clicked: a
+  // window counts as opened only when it goes from closed to open, and every close is counted
+  // however it happened (button, Escape, a reset, or a phone switching to another window).
+  const { eggClicks, bsod, popups, windows, worldTimeOpen } = state;
+  const shownPopups = useRef(new Set());
+  const seen = useRef({ windows, popups });
+  const openedAt = useRef(new Map());
+  const wasBsod = useRef(false);
+
+  useEffect(() => {
+    const before = seen.current;
+    seen.current = { windows, popups };
+    if (before.windows !== windows) {
+      Object.keys(windows).forEach(id => {
+        const was = !!(before.windows[id] && before.windows[id].open);
+        const now = !!windows[id].open;
+        if (!was && now) {
+          openedAt.current.set(id, Date.now());
+          if (openIntent.has(id)) {
+            recordWindowOpen(id, openIntent.get(id));
+          }
+        } else if (was && !now) {
+          const start = openedAt.current.get(id);
+          openedAt.current.delete(id);
+          record('window_close', {
+            props: { window: id, via: reasonFor(`win:${id}`), open: dwellBand(start) },
+          });
+        }
+      });
+    }
+    if (before.popups !== popups) {
+      before.popups.forEach(p => {
+        if (!popups.some(q => q.key === p.key)) {
+          record('popup_close', { props: { popup: p.dataId, via: reasonFor(`pop:${p.key}`) } });
+        }
+      });
+    }
+    closeVia.clear();
+    openIntent.clear();
+    escapeAt = 0;
+    resetAt = 0;
+  }, [windows, popups]);
+
+  useEffect(() => {
+    if (eggClicks > 0) {
+      record('egg_click', { path: '/egg/click', props: { count: eggClicks } });
+    }
+  }, [eggClicks]);
+
+  useEffect(() => {
+    if (bsod) {
+      record('egg_bluescreen', { path: '/egg/bluescreen' });
+    } else if (wasBsod.current) {
+      record('bluescreen_dismiss');
+    }
+    wasBsod.current = bsod;
+  }, [bsod]);
+
+  useEffect(() => {
+    if (worldTimeOpen) {
+      record('world_time_open', { path: '/panel/world-time' });
+    }
+  }, [worldTimeOpen]);
+
+  useEffect(() => {
+    popups.forEach(p => {
+      if (!shownPopups.current.has(p.key)) {
+        shownPopups.current.add(p.key);
+        record('popup_shown', { props: { popup: p.dataId } });
+      }
+    });
+  }, [popups]);
 
   const value = useMemo(() => ({ state, dispatch, actions }), [state, actions]);
 

@@ -200,7 +200,7 @@ const Window = ({ id, flush, dark, footer, children }) => {
     const dx = Math.round(win.dx + left - rect.left);
     const dy = Math.round(win.dy + top - rect.top);
     if (dx !== win.dx || dy !== win.dy) {
-      actions.moveWindow(id, dx, dy);
+      actions.moveWindow(id, dx, dy, { auto: true });
     }
   }, [win.open, win.dx, win.dy, viewport.w, viewport.h, viewport.ready, height]);
 

@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Analytics } from '@vercel/analytics/react';
 import { GlobalStyle } from '@styles';
 import Head from './head';
+import SiteAnalytics from './tracking';
 
 const Layout = ({ children }) => (
   <>
     <Head />
     <GlobalStyle />
-    <Analytics />
+    <SiteAnalytics />
 
     <a className="skip-link" href="#content">
       Skip to content

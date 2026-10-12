@@ -83,6 +83,11 @@ const SiteInfoWindow = () => {
           Built with Gatsby and React. Code forked from Brittany Chiang&apos;s{' '}
           <ExtLink href="https://github.com/bchiang7/v4">v4</ExtLink> (MIT licence).
         </Para>
+
+        <Para>
+          Visits and clicks are counted with Vercel Web Analytics, which sets no cookies and is not
+          used for advertising.
+        </Para>
       </Page>
     </Window>
   );

@@ -26,6 +26,32 @@ Everything the windows show comes from three folders under `content/`.
 - `content/featured/`: the two featured projects in the Projects window. Each has `title`, `period`, `cover` (an image in the same folder), `external` or `github`, and `tech`. The body is the description.
 - `content/projects/`: one Markdown file per entry in "Also on GitHub". Set `showInProjects: false` to hide an entry.
 
+## Analytics
+
+Visits are counted with Vercel Web Analytics (no cookies) and page speed with Vercel Speed Insights. Both are read in the Vercel dashboard. The code
+is in `src/components/tracking.js`.
+
+Each interaction is sent as a custom event and also as a virtual page view, so it appears in the
+Pages panel on Vercel's free plan. The address bar never changes. Virtual paths:
+
+| Path                                            | Meaning                                                                       |
+| ----------------------------------------------- | ----------------------------------------------------------------------------- |
+| `/`                                             | A real visit                                                                  |
+| `/window/<id>`                                  | The visitor opened that window (the automatic About window is not counted)    |
+| `/click/resume`, `/click/email`                 | Opened the résumé, clicked an email link                                      |
+| `/click/file`, `/click/phone`                   | Opened another file on the site, clicked a phone link                         |
+| `/out/<host>/<path>`                            | Clicked a link to another site                                                |
+| `/popup/<id>`                                   | Clicked the button in a promo popup                                           |
+| `/egg/click`, `/egg/bluescreen`                 | Clicked `free_ram.exe`, reached the blue screen                               |
+| `/engaged/15s`, `/engaged/60s`, `/engaged/180s` | Kept the tab visible that long                                                |
+| `/from/<source>`                                | Arrived through a tagged link such as `https://petershamoun.com/?from=resume` |
+| `/panel/world-time`, `/click/reset`             | Opened the clock panel, clicked the name button                               |
+| `/error/js`, `/error/promise`                   | A script error happened on the page                                           |
+
+Because of the virtual paths, the dashboard's total page-view number counts actions as well as
+visits; the row for `/` is the number of real visits. Set `VIRTUAL_PAGEVIEWS` to `false` in
+`tracking.js` to turn them off.
+
 ## Credits
 
 - The code is forked from Brittany Chiang's [v4](https://github.com/bchiang7/v4) site, released under the MIT licence. The licence and both copyright notices are in [LICENSE](LICENSE).

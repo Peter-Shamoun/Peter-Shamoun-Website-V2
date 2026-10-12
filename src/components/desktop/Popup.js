@@ -41,7 +41,7 @@ const Popup = ({ popup }) => {
     const x = Math.round(clamp(popup.x, bounds.left, bounds.right - width));
     const y = Math.round(clamp(popup.y, bounds.top, bounds.bottom - height));
     if (x !== popup.x || y !== popup.y) {
-      actions.movePopup(popup.key, x, y);
+      actions.movePopup(popup.key, x, y, { auto: true });
     }
   }, [viewport.w, viewport.h, viewport.ready, viewport.phone]);
 

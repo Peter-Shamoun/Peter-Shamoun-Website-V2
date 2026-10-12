@@ -1,12 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import { graphql, useStaticQuery } from 'gatsby';
-import { GatsbyImage } from 'gatsby-plugin-image';
 import {
   Window,
   Heading,
   SubHeading,
-  Inset,
   TagList,
   ButtonRow,
   BevelLink,
@@ -42,15 +40,6 @@ const Period = styled.span`
   letter-spacing: 0.5px;
   text-transform: uppercase;
   white-space: nowrap;
-`;
-
-const Cover = styled(Inset)`
-  margin: 0 0 1.2rem;
-
-  .gatsby-image-wrapper {
-    display: block;
-    max-width: 100%;
-  }
 `;
 
 // Markdown body HTML. A div, because the markdown already wraps its text in <p>.
@@ -99,8 +88,7 @@ const EntryLinks = styled.div`
 
 // Plain render functions (not components) so each markdown node is read directly.
 const renderFeatured = node => {
-  const { title, period, external, github, tech, cover } = node.frontmatter;
-  const image = cover && cover.childImageSharp ? cover.childImageSharp.gatsbyImageData : null;
+  const { title, period, external, github, tech } = node.frontmatter;
   const hasExternal = present(external);
   const hasGithub = present(github);
   const tags = Array.isArray(tech) ? tech : [];
@@ -108,11 +96,6 @@ const renderFeatured = node => {
 
   return (
     <Article key={title}>
-      {image ? (
-        <Cover>
-          <GatsbyImage image={image} alt={`${title} screenshot`} />
-        </Cover>
-      ) : null}
       <TitleRow>
         <ArticleTitle>{title}</ArticleTitle>
         {present(period) ? <Period>{period}</Period> : null}
@@ -177,11 +160,6 @@ const ProjectsWindow = () => {
             external
             github
             tech
-            cover {
-              childImageSharp {
-                gatsbyImageData(width: 480, placeholder: NONE, formats: [AUTO, WEBP])
-              }
-            }
           }
         }
       }

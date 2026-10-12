@@ -38,7 +38,6 @@ export {
   ArtMail,
   ArtRam,
 } from './art';
-export { BannerAbout } from './banner';
 
 // Lookups by name: the desktop icons and the popup pictures.
 export const ICONS = {

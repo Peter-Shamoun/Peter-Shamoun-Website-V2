@@ -40,8 +40,6 @@ const DesktopIcons = () => {
   const activate = item => e => {
     if (item.kind === 'window') {
       actions.openWindow(item.target, { from: e.currentTarget });
-    } else if (item.kind === 'egg') {
-      actions.eggClick(e.currentTarget);
     }
   };
 

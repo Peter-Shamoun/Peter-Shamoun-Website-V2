@@ -125,14 +125,10 @@ export const record = (name, { path, props, once = false } = {}) => {
   }
 };
 
-// Where a click happened: 'popup:<id>', 'window:<id>' or 'desktop'.
+// Where a click happened: 'window:<id>' or 'desktop'.
 const contextOf = el => {
   if (!el || !el.closest) {
     return 'desktop';
-  }
-  const popup = el.closest('[data-popup]');
-  if (popup) {
-    return `popup:${popup.getAttribute('data-popup')}`;
   }
   const win = el.closest('[data-window]');
   if (win) {
@@ -144,20 +140,13 @@ const contextOf = el => {
 export const recordWindowOpen = (id, from) => {
   let via = 'other';
   if (from && from.closest) {
-    if (from.closest('[data-popup]')) {
-      via = 'popup';
-    } else if (from.closest('[data-window]')) {
+    if (from.closest('[data-window]')) {
       via = 'tab'; // a button inside another window
     } else if (from.hasAttribute('data-icon-for')) {
       via = 'icon';
     } else if (from.closest('[data-start-menu]')) {
       via = 'start';
     }
-  }
-  if (via === 'popup') {
-    // A popup whose button opens a window (rather than a link) counts as a popup click too.
-    const id = from.closest('[data-popup]').getAttribute('data-popup');
-    record('popup_click', { path: `/popup/${slug(id)}`, props: { popup: id } });
   }
   record('window_open', {
     path: `/window/${slug(id)}`,
@@ -170,14 +159,6 @@ const recordLink = (link, button) => {
   const context = contextOf(link);
   const label = (link.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 60);
   const base = { context, label, newTab: button === 1 || link.target === '_blank' };
-
-  if (context.indexOf('popup:') === 0) {
-    const id = context.slice(6);
-    record('popup_click', {
-      path: `/popup/${slug(id)}`,
-      props: { popup: id },
-    });
-  }
 
   if (/^mailto:/i.test(href)) {
     // The label would be the address itself, so it is left out.

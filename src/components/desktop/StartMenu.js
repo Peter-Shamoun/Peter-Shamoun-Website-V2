@@ -123,10 +123,9 @@ const Separator = styled.div`
 `;
 
 const ICON = 32;
-const ITEMS = DESKTOP_ICONS.filter(entry => entry.kind !== 'egg');
 const itemsOf = menu => Array.from(menu.querySelectorAll('[role="menuitem"]'));
 
-// The Start button and its menu: every window and the two desktop commands.
+// The Start button and its menu: every window and the Tidy desktop command.
 const StartMenu = () => {
   const { state, actions } = useDesktop();
   const open = state.startOpen;
@@ -255,7 +254,7 @@ const StartMenu = () => {
         tabIndex={-1}
         hidden={!open}
         onKeyDown={onMenuKeyDown}>
-        {ITEMS.map(entry => {
+        {DESKTOP_ICONS.map(entry => {
           const Art = ICONS[entry.icon];
           return entry.kind === 'link' ? (
             <ItemLink
@@ -284,17 +283,6 @@ const StartMenu = () => {
           );
         })}
         <Separator role="separator" />
-        <ItemButton
-          role="menuitem"
-          tabIndex={-1}
-          data-start-item="siteinfo"
-          onClick={openWindow('siteinfo')}
-          onPointerMove={hover}>
-          <Tile $size={ICON} aria-hidden="true">
-            <GlyphApp size={ICON} />
-          </Tile>
-          About this site
-        </ItemButton>
         <ItemButton
           role="menuitem"
           tabIndex={-1}

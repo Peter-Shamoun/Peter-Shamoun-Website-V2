@@ -20,13 +20,11 @@ const variables = css`
     --link: #000080;
     --select: #000080;
     --select-text: #ffffff;
-    --bsod-color: #000080;
 
     /* fonts */
     --main-font: 'Web437 ANK16', 'Courier New', Courier, monospace;
     --main-large-font: 'Web437 ANK24', 'Courier New', Courier, monospace;
     --window-title-font: 'Silkscreen', 'Courier New', Courier, monospace;
-    --bsod-font: 'Courier New', Courier, monospace;
     --font-base-size: 1.6rem;
 
     /* sizes */
@@ -40,10 +38,8 @@ const variables = css`
     /* layers */
     --z-wallpaper: 0;
     --z-icons: 1;
-    --z-popup-phone: 900;
     --z-window-base: 1000; /* JS sets z-index inline from the topZ counter, which starts here */
     --z-taskbar: 10000;
-    --z-bsod: 99999;
     --z-skip: 100000;
   }
 

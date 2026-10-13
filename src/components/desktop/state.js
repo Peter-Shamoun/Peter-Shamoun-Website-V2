@@ -9,12 +9,6 @@ export const A = {
   RAISE: 'RAISE',
   MOVE: 'MOVE',
   RESET: 'RESET',
-  SPAWN: 'SPAWN',
-  CLOSE_POPUP: 'CLOSE_POPUP',
-  RAISE_POPUP: 'RAISE_POPUP',
-  MOVE_POPUP: 'MOVE_POPUP',
-  EGG_CLICK: 'EGG_CLICK',
-  BSOD_DISMISS: 'BSOD_DISMISS',
   TOGGLE_WORLD_TIME: 'TOGGLE_WORLD_TIME',
   CLOSE_WORLD_TIME: 'CLOSE_WORLD_TIME',
   TOGGLE_START: 'TOGGLE_START',
@@ -22,8 +16,6 @@ export const A = {
   ESCAPE: 'ESCAPE',
 };
 
-export const MAX_POPUPS = 12;
-const EGG_BSOD_AT = 3;
 const PHONE_MAX = 576;
 
 const BASE_Z = 1000;
@@ -44,27 +36,18 @@ export const initialState = {
   windows: makeWindows(), // one entry per registry id: { open, z, dx, dy, order }
   topZ: BASE_Z + 1,
   openCount: 1, // source of windows[id].order, which sorts the taskbar buttons
-  popups: [], // { key, dataId, x, y, w, z }
-  popupEpoch: 0, // bumped by RESET, the blue screen and BSOD_DISMISS; the spawner cancels timers
-  eggClicks: 0, // never reset
-  bsod: false,
   worldTimeOpen: false,
   startOpen: false,
-  focusTick: null, // { kind: 'window' | 'bsod', id, n } - a request to move focus
+  focusTick: null, // { kind: 'window', id, n } - a request to move focus
 };
 
-// The z of whatever is in front, a window or a popup. 0 when nothing is open.
+// The z of the window in front. 0 when nothing is open.
 export const frontZ = state => {
   let z = 0;
   Object.keys(state.windows).forEach(id => {
     const w = state.windows[id];
     if (w.open && w.z > z) {
       z = w.z;
-    }
-  });
-  state.popups.forEach(p => {
-    if (p.z > z) {
-      z = p.z;
     }
   });
   return z;
@@ -121,33 +104,17 @@ const closeWindow = (state, id) => {
   };
 };
 
-const closePopup = (state, key) => {
-  const popups = state.popups.filter(p => p.key !== key);
-  return popups.length === state.popups.length ? state : { ...state, popups };
-};
-
-const dismissBsod = state =>
-  state.bsod ? { ...state, bsod: false, popups: [], popupEpoch: state.popupEpoch + 1 } : state;
-
-// Escape closes whichever open window or popup is in front. Keyboard focus brings its window
-// or popup to the front, so that is also the one holding focus.
+// Escape closes whichever open window is in front. Keyboard focus brings its window to the
+// front, so that is also the one holding focus.
 const closeTop = state => {
   let top = null;
   Object.keys(state.windows).forEach(id => {
     const w = state.windows[id];
     if (w.open && (!top || w.z > top.z)) {
-      top = { type: 'window', id, z: w.z };
+      top = { id, z: w.z };
     }
   });
-  state.popups.forEach(p => {
-    if (!top || p.z > top.z) {
-      top = { type: 'popup', key: p.key, z: p.z };
-    }
-  });
-  if (!top) {
-    return state;
-  }
-  return top.type === 'window' ? closeWindow(state, top.id) : closePopup(state, top.key);
+  return top ? closeWindow(state, top.id) : state;
 };
 
 export const reducer = (state, action) => {
@@ -214,71 +181,9 @@ export const reducer = (state, action) => {
       return {
         ...state,
         windows: mapWindows(state.windows, w => ({ ...w, open: false, dx: 0, dy: 0 })),
-        popups: [],
-        popupEpoch: state.popupEpoch + 1,
         worldTimeOpen: false,
         startOpen: false,
       };
-
-    case A.SPAWN: {
-      const { popup } = action;
-      if (
-        !popup ||
-        state.bsod ||
-        state.popups.length >= MAX_POPUPS ||
-        state.popups.some(p => p.dataId === popup.dataId || p.key === popup.key)
-      ) {
-        return state;
-      }
-      const topZ = state.topZ + 1;
-      return { ...state, topZ, popups: [...state.popups, { ...popup, z: topZ }] };
-    }
-
-    case A.CLOSE_POPUP:
-      return closePopup(state, action.key);
-
-    case A.RAISE_POPUP: {
-      const popup = state.popups.find(p => p.key === action.key);
-      if (!popup || popup.z === state.topZ) {
-        return state;
-      }
-      const topZ = state.topZ + 1;
-      return {
-        ...state,
-        topZ,
-        popups: state.popups.map(p => (p.key === action.key ? { ...p, z: topZ } : p)),
-      };
-    }
-
-    case A.MOVE_POPUP:
-      return {
-        ...state,
-        popups: state.popups.map(p =>
-          p.key === action.key ? { ...p, x: action.x, y: action.y } : p,
-        ),
-      };
-
-    case A.EGG_CLICK: {
-      if (state.bsod) {
-        return state;
-      }
-      const eggClicks = state.eggClicks + 1;
-      if (eggClicks < EGG_BSOD_AT) {
-        return { ...state, eggClicks };
-      }
-      return {
-        ...state,
-        eggClicks,
-        bsod: true,
-        popupEpoch: state.popupEpoch + 1,
-        worldTimeOpen: false,
-        startOpen: false,
-        focusTick: nextTick(state, 'bsod', null),
-      };
-    }
-
-    case A.BSOD_DISMISS:
-      return dismissBsod(state);
 
     case A.TOGGLE_WORLD_TIME:
       return { ...state, worldTimeOpen: !state.worldTimeOpen, startOpen: false };
@@ -293,9 +198,6 @@ export const reducer = (state, action) => {
       return state.startOpen ? { ...state, startOpen: false } : state;
 
     case A.ESCAPE:
-      if (state.bsod) {
-        return dismissBsod(state);
-      }
       if (state.worldTimeOpen || state.startOpen) {
         return { ...state, worldTimeOpen: false, startOpen: false };
       }

@@ -18,16 +18,13 @@ export const useIsoLayoutEffect = typeof window !== 'undefined' ? useLayoutEffec
 
 // Elements that opened something, so focus can go back to them when it closes.
 const openers = new Map();
-const EGG_KEY = '@egg';
 
 export const getOpener = id => openers.get(id) || null;
-export const getEggOpener = () => openers.get(EGG_KEY) || null;
 
 // Windows the visitor just asked to open (id -> the element they used). The state diff below
 // counts one only if it really went from closed to open.
 const openIntent = new Map();
-// Why a window or popup is about to close ('win:<id>' or 'pop:<key>' -> 'button'), and when Escape
-// or a reset last ran. The state diff below reads these to name the reason of each close.
+// Why a window is about to close ('win:<id>' -> 'button'), and when Escape or a reset last ran. The state diff below reads these to name the reason of each close.
 const closeVia = new Map();
 let escapeAt = 0;
 let resetAt = 0;
@@ -90,23 +87,6 @@ const makeActions = dispatch => ({
     resetAt = Date.now();
     dispatch({ type: A.RESET });
   },
-  spawnPopup: popup => dispatch({ type: A.SPAWN, popup }),
-  closePopup: key => {
-    closeVia.set(`pop:${key}`, 'button');
-    dispatch({ type: A.CLOSE_POPUP, key });
-  },
-  raisePopup: key => dispatch({ type: A.RAISE_POPUP, key }),
-  movePopup: (key, x, y, { auto = false } = {}) => {
-    if (!auto) {
-      record('popup_move', { once: true });
-    }
-    dispatch({ type: A.MOVE_POPUP, key, x, y });
-  },
-  eggClick: fromEl => {
-    rememberOpener(EGG_KEY, fromEl);
-    dispatch({ type: A.EGG_CLICK });
-  },
-  dismissBsod: () => dispatch({ type: A.BSOD_DISMISS }),
   toggleWorldTime: () => dispatch({ type: A.TOGGLE_WORLD_TIME }),
   closeWorldTime: () => dispatch({ type: A.CLOSE_WORLD_TIME }),
   toggleStart: () => dispatch({ type: A.TOGGLE_START }),
@@ -169,9 +149,8 @@ const DesktopProvider = ({ children }) => {
   // Analytics, read from what the state actually did rather than from what was clicked: a
   // window counts as opened only when it goes from closed to open, and every close is counted
   // however it happened (button, Escape, a reset, or a phone switching to another window).
-  const { eggClicks, bsod, popups, windows, worldTimeOpen, startOpen } = state;
-  const shownPopups = useRef(new Set());
-  const seen = useRef({ windows, popups });
+  const { windows, worldTimeOpen, startOpen } = state;
+  const seen = useRef({ windows });
   const openedAt = useRef(new Map());
 
   // The window that is open when the page appears is not counted as opened, but its close is
@@ -184,11 +163,10 @@ const DesktopProvider = ({ children }) => {
     });
     // Once, for the windows of the first render.
   }, []);
-  const wasBsod = useRef(false);
 
   useEffect(() => {
     const before = seen.current;
-    seen.current = { windows, popups };
+    seen.current = { windows };
     if (before.windows !== windows) {
       Object.keys(windows).forEach(id => {
         const was = !!(before.windows[id] && before.windows[id].open);
@@ -207,33 +185,11 @@ const DesktopProvider = ({ children }) => {
         }
       });
     }
-    if (before.popups !== popups) {
-      before.popups.forEach(p => {
-        if (!popups.some(q => q.key === p.key)) {
-          record('popup_close', { props: { popup: p.dataId, via: reasonFor(`pop:${p.key}`) } });
-        }
-      });
-    }
     closeVia.clear();
     openIntent.clear();
     escapeAt = 0;
     resetAt = 0;
-  }, [windows, popups]);
-
-  useEffect(() => {
-    if (eggClicks > 0) {
-      record('egg_click', { path: '/egg/click', props: { count: eggClicks } });
-    }
-  }, [eggClicks]);
-
-  useEffect(() => {
-    if (bsod) {
-      record('egg_bluescreen', { path: '/egg/bluescreen' });
-    } else if (wasBsod.current) {
-      record('bluescreen_dismiss');
-    }
-    wasBsod.current = bsod;
-  }, [bsod]);
+  }, [windows]);
 
   useEffect(() => {
     if (worldTimeOpen) {
@@ -246,15 +202,6 @@ const DesktopProvider = ({ children }) => {
       record('start_menu_open', { path: '/panel/start', once: true });
     }
   }, [startOpen]);
-
-  useEffect(() => {
-    popups.forEach(p => {
-      if (!shownPopups.current.has(p.key)) {
-        shownPopups.current.add(p.key);
-        record('popup_shown', { props: { popup: p.dataId } });
-      }
-    });
-  }, [popups]);
 
   const value = useMemo(() => ({ state, dispatch, actions }), [state, actions]);
 

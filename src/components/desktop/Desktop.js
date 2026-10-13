@@ -3,23 +3,20 @@ import styled from 'styled-components';
 import DesktopProvider from './DesktopProvider';
 import Wallpaper from './Wallpaper';
 import DesktopIcons from './DesktopIcons';
-import PopupSpawner from './PopupSpawner';
 import Taskbar from './Taskbar';
-import BlueScreen from './BlueScreen';
 import {
   AboutWindow,
   ExperienceWindow,
   ProjectsWindow,
   ResearchWindow,
   ContactWindow,
-  SiteInfoWindow,
   GamesWindow,
   GameWindow,
 } from '../windows';
 import { GAME_LIST } from './registry';
 
 // The desktop area above the taskbar. It is its own stacking context (z-index: 1), so windows
-// and popups inside it always sit below the taskbar and its menus.
+// inside it always sit below the taskbar and its menus.
 const StyledDesktop = styled.main`
   position: fixed;
   top: 0;
@@ -29,7 +26,7 @@ const StyledDesktop = styled.main`
   z-index: 1;
   overflow: hidden;
 
-  /* It takes focus from the skip link and from a closed popup; it is not a control. */
+  /* It takes focus from the skip link; it is not a control. */
   &:focus,
   &:focus-visible {
     outline: none;
@@ -47,15 +44,12 @@ const Desktop = () => (
       <ProjectsWindow />
       <ResearchWindow />
       <ContactWindow />
-      <SiteInfoWindow />
       <GamesWindow />
       {GAME_LIST.map(game => (
         <GameWindow key={game.id} id={game.id} />
       ))}
-      <PopupSpawner />
     </StyledDesktop>
     <Taskbar />
-    <BlueScreen />
   </DesktopProvider>
 );
 

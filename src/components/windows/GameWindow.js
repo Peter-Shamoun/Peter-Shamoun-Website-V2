@@ -43,8 +43,7 @@ const GameWindow = ({ id }) => {
     return () => document.removeEventListener('visibilitychange', onChange);
   }, []);
 
-  const active =
-    win.open && win.z === frontZ(state) && !state.startOpen && !state.bsod && pageShown;
+  const active = win.open && win.z === frontZ(state) && !state.startOpen && pageShown;
 
   // When the game becomes the thing in front again (the Start menu closed, say) the keyboard
   // goes back to it, unless focus is already somewhere inside its window.

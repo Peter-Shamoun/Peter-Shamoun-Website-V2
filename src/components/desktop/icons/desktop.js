@@ -181,44 +181,8 @@ const CONTACT = [
   '.32',
 ];
 
-const EGG = [
-  '.32',
-  '.32',
-  '.15 R2 .15',
-  '.15 R2 .15',
-  '.15 R2 .15',
-  '.15 R2 .15',
-  '.12 R8 .12',
-  '.13 R6 .13',
-  '.14 R4 .14',
-  '.2 K28 .2',
-  '.2 K1 L26 K1 .2',
-  '.2 K1 L2 K5 L1 K5 L1 K5 L1 K5 L1 K1 .2',
-  '.2 K1 L2 K1 S3 K1 L1 K1 S3 K1 L1 K1 S3 K1 L1 K1 S3 K1 L1 K1 .2',
-  '.2 K1 L2 K1 S3 K1 L1 K1 S3 K1 L1 K1 S3 K1 L1 K1 S3 K1 L1 K1 .2',
-  '.2 K1 L2 K1 S3 K1 L1 K1 S3 K1 L1 K1 S3 K1 L1 K1 S3 K1 L1 K1 .2',
-  '.2 K1 L2 K5 L1 K5 L1 K5 L1 K5 L1 K1 .2',
-  '.2 K1 L26 K1 .2',
-  '.2 K1 L26 K1 .2',
-  '.2 K1 L26 K1 .2',
-  '.2 K1 L26 K1 .2',
-  '.2 K1 L26 K1 .2',
-  '.2 K28 .2',
-  '.3 Y1 K1 Y1 K1 Y1 K1 Y1 K1 Y1 K1 Y1 K1 Y1 K1 Y1 K1 Y1 K1 Y1 K1 Y1 K1 Y1 K1 Y1 K1 .3',
-  '.3 Y1 K1 Y1 K1 Y1 K1 Y1 K1 Y1 K1 Y1 K1 Y1 K1 Y1 K1 Y1 K1 Y1 K1 Y1 K1 Y1 K1 Y1 K1 .3',
-  '.3 Y1 K1 Y1 K1 Y1 K1 Y1 K1 Y1 K1 Y1 K1 Y1 K1 Y1 K1 Y1 K1 Y1 K1 Y1 K1 Y1 K1 Y1 K1 .3',
-  '.3 K26 .3',
-  '.32',
-  '.32',
-  '.32',
-  '.32',
-  '.32',
-  '.32',
-];
-
 export const IconAbout = makeIcon('IconAbout', ICON, 64, draw(ABOUT));
 export const IconExperience = makeIcon('IconExperience', ICON, 64, draw(EXPERIENCE));
 export const IconProjects = makeIcon('IconProjects', ICON, 64, draw(PROJECTS));
 export const IconResearch = makeIcon('IconResearch', ICON, 64, draw(RESEARCH));
 export const IconContact = makeIcon('IconContact', ICON, 64, draw(CONTACT));
-export const IconEgg = makeIcon('IconEgg', ICON, 64, draw(EGG));

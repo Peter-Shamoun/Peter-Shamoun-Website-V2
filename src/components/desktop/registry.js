@@ -19,8 +19,7 @@ export const WINDOWS = [
   { id: 'projects', title: 'Projects', w: 540, maxH: '60vh', step: 2 },
   { id: 'research', title: 'Research', w: 540, maxH: '60vh', step: 3 },
   { id: 'contact', title: 'Contact', w: 540, maxH: '60vh', step: 4 },
-  { id: 'siteinfo', title: 'About this site', w: 540, maxH: '60vh', step: 5 },
-  { id: 'games', title: 'Games', w: 440, maxH: '60vh', step: 6 },
+  { id: 'games', title: 'Games', w: 440, maxH: '60vh', step: 5 },
   ...GAME_LIST.map(({ id, title, step, size }) => ({
     id,
     title,
@@ -31,8 +30,7 @@ export const WINDOWS = [
   })),
 ];
 
-// In the order they are shown: down the desktop column, and down the Start menu (which leaves
-// the egg out).
+// In the order they are shown: down the desktop column, and down the Start menu.
 export const DESKTOP_ICONS = [
   { key: 'about', label: 'About', kind: 'window', target: 'about', icon: 'IconAbout' },
   {
@@ -46,7 +44,6 @@ export const DESKTOP_ICONS = [
   { key: 'research', label: 'Research', kind: 'window', target: 'research', icon: 'IconResearch' },
   { key: 'contact', label: 'Contact', kind: 'window', target: 'contact', icon: 'IconContact' },
   { key: 'games', label: 'Games', kind: 'window', target: 'games', icon: 'IconGames' },
-  { key: 'egg', label: 'free_ram.exe', kind: 'egg', icon: 'IconEgg' },
 ];
 
 export const getWindow = id => WINDOWS.find(w => w.id === id);

@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled, { css } from 'styled-components';
-import { media } from '@styles';
+import styled from 'styled-components';
 import { ICONS } from './icons';
 
 // Picture box. The SVG fills it.
@@ -56,14 +55,6 @@ const StyledIcon = styled.button`
     outline: 1px dotted var(--select-text);
     outline-offset: -1px;
   }
-
-  ${props =>
-    props.$egg &&
-    css`
-      ${media.phone} {
-        display: none;
-      }
-    `}
 `;
 
 // Picture and label. Shared by the button and link forms.
@@ -84,19 +75,11 @@ Content.propTypes = {
   }).isRequired,
 };
 
-// One desktop icon. Window icons are buttons, a link entry is a link, the egg is a button.
+// One desktop icon. Window icons are buttons, a link entry is a link.
 const DesktopIcon = ({ item, onActivate }) => {
   if (item.kind === 'link') {
     return (
       <StyledIcon as="a" href={item.href} target="_blank" rel="noopener noreferrer">
-        <Content item={item} />
-      </StyledIcon>
-    );
-  }
-
-  if (item.kind === 'egg') {
-    return (
-      <StyledIcon type="button" data-egg $egg onClick={onActivate}>
         <Content item={item} />
       </StyledIcon>
     );
@@ -117,7 +100,7 @@ DesktopIcon.propTypes = {
   item: PropTypes.shape({
     key: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
-    kind: PropTypes.oneOf(['window', 'link', 'egg']).isRequired,
+    kind: PropTypes.oneOf(['window', 'link']).isRequired,
     target: PropTypes.string,
     href: PropTypes.string,
     icon: PropTypes.string.isRequired,

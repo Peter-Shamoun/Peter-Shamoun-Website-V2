@@ -84,7 +84,7 @@ export const useDrag = ({ enabled = true, onStart, onMove, onEnd } = {}) => {
 };
 
 /**
- * The title strip shared by windows and popups: the title at the left, close at the right.
+ * The title strip of a window: the title at the left, close at the right.
  */
 export const TitleBar = ({ title, titleId, onClose, closeLabel, dragProps }) => (
   <header className="win__titlebar" data-drag-handle {...dragProps}>

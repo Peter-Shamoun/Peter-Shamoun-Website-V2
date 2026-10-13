@@ -124,12 +124,11 @@ const GlobalStyle = createGlobalStyle`
    * when it is as tall as it may be, so it is right before any script has run). Every other
    * window opens one step further down and to the right, so no title bar starts under another.
    * --win-clear is the width the desktop icons take: one column, or two when the desktop is too
-   * short for all seven in one (under 728px). A window opens to the right of it and gives up
+   * short for all six in one (under 632px). A window opens to the right of it and gives up
    * some width for that, down to 440px.
    */
 
-  .win,
-  .popup {
+  .win {
     position: fixed;
     z-index: var(--z-window-base);
     display: flex;
@@ -168,7 +167,7 @@ const GlobalStyle = createGlobalStyle`
     );
   }
 
-  @media (max-height: 727px) {
+  @media (max-height: 631px) {
     .win {
       --win-clear: 232px;
     }
@@ -301,31 +300,6 @@ const GlobalStyle = createGlobalStyle`
     ${sunkenThin};
   }
 
-  /* ---------- popup frame (used by Popup.js) ---------- */
-
-  .popup {
-    max-width: calc(100vw - 16px);
-  }
-
-  /* Popup titles are whole sentences, so they use the narrower body face to fit the strip. */
-  .popup .win__title {
-    font: 400 16px/1 var(--main-font);
-    text-transform: uppercase;
-  }
-
-  .popup__body {
-    padding: 12px 8px 10px;
-    text-align: center;
-  }
-
-  .popup__art {
-    display: block;
-    width: 100%;
-    height: auto;
-    margin-bottom: 10px;
-    image-rendering: pixelated;
-  }
-
   /* ---------- phone ---------- */
 
   ${media.phone} {
@@ -381,17 +355,6 @@ const GlobalStyle = createGlobalStyle`
     .win__footer a {
       display: inline-block;
       padding: 10px 0;
-    }
-
-    .popup {
-      width: 260px;
-      z-index: var(--z-popup-phone);
-    }
-
-    .popup__body a,
-    .popup__body button {
-      max-width: 100%;
-      white-space: normal;
     }
   }
 

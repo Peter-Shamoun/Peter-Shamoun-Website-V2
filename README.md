@@ -50,8 +50,6 @@ Pages panel on Vercel's free plan. The address bar never changes. Virtual paths:
 | `/click/email`                                  | Clicked an email link                                                           |
 | `/click/file`, `/click/phone`                   | Opened another file on the site, clicked a phone link                           |
 | `/out/<host>/<path>`                            | Clicked a link to another site                                                  |
-| `/popup/<id>`                                   | Clicked the button in a popup (popups only come from `free_ram.exe`)            |
-| `/egg/click`, `/egg/bluescreen`                 | Clicked `free_ram.exe`, reached the blue screen                                 |
 | `/engaged/15s`, `/engaged/60s`, `/engaged/180s` | Kept the tab visible that long                                                  |
 | `/from/<source>`                                | Arrived through a tagged link such as `https://petershamoun.com/?from=linkedin` |
 | `/panel/world-time`, `/panel/start`             | Opened the clock panel, opened the Start menu                                   |

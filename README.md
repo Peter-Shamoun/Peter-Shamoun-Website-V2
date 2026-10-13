@@ -25,6 +25,16 @@ Everything the windows show comes from two folders under `content/`.
 - `content/jobs/`: one folder per role, newest first. Each `index.md` has `title`, `company`, `location`, `range`, `url` and `show`. Set `show: false` to hide a role. The bullets are the body.
 - `content/featured/`: the projects in the Projects window, in `date` order. Each `index.md` has `title`, `external` (the link) and `summary` (the short phrase).
 
+## Games
+
+The Games folder on the desktop holds seven small games, each in its own window: Minesweeper, Solitaire, Snake, Blocks, Bricks, Paddle and Invaders. All of them are written for this site, with no images, sounds or outside code.
+
+- `src/components/games/<Name>.js`: one file per game. It is fetched only when its window first opens.
+- `src/components/games/kit.js`: the parts they share (the box that scales a game to fit a phone, the game loop, keys, best scores, buttons and readouts).
+- `GAME_LIST` in `src/components/desktop/registry.js`: the list of games, their icons and sizes. Add a game there and in `src/components/games/index.js`.
+
+Best scores are kept in the visitor's own browser and nowhere else.
+
 ## Analytics
 
 Visits are counted with Vercel Web Analytics (no cookies) and page speed with Vercel Speed Insights. Both are read in the Vercel dashboard. The code

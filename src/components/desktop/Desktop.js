@@ -13,7 +13,10 @@ import {
   ResearchWindow,
   ContactWindow,
   SiteInfoWindow,
+  GamesWindow,
+  GameWindow,
 } from '../windows';
+import { GAME_LIST } from './registry';
 
 // The desktop area above the taskbar. It is its own stacking context (z-index: 1), so windows
 // and popups inside it always sit below the taskbar and its menus.
@@ -45,6 +48,10 @@ const Desktop = () => (
       <ResearchWindow />
       <ContactWindow />
       <SiteInfoWindow />
+      <GamesWindow />
+      {GAME_LIST.map(game => (
+        <GameWindow key={game.id} id={game.id} />
+      ))}
       <PopupSpawner />
     </StyledDesktop>
     <Taskbar />

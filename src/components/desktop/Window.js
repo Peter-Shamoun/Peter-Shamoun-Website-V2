@@ -109,7 +109,7 @@ TitleBar.propTypes = {
   dragProps: PropTypes.object,
 };
 
-const Window = ({ id, flush, footer, children }) => {
+const Window = ({ id, flush, game, footer, children }) => {
   const { state, actions } = useDesktop();
   const def = getWindow(id);
   const win = state.windows[id];
@@ -241,6 +241,9 @@ const Window = ({ id, flush, footer, children }) => {
   if (flush) {
     classes.push('win--flush');
   }
+  if (game) {
+    classes.push('win--game');
+  }
   // The title bar is navy on the window in front and grey on the others.
   if (win.open && win.z === frontZ(state)) {
     classes.push('is-active');
@@ -288,12 +291,14 @@ const Window = ({ id, flush, footer, children }) => {
 Window.propTypes = {
   id: PropTypes.string.isRequired,
   flush: PropTypes.bool,
+  game: PropTypes.bool,
   footer: PropTypes.node,
   children: PropTypes.node,
 };
 
 Window.defaultProps = {
   flush: false,
+  game: false,
   footer: null,
   children: null,
 };

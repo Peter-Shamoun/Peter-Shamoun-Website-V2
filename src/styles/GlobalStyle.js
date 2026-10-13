@@ -278,6 +278,19 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
   }
 
+  /* A game window: grey all the way through, and the game does its own fitting. */
+  .win--game .win__body {
+    padding: 0;
+    background: var(--chrome);
+    box-shadow: none;
+  }
+
+  .win--game .win__area {
+    padding: 6px;
+    overflow: hidden;
+    line-height: 1;
+  }
+
   /* The status bar under the content. */
   .win__footer {
     flex: none;
@@ -352,6 +365,14 @@ const GlobalStyle = createGlobalStyle`
       padding: 0;
     }
 
+    /* The game sits in the middle of the full-screen window. */
+    .win--game .win__area {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 6px;
+    }
+
     /* a footer link stands alone, so the link fills a 44px row */
     .win__footer {
       padding: 0 8px;
@@ -390,6 +411,12 @@ const GlobalStyle = createGlobalStyle`
     .win--static {
       top: auto;
       bottom: auto;
+    }
+
+    .win--game .win__area {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
     /* The icons are behind a full-screen window: out of the tab order and the reading order. */

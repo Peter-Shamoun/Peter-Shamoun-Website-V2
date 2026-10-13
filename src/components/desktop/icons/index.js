@@ -7,6 +7,16 @@ import {
   IconResearch,
 } from './desktop';
 import {
+  IconGames,
+  IconMines,
+  IconCards,
+  IconSnake,
+  IconBlocks,
+  IconBricks,
+  IconPaddle,
+  IconInvaders,
+} from './games';
+import {
   ArtCheatSheet,
   ArtGithub,
   ArtGraph,
@@ -24,6 +34,16 @@ export {
   IconContact,
   IconEgg,
 } from './desktop';
+export {
+  IconGames,
+  IconMines,
+  IconCards,
+  IconSnake,
+  IconBlocks,
+  IconBricks,
+  IconPaddle,
+  IconInvaders,
+} from './games';
 export { GlyphApp, GlyphClose, GlyphMenu } from './glyphs';
 export {
   ArtCheatSheet,
@@ -43,6 +63,14 @@ export const ICONS = {
   IconResearch,
   IconContact,
   IconEgg,
+  IconGames,
+  IconMines,
+  IconCards,
+  IconSnake,
+  IconBlocks,
+  IconBricks,
+  IconPaddle,
+  IconInvaders,
 };
 
 export const ART = {

@@ -473,7 +473,7 @@ const Game = ({ active, w, h }) => {
         <Board
           ref={canvasRef}
           role="img"
-          aria-label="Bricks playing field"
+          aria-label="Breakout playing field"
           onPointerMove={onPointerMove}
           onPointerDown={onPointerDown}
         />

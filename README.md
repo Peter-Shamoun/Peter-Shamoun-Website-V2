@@ -27,7 +27,7 @@ Everything the windows show comes from two folders under `content/`.
 
 ## Games
 
-The Games folder on the desktop holds seven small games, each in its own window: Minesweeper, Solitaire, Snake, Blocks, Bricks, Paddle and Invaders. All of them are written for this site, with no images, sounds or outside code.
+The Games folder on the desktop holds seven small games, each in its own window: Minesweeper, Solitaire, Snake, Tetris, Breakout, Pong and Space Invaders. All of them are written for this site, with no images, sounds or outside code.
 
 - `src/components/games/<Name>.js`: one file per game. It is fetched only when its window first opens.
 - `src/components/games/kit.js`: the parts they share (the box that scales a game to fit a phone, the game loop, keys, best scores, buttons and readouts).

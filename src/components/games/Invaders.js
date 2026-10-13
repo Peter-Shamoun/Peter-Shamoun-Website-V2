@@ -597,7 +597,7 @@ const Game = ({ active }) => {
 
   let message = null;
   if (shown === 'ready') {
-    message = <Message title="Invaders">Press Space or tap to start</Message>;
+    message = <Message title="Space Invaders">Press Space or tap to start</Message>;
   } else if (shown === 'paused') {
     message = (
       <Message title="Paused">{ui.status === 'paused' ? 'Press P to resume' : null}</Message>
@@ -624,7 +624,7 @@ const Game = ({ active }) => {
         <Screen
           ref={canvasRef}
           role="img"
-          aria-label="Invaders playing field"
+          aria-label="Space Invaders playing field"
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
           onPointerUp={onPointerEnd}

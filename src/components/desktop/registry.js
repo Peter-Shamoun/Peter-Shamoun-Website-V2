@@ -5,10 +5,16 @@ export const GAME_LIST = [
   { id: 'minesweeper', title: 'Minesweeper', icon: 'IconMines', step: 1, size: { w: 288, h: 384 } },
   { id: 'solitaire', title: 'Solitaire', icon: 'IconCards', step: 0, size: { w: 476, h: 460 } },
   { id: 'snake', title: 'Snake', icon: 'IconSnake', step: 1, size: { w: 384, h: 372 } },
-  { id: 'blocks', title: 'Blocks', icon: 'IconBlocks', step: 2, size: { w: 320, h: 396 } },
-  { id: 'bricks', title: 'Bricks', icon: 'IconBricks', step: 1, size: { w: 400, h: 372 } },
-  { id: 'paddle', title: 'Paddle', icon: 'IconPaddle', step: 2, size: { w: 400, h: 372 } },
-  { id: 'invaders', title: 'Invaders', icon: 'IconInvaders', step: 1, size: { w: 400, h: 400 } },
+  { id: 'blocks', title: 'Tetris', icon: 'IconBlocks', step: 2, size: { w: 320, h: 396 } },
+  { id: 'bricks', title: 'Breakout', icon: 'IconBricks', step: 1, size: { w: 400, h: 372 } },
+  { id: 'paddle', title: 'Pong', icon: 'IconPaddle', step: 2, size: { w: 400, h: 372 } },
+  {
+    id: 'invaders',
+    title: 'Space Invaders',
+    icon: 'IconInvaders',
+    step: 1,
+    size: { w: 400, h: 400 },
+  },
 ];
 
 // w: width in px. maxH: CSS max-height. step: place in the opening cascade (0 is centred, each

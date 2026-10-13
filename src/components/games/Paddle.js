@@ -391,7 +391,7 @@ const Game = ({ active, w, h }) => {
         <canvas
           ref={canvasRef}
           role="img"
-          aria-label="Paddle table tennis. Your paddle is on the left, the computer's on the right."
+          aria-label="Pong. Your paddle is on the left, the computer's on the right."
           style={BOARD_STYLE}
           onPointerDown={onPointerDown}
           onPointerMove={aim}

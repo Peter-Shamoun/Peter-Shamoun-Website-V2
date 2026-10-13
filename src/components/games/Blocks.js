@@ -714,7 +714,7 @@ const Game = ({ active, w, h }) => {
           <canvas
             ref={wellRef}
             role="img"
-            aria-label="Blocks well"
+            aria-label="Tetris well"
             width={WELL_W}
             height={WELL_H}
           />

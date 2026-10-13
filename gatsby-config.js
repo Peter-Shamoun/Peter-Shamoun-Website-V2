@@ -2,7 +2,7 @@ const config = require('./src/config');
 
 module.exports = {
   siteMetadata: {
-    title: 'Peter Shamoun | AI Engineer',
+    title: 'Peter Shamoun',
     description: 'Peter Shamoun, AI Engineer in San Diego. I build and study AI systems.',
     keywords:
       'AI engineer, agentic AI, data science, machine learning, AI safety, NLP, LLM, Python, AWS, Docker, TensorFlow, LangChain, UCSD, San Diego, Xifin, LPL Financial, Nexon America, Data Science Alliance, cloud computing',

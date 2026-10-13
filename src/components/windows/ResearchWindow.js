@@ -1,15 +1,15 @@
 import React from 'react';
-import { Window, Heading, Lines, ExtLink } from '@components/desktop';
+import { Window, Heading, Lines } from '@components/desktop';
 
 const ResearchWindow = () => (
   <Window id="research">
     <Heading>Research</Heading>
     <Lines>
       <li>
-        <span>Steering language models away from harm</span>
+        <span>Sleep patterns as an alternative to epoch training</span>
       </li>
       <li>
-        <ExtLink href="https://datascience.ucsd.edu/">HDSI Data Smith Lab, UC San Diego</ExtLink>
+        <span>Publication coming soon...</span>
       </li>
     </Lines>
   </Window>

@@ -8,7 +8,7 @@ const ResearchWindow = () => (
         <span>Sleep patterns as an alternative to epoch training</span>
       </li>
       <li>
-        <span>Publication coming soon...</span>
+        <span>Publication coming soon…</span>
       </li>
     </Lines>
   </Window>

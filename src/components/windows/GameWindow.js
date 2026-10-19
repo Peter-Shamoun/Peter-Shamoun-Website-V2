@@ -67,7 +67,7 @@ const GameWindow = ({ id }) => {
     content = <Game active={active} w={size.w} h={size.h} />;
   } else if (win.open) {
     content = (
-      <Note>{failed ? 'This game did not load. Close it and try again.' : 'Loading...'}</Note>
+      <Note>{failed ? 'This game did not load. Close it and try again.' : 'Loading…'}</Note>
     );
   }
 

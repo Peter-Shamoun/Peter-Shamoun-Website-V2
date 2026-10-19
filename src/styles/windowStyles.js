@@ -40,6 +40,16 @@ const windowStyles = css`
     ${glassInactive};
   }
 
+  /* No see-through glass for people who ask for less transparency. */
+  @media (prefers-reduced-transparency: reduce) {
+    .win,
+    .win:not(.is-active) {
+      background-color: var(--glass-tint-solid);
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+  }
+
   /* Opening: the pane swells up out of the bubble that was popped, the way a bubble rises.
      The individual scale and translate properties leave the drag transform alone. It replays
      whenever [hidden] is removed. */

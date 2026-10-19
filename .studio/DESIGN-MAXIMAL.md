@@ -79,7 +79,7 @@ can press this"; orange appears only on fish.
   the horizon, shelves and ivy at the right edge, deck centred at the bottom, grass blades in
   front of the deck.
 - 390: name, globe (smaller, top), the six bubbles as a 3 by 2 grid of 96px targets, the deck
-  docked at the bottom. The shelves fold into the Games pane. Panes open as full-width sheets.
+  docked at the bottom. The shelves fold into the Games pane. Panes rise from the deck as drawers as tall as their content, so the globe stays in view above them.
 
 ## Assets (all in `static/aero/`)
 

@@ -298,7 +298,7 @@ const Taskbar = () => {
         <Track>
           <NowShowing aria-live="polite">
             <PlayGlyph />
-            {frontWin ? frontWin.title : 'Pick a bubble'}
+            {frontWin ? frontWin.title : 'Ready'}
           </NowShowing>
           <Tasks data-tasks>
             {open.map(w => (

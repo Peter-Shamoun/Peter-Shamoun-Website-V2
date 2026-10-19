@@ -57,6 +57,7 @@ export const Heading = styled.h3`
   font: 900 28px/1.15 var(--main-large-font);
   color: var(--heading);
   letter-spacing: -0.01em;
+  text-wrap: balance;
 `;
 
 // Short lines, one thought each. A row is either one phrase, or a name with a phrase beside it.

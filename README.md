@@ -1,6 +1,6 @@
 # Peter Shamoun: personal website
 
-The personal site of Peter Shamoun, live at [petershamoun.com](https://petershamoun.com). It is laid out as a calm 1990s desktop: the Windows XP hill-and-sky wallpaper, a column of desktop icons, a taskbar with a Start menu and a clock along the bottom, and grey bevelled windows for About, Experience, Projects, Research and Contact.
+The personal site of Peter Shamoun, live at [petershamoun.com](https://petershamoun.com). It is a 2007-style Frutiger Aero scene: a glass globe sits on a bright meadow under a deep blue sky, with a glass-tower island inside and goldfish swimming laps below the waterline. The sections (About, Experience, Projects, Research, Contact and Games) float beside it as soap bubbles that pop open into glass panes. The games stand on lime acrylic shelves hanging from ivy, and a chrome media player at the bottom runs the page: its orb lists every section, its LCD shows the open pane and the time, and its buttons skip between sections.
 
 Built with [Gatsby](https://www.gatsbyjs.org/) 3, React 17 and styled-components. Content is kept in Markdown files.
 
@@ -27,7 +27,7 @@ Everything the windows show comes from two folders under `content/`.
 
 ## Games
 
-The Games folder on the desktop holds seven small games, each in its own window: Minesweeper, Solitaire, Snake, Tetris, Breakout, Pong and Space Invaders. All of them are written for this site, with no images, sounds or outside code.
+The Games bubble and the shelves hold seven small games, each in its own window: Minesweeper, Solitaire, Snake, Tetris, Breakout, Pong and Space Invaders. All of them are written for this site, with no images, sounds or outside code.
 
 - `src/components/games/<Name>.js`: one file per game. It is fetched only when its window first opens.
 - `src/components/games/kit.js`: the parts they share (the box that scales a game to fit a phone, the game loop, keys, best scores, buttons and readouts).
@@ -46,14 +46,14 @@ Pages panel on Vercel's free plan. The address bar never changes. Virtual paths:
 | Path                                            | Meaning                                                                         |
 | ----------------------------------------------- | ------------------------------------------------------------------------------- |
 | `/`                                             | A real visit                                                                    |
-| `/window/<id>`                                  | The visitor opened that window (About, open on arrival, is not counted)         |
+| `/window/<id>`                                  | The visitor opened that pane                                                    |
 | `/click/email`                                  | Clicked an email link                                                           |
 | `/click/file`, `/click/phone`                   | Opened another file on the site, clicked a phone link                           |
 | `/out/<host>/<path>`                            | Clicked a link to another site                                                  |
 | `/engaged/15s`, `/engaged/60s`, `/engaged/180s` | Kept the tab visible that long                                                  |
 | `/from/<source>`                                | Arrived through a tagged link such as `https://petershamoun.com/?from=linkedin` |
-| `/panel/world-time`, `/panel/start`             | Opened the clock panel, opened the Start menu                                   |
-| `/click/reset`                                  | Chose "Tidy desktop" in the Start menu                                          |
+| `/panel/world-time`, `/panel/start`             | Opened the world-time panel, opened the playlist                                |
+| `/click/reset`                                  | Chose "Close all panes" in the playlist                                         |
 | `/error/js`, `/error/promise`                   | A script error happened on the page                                             |
 
 Because of the virtual paths, the dashboard's total page-view number counts actions as well as
@@ -63,5 +63,6 @@ visits; the row for `/` is the number of real visits. Set `VIRTUAL_PAGEVIEWS` to
 ## Credits
 
 - The code is forked from Brittany Chiang's [v4](https://github.com/bchiang7/v4) site, released under the MIT licence. The licence and both copyright notices are in [LICENSE](LICENSE).
-- Typefaces: Web437 DOS/V re ANK16 and ANK24 by VileR, from The Ultimate Oldschool PC Font Pack ([int10h.org](https://int10h.org/oldschool-pc-fonts/)), licensed under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). Silkscreen by Jason Kottke, under the SIL Open Font License 1.1.
-- Design: a homage to late-1990s desktop operating systems and to the fake-desktop design of thestrokes.com. The site is not affiliated with or endorsed by The Strokes. All artwork and text here are original.
+- Typefaces: Open Sans and Nunito, both under the SIL Open Font License 1.1.
+- Photos: the sky and grass in the meadow are CC0 photos by Trixia Lao and Marc Wilnauer. Sources and licences for every outside file are in [static/aero/CREDITS.md](static/aero/CREDITS.md).
+- Design: a homage to the Frutiger Aero look of 2004-2013 desktop themes and gadgets. No real product logos or characters are used; the globe, fish, bubbles, deck and the rest are drawn for this site, with their generators in `design/aero/`.

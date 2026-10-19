@@ -577,9 +577,16 @@ const Scene = () => {
           <source media="(max-width: 576px)" type="image/webp" srcSet={asset('plate-phone.webp')} />
           <source media="(max-width: 576px)" srcSet={asset('plate-phone.jpg')} />
           <source type="image/webp" srcSet={asset('plate-desktop.webp')} />
-          {/* React 17 does not know fetchPriority yet; the lowercase attribute reaches the DOM. */}
-          {/* eslint-disable-next-line react/no-unknown-property */}
-          <img src={asset('plate-desktop.jpg')} alt="" fetchpriority="high" decoding="async" />
+          <img
+            src={asset('plate-desktop.jpg')}
+            width={2560}
+            height={1440}
+            alt=""
+            // React 17 does not know fetchPriority; the lowercase attribute reaches the DOM.
+            // eslint-disable-next-line react/no-unknown-property
+            fetchpriority="high"
+            decoding="async"
+          />
         </Plate>
         {SKY_STARS.map(s => (
           <Star
@@ -602,6 +609,8 @@ const Scene = () => {
             src={asset('globe-back.webp')}
             srcSet={`${asset('globe-back-600.webp')} 600w, ${asset('globe-back.webp')} 1200w`}
             sizes="(max-width: 576px) 380px, 760px"
+            width={1200}
+            height={1400}
             alt=""
             decoding="async"
           />
@@ -643,6 +652,8 @@ const Scene = () => {
             src={asset('globe-front.webp')}
             srcSet={`${asset('globe-front-600.webp')} 600w, ${asset('globe-front.webp')} 1200w`}
             sizes="(max-width: 576px) 380px, 760px"
+            width={1200}
+            height={1400}
             alt=""
             decoding="async"
           />
@@ -668,12 +679,16 @@ const Scene = () => {
       <Layer style={{ '--depth': '-22px' }}>
         <Ivy
           src={asset('ivy.svg')}
+          width={520}
+          height={760}
           alt=""
           data-side="right"
           style={{ '--w': 'clamp(220px, 24vw, 440px)' }}
         />
         <Ivy
           src={asset('ivy.svg')}
+          width={520}
+          height={760}
           alt=""
           data-side="left"
           style={{ '--w': 'clamp(160px, 16vw, 300px)' }}
@@ -708,7 +723,7 @@ const Scene = () => {
       </Layer>
 
       <Layer style={{ '--depth': '-34px' }}>
-        <Blades src={asset('blades.svg')} alt="" />
+        <Blades src={asset('blades.svg')} width={1600} height={180} alt="" />
         <Bokeh style={{ '--x': '-3%', '--y': '72%', '--s': '150px', '--blur': '4px' }} />
         <Bokeh style={{ '--x': '93%', '--y': '80%', '--s': '110px', '--blur': '3px' }} />
       </Layer>

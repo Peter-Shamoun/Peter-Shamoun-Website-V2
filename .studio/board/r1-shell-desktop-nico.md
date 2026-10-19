@@ -12,16 +12,21 @@ Branch `aero/r1-shell-desktop`. Files: `DesktopIcon.js`, `DesktopIcons.js`, `Wal
 
 ## Measurements and cross-squad
 
-- Measured column: the grid column is 104px. Left 16px + 104px + 8px gap = 128px. That matches `--win-clear: 128px` in `windowStyles.js` for one column, so I did not touch it.
-- Two-column case (short desktop, 40px icons) is also fine.
-- Assets: this branch has no icons or bubble SVG. For the shots I copied `static/aero/fx/bubble.svg` from `aero/r1-asset-bubble` and three icons from `aero/r1-asset-icons-a` into `public/` (gitignored). Research, Contact and Games show as broken images until the icon set lands.
+- Measured column: the grid has no column-gap (only row-gap 6px), so the first column ends at 16 + 104 = 120px and the second column starts at 120px. That is clear of `--win-clear: 128px` in `windowStyles.js` for one column, so I did not touch it.
+- Two-column case (short desktop, 40px icons): 16 + 104 + 104 = 224px, inside the 232px two-column clearance.
+- Assets: this branch has no icons or bubble SVG. For the shots I copied `static/aero/fx/bubble.svg` from `aero/r1-asset-bubble` and three icons (about, experience, projects) from `aero/r1-asset-icons-a` into `public/` (gitignored). Research, Contact and Games show as broken images until the icon set lands.
+
+## Review fixes (round 1 fix branch `aero/r1-shell-desktop-fix`)
+
+- Column math corrected to 16 + 104 = 120px (no column-gap), two-column case 224px inside 232px. `windowStyles.js` not changed.
+- Hover strengthened to a gradient of rgba(255,255,255,.36) to rgba(255,255,255,.16) with a border of rgba(255,255,255,.7). The Projects box now reads clearly on bright sky in `hover.png`.
+- eslint on the three files and `build.sh` were re-run on this branch. eslint needs `NODE_ENV=test` to bypass the Gatsby babel preset, and the build reports Done building.
 
 ## Shots (`$SP/shots/shell-desktop/`)
 
-- `desktop.png`, `hover.png`, `short.png` (1280x480), `phone.png`, `click-projects.png` (click still opens the window).
-- The selection box is visible on the old wallpaper, though the frosted tint is subtle on bright sky. Worth a look once the final bubble art lands.
+- `desktop.png`, `hover.png`, `short.png` (1280x480), `phone.png`. Research, Contact and Games are broken images in these shots because their icon files are not on this branch.
+- The selection box is visible on the old wallpaper, and the hover box is clearly visible on the Projects icon.
 
 ## Open questions
 
-- Mira: is the hover tint strong enough on the bright sky, or should the border go up to .7?
-- Theo: the bubble sprite is a placeholder ring in my shots. Please confirm the real `bubble.svg` reads well at 24 to 90px.
+- Theo: the bubble sprite in my shots is the placeholder from `aero/r1-asset-bubble`. Please confirm the final `bubble.svg` reads well at 24 to 90px.

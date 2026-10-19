@@ -55,8 +55,8 @@ const StyledIcon = styled.button`
     border-color var(--dur-hover) var(--ease-out);
 
   &:hover {
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.1));
-    border-color: rgba(255, 255, 255, 0.55);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.36), rgba(255, 255, 255, 0.16));
+    border-color: rgba(255, 255, 255, 0.7);
   }
 
   /* Selected by keyboard or press: a frosted blue box around the icon and its label.

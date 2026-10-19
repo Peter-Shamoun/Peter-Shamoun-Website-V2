@@ -35,7 +35,7 @@ body { margin: 0; padding: 20px; width: 660px; font: 13px/1.4 "Open Sans", Arial
 .row { display: flex; align-items: center; gap: 22px; margin-bottom: 14px; }
 .white { width: 660px; box-sizing: border-box; padding: 14px; background: #ffffff; margin-bottom: 14px;
   display: flex; align-items: center; gap: 26px; border: 1px solid #dde6ee; }
-.white img { width: 96px; height: 96px; }
+.white > img { width: 96px; height: 96px; }
 .lbl { color: #546a80; font-size: 12px; }
 .fav { display: flex; align-items: flex-end; gap: 14px; }
 </style></head>

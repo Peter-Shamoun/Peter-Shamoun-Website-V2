@@ -6,7 +6,8 @@ import { DESKTOP_ICONS } from './registry';
 import DesktopIcon from './DesktopIcon';
 
 // One column from the top-left corner, filled top to bottom. A second column starts only when
-// the desktop is too short for the first. A row is the picture, 2px and the 20px label.
+// the desktop is too short for the first. A cell is 104px wide and the picture plus 50px tall:
+// the picture, the 2px gap, up to two 18px label lines and the selection box padding.
 // On phones: rows of four across the top. Only the icons take pointer events.
 const StyledIcons = styled.nav`
   position: absolute;
@@ -16,9 +17,9 @@ const StyledIcons = styled.nav`
   z-index: var(--z-icons);
   display: grid;
   grid-auto-flow: column;
-  grid-template-rows: repeat(auto-fill, calc(var(--icon-size) + 22px));
+  grid-template-rows: repeat(auto-fill, calc(var(--icon-size) + 50px));
   grid-auto-columns: 104px;
-  row-gap: 10px;
+  row-gap: 6px;
   pointer-events: none;
 
   ${media.phone} {

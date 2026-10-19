@@ -19,9 +19,9 @@ export const A = {
 const PHONE_MAX = 576;
 
 const BASE_Z = 1000;
-// The window that is already open when the page appears. It is open in the first render, so it
-// is in the server's HTML and nothing moves on load.
-const OPEN_AT_START = 'about';
+// The window that is already open when the page appears (null: none, so the first view is the
+// whole scene). Every pane is in the server's HTML either way, hidden until opened.
+const OPEN_AT_START = null;
 
 const makeWindows = () =>
   WINDOWS.reduce((acc, w) => {

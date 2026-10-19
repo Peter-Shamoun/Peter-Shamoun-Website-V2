@@ -1,9 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDesktop, useIsoLayoutEffect, getOpener } from './DesktopProvider';
-import { getWindow } from './registry';
+import { getWindow, DESKTOP_ICONS, GAME_LIST } from './registry';
 import { frontZ } from './state';
-import { GlyphClose } from './icons';
+import { GlyphClose, ICONS } from './icons';
+
+// The art for a window: its desktop entry's icon, or a game's icon for a game window.
+export const iconFor = id =>
+  ICONS[(DESKTOP_ICONS.find(i => i.target === id) || GAME_LIST.find(g => g.id === id) || {}).icon];
 
 const clamp = (value, lo, hi) => Math.max(lo, Math.min(value, hi));
 
@@ -84,10 +88,11 @@ export const useDrag = ({ enabled = true, onStart, onMove, onEnd } = {}) => {
 };
 
 /**
- * The title strip of a window: the title at the left, close at the right.
+ * The title strip of a window: the icon and title at the left, close at the right.
  */
-export const TitleBar = ({ title, titleId, onClose, closeLabel, dragProps }) => (
+export const TitleBar = ({ title, titleId, icon: Art, onClose, closeLabel, dragProps }) => (
   <header className="win__titlebar" data-drag-handle {...dragProps}>
+    {Art ? <Art size={28} className="win__icon" /> : null}
     <h2 className="win__title" id={titleId}>
       {title}
     </h2>
@@ -104,6 +109,7 @@ export const TitleBar = ({ title, titleId, onClose, closeLabel, dragProps }) => 
 TitleBar.propTypes = {
   title: PropTypes.string.isRequired,
   titleId: PropTypes.string,
+  icon: PropTypes.elementType,
   onClose: PropTypes.func,
   closeLabel: PropTypes.string,
   dragProps: PropTypes.object,
@@ -276,6 +282,7 @@ const Window = ({ id, flush, game, footer, children }) => {
       <TitleBar
         title={def.title}
         titleId={titleId}
+        icon={iconFor(id)}
         onClose={() => actions.closeWindow(id)}
         closeLabel={`Close ${def.title}`}
         dragProps={{ ...dragProps, onDoubleClick: () => actions.moveWindow(id, 0, 0) }}

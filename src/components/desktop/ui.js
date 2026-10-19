@@ -53,10 +53,10 @@ export const BevelLink = GlossLink;
 
 /** Window heading. */
 export const Heading = styled.h3`
-  margin: 0 0 12px;
-  font: 300 22px/1.2 var(--main-large-font);
+  margin: 0 0 10px;
+  font: 900 28px/1.15 var(--main-large-font);
   color: var(--heading);
-  letter-spacing: 0;
+  letter-spacing: -0.01em;
 `;
 
 // Short lines, one thought each. A row is either one phrase, or a name with a phrase beside it.
@@ -69,9 +69,17 @@ export const Lines = styled.ul`
 
   li {
     display: grid;
-    grid-template-columns: 24rem minmax(0, 1fr);
+    grid-template-columns: 17rem minmax(0, 1fr);
     column-gap: 1.6rem;
-    padding: 0.5rem 0;
+    padding: 0.7rem 0;
+  }
+
+  li + li {
+    border-top: 1px solid rgba(24, 140, 210, 0.14);
+  }
+
+  li > a {
+    font: 800 16px/1.5 var(--display-font);
   }
 
   li > :only-child {

@@ -1,6 +1,6 @@
 import { css } from 'styled-components';
 
-// The Frutiger Aero materials (.studio/DESIGN.md section 5).
+// The Frutiger Aero materials (.studio/DESIGN-MAXIMAL.md, Materials).
 
 // Aero glass: the window frame, the Start menu, flyouts. Pair with a radius.
 export const glass = css`
@@ -77,14 +77,14 @@ export const fieldThin = css`
 // Explorer-style row highlight: Start menu rows, folder entries, hovered icons on white.
 export const hotTrack = css`
   border: 1px solid var(--hot-edge);
-  border-radius: var(--radius-ctl);
+  border-radius: 12px;
   background: var(--hot-fill);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.7);
 `;
 
 export const hotTrackStrong = css`
   border: 1px solid var(--hot-edge-strong);
-  border-radius: var(--radius-ctl);
+  border-radius: 12px;
   background: var(--hot-fill-strong);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.6);
 `;

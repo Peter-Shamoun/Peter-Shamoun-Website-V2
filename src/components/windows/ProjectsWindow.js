@@ -1,6 +1,6 @@
 import React from 'react';
 import { graphql, useStaticQuery } from 'gatsby';
-import { Window, Heading, Lines, ExtLink } from '@components/desktop';
+import { Window, Lines, ExtLink } from '@components/desktop';
 
 const ProjectsWindow = () => {
   const data = useStaticQuery(graphql`
@@ -22,7 +22,6 @@ const ProjectsWindow = () => {
 
   return (
     <Window id="projects">
-      <Heading>Projects</Heading>
       <Lines>
         {data.allMarkdownRemark.nodes.map(({ frontmatter }) => (
           <li key={frontmatter.title}>

@@ -3,7 +3,6 @@ import fonts from './fonts';
 import variables from './variables';
 import windowStyles from './windowStyles';
 import { gloss } from './mixins';
-import { media } from './media';
 
 const GlobalStyle = createGlobalStyle`
   ${fonts};
@@ -35,32 +34,6 @@ const GlobalStyle = createGlobalStyle`
     overflow: hidden;
   }
 
-  /* The drawn Aero wallpaper, fixed behind everything. --desktop shows while it loads. */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    background-image: url('/aero/wallpaper/aero-desktop.jpg');
-    background-image: image-set(
-      url('/aero/wallpaper/aero-desktop.webp') type('image/webp'),
-      url('/aero/wallpaper/aero-desktop.jpg') type('image/jpeg')
-    );
-    background-position: center bottom;
-    background-size: cover;
-    background-repeat: no-repeat;
-  }
-
-  ${media.phone} {
-    body::before {
-      background-image: url('/aero/wallpaper/aero-phone.jpg');
-      background-image: image-set(
-        url('/aero/wallpaper/aero-phone.webp') type('image/webp'),
-        url('/aero/wallpaper/aero-phone.jpg') type('image/jpeg')
-      );
-    }
-  }
-
   p,
   a,
   li,
@@ -74,6 +47,11 @@ const GlobalStyle = createGlobalStyle`
     background: var(--select);
     color: var(--select-text);
     text-shadow: none;
+  }
+
+  input,
+  textarea {
+    caret-color: var(--lagoon);
   }
 
   button {
@@ -95,7 +73,7 @@ const GlobalStyle = createGlobalStyle`
    * mixins.
    */
   :focus-visible {
-    outline: 2px solid var(--focus);
+    outline: 3px solid var(--focus);
     outline-offset: 2px;
   }
 

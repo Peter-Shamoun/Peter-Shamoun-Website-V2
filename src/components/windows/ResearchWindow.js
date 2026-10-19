@@ -1,9 +1,8 @@
 import React from 'react';
-import { Window, Heading, Lines } from '@components/desktop';
+import { Window, Lines } from '@components/desktop';
 
 const ResearchWindow = () => (
   <Window id="research">
-    <Heading>Research</Heading>
     <Lines>
       <li>
         <span>Sleep patterns as an alternative to epoch training</span>

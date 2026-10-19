@@ -1,6 +1,6 @@
 import React from 'react';
 import { graphql, useStaticQuery } from 'gatsby';
-import { Window, Heading, Lines, ExtLink } from '@components/desktop';
+import { Window, Lines, ExtLink } from '@components/desktop';
 
 // Each job is its markdown file's company and one-line summary; the newest comes first.
 const ExperienceWindow = () => {
@@ -29,7 +29,6 @@ const ExperienceWindow = () => {
 
   return (
     <Window id="experience">
-      <Heading>Work</Heading>
       <Lines>
         {data.allMarkdownRemark.nodes.map(({ id, frontmatter }) => (
           <li key={id}>

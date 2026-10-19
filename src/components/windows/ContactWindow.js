@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import config from '@config';
 import { media } from '@styles';
-import { Window, Heading, BevelLink } from '@components/desktop';
+import { Window, BevelLink } from '@components/desktop';
 
 // Shows a link address without its scheme, "www." or leading or trailing slash.
 const addressOf = url =>
@@ -37,8 +37,9 @@ const Row = styled(BevelLink)`
     column-gap: 12px;
     width: 100%;
     height: auto;
-    min-height: 40px;
-    padding: 6px 12px;
+    min-height: 52px;
+    padding: 8px 18px;
+    border-radius: 16px;
     text-align: left;
   }
 
@@ -50,13 +51,13 @@ const Row = styled(BevelLink)`
 `;
 
 const Label = styled.span`
-  font: 600 14px/1.3 var(--main-font);
+  font: 900 17px/1.3 var(--display-font);
   color: var(--heading);
 `;
 
 // Addresses wrap anywhere on narrow screens rather than push the row wider than the window.
 const Shown = styled.span`
-  font: 400 14px/1.3 var(--main-font);
+  font: 400 15px/1.3 var(--main-font);
   color: var(--text-muted);
   overflow-wrap: anywhere;
   text-align: right;
@@ -64,8 +65,6 @@ const Shown = styled.span`
 
 const ContactWindow = () => (
   <Window id="contact">
-    <Heading>Contact</Heading>
-
     <Rows>
       {ROWS.map(row => (
         <Row key={row.label} href={row.href}>

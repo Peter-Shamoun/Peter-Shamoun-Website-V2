@@ -15,7 +15,7 @@ const Grid = styled.ul`
 
 const Label = styled.span`
   padding: 0 2px;
-  font: 400 13px/1.3 var(--main-font);
+  font: 800 14px/1.3 var(--display-font);
   color: var(--text);
   text-align: center;
 `;
@@ -28,12 +28,12 @@ const Entry = styled.button.attrs({ type: 'button' })`
   align-items: center;
   gap: 4px;
   width: 100%;
-  padding: 6px 4px;
+  padding: 10px 4px 8px;
   background: none;
   border: 1px solid transparent;
-  border-radius: 3px;
+  border-radius: 14px;
   color: var(--text);
-  cursor: default;
+  cursor: pointer;
   transition: background var(--dur-hover) var(--ease-out),
     border-color var(--dur-hover) var(--ease-out);
 
@@ -49,9 +49,14 @@ const Entry = styled.button.attrs({ type: 'button' })`
 
   & img {
     display: block;
-    width: 48px;
-    height: 48px;
-    filter: drop-shadow(0 1px 2px rgba(0, 30, 60, 0.3));
+    width: 56px;
+    height: 56px;
+    filter: drop-shadow(0 3px 3px rgba(0, 30, 60, 0.3));
+    transition: transform var(--dur-hover) var(--ease-spring);
+  }
+
+  &:hover img {
+    transform: translateY(-3px) rotate(-4deg);
   }
 
   ${media.phone} {
@@ -74,7 +79,7 @@ const GamesWindow = () => {
                 data-game={id}
                 aria-label={`Play ${title}`}
                 onClick={e => actions.openWindow(id, { from: e.currentTarget })}>
-                <Art size={48} />
+                <Art size={56} />
                 <Label>{title}</Label>
               </Entry>
             </li>

@@ -9,6 +9,8 @@ import { Stage } from '../games/kit';
 const Note = styled.p`
   margin: 0;
   padding: 12px;
+  font: 400 13px/1.4 var(--main-font);
+  color: var(--text-muted);
 `;
 
 // The window a game runs in. The game is fetched when the window first opens and exists only

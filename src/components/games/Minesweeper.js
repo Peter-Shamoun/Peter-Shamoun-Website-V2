@@ -1,7 +1,7 @@
 import React, { useEffect, useReducer, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled, { css } from 'styled-components';
-import { bevel, bevelPressed, focusRect } from '@styles';
+import { focusRing } from '@styles';
 import { useIsoLayoutEffect } from '../desktop/DesktopProvider';
 import {
   COLORS,
@@ -235,21 +235,21 @@ const dropPress = ref => {
   }
 };
 
-// The small pixel mine and flag, drawn as crisp SVG rectangles.
+// The small pixel mine and flag, drawn as SVG rectangles in the Aero ink colour.
 const MineIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 14 14" shapeRendering="crispEdges" aria-hidden="true">
+  <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
     <rect x="6" y="0" width="2" height="14" fill={COLORS.black} />
     <rect x="0" y="6" width="14" height="2" fill={COLORS.black} />
     <rect x="3" y="3" width="8" height="8" fill={COLORS.black} />
-    <rect x="4" y="4" width="2" height="2" fill={COLORS.white} />
+    <rect x="4" y="4" width="2" height="2" fill="#ffffff" fillOpacity="0.85" />
   </svg>
 );
 
 const FlagIcon = ({ wrong }) => (
-  <svg width="14" height="14" viewBox="0 0 14 14" shapeRendering="crispEdges" aria-hidden="true">
-    <rect x="3" y="1" width="1" height="12" fill={COLORS.black} />
+  <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+    <rect x="3" y="1" width="1" height="12" fill={COLORS.navy} />
     <polygon points="4,1 12,4 4,7" fill={COLORS.red} />
-    <rect x="1" y="12" width="5" height="1" fill={COLORS.black} />
+    <rect x="1" y="12" width="5" height="1" fill={COLORS.navy} />
     {wrong ? (
       <path d="M2 2 L12 12 M12 2 L2 12" stroke={COLORS.black} strokeWidth="2" fill="none" />
     ) : null}
@@ -260,16 +260,23 @@ FlagIcon.propTypes = {
   wrong: PropTypes.bool,
 };
 
-const flatEdge = css`
-  box-shadow: inset -1px -1px ${COLORS.shadow};
+// An unopened cell: a glossy Windows 7 sky-blue tile.
+const unopenedCss = css`
+  background: linear-gradient(180deg, #9fd6f7 0%, #6cb6ea 49%, #4f9fe0 50%, #3b8fd6 100%);
+  border: 1px solid #2f78b8;
+  border-radius: 2px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+
+  &:hover {
+    filter: brightness(1.08);
+  }
 `;
 
-const raisedEdge = css`
-  ${bevel};
-
-  &:active {
-    ${bevelPressed};
-  }
+// An opened cell: flat and pale, with a fine grid line.
+const openedCss = css`
+  background: #eef4fa;
+  border: 1px solid #c5d4e2;
+  border-radius: 0;
 `;
 
 const Pit = styled(Well)`
@@ -294,18 +301,17 @@ const Cell = styled.button.attrs({ type: 'button' })`
   display: flex;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
   width: 28px;
   height: 28px;
   margin: 0;
   padding: 0;
-  border: 0;
-  border-radius: 0;
-  background: ${p => (p.$hit ? COLORS.red : COLORS.chrome)};
   color: ${p => p.$color || COLORS.black};
   font: 16px/1 var(--main-font);
   cursor: default;
-  ${p => (p.$open ? flatEdge : raisedEdge)};
-  ${focusRect};
+  ${p => (p.$open ? openedCss : unopenedCss)};
+  ${p => (p.$hit ? `background: ${COLORS.red};` : '')};
+  ${focusRing};
 `;
 
 const Row = styled.div`

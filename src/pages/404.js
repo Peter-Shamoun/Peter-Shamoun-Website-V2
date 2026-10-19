@@ -10,6 +10,7 @@ import { Plate, GelLink } from '../components/sea/ui';
 
 const Main = styled.main`
   position: relative;
+  isolation: isolate;
   min-height: 100svh;
   display: flex;
   align-items: center;

@@ -151,6 +151,31 @@ const MenuButton = styled.button.attrs({ type: 'button' })`
   }
 `;
 
+// Stops every loop on the page: bubbles, light, the orb. Remembered in this browser.
+const Still = styled.button.attrs({ type: 'button' })`
+  ${linkLook};
+  justify-content: center;
+  width: 46px;
+  padding: 0;
+  margin-left: 4px;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.45);
+  border-color: rgba(10, 95, 168, 0.25);
+
+  &[aria-pressed='true'] {
+    background: linear-gradient(180deg, #e6ffb8 0%, #c4f26c 50%, #ace24a 51%, #c9f47a 100%);
+    border-color: #6fb51f;
+    color: #1f4a00;
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+`;
+
+const STILL_KEY = 'ps-still';
+
 const Sheet = styled.ul`
   ${pill};
   position: absolute;
@@ -176,6 +201,36 @@ const Nav = () => {
   const [current, setCurrent] = useState(null);
   const [open, setOpen] = useState(false);
   const button = useRef(null);
+  const [still, setStill] = useState(false);
+
+  useEffect(() => {
+    try {
+      setStill(window.localStorage.getItem(STILL_KEY) === '1');
+    } catch (err) {
+      // storage blocked: motion stays on
+    }
+  }, []);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (still) {
+      root.setAttribute('data-still', '');
+    } else {
+      root.removeAttribute('data-still');
+    }
+    window.dispatchEvent(new Event('ps-still'));
+  }, [still]);
+
+  const toggleStill = () => {
+    setStill(v => {
+      try {
+        window.localStorage.setItem(STILL_KEY, v ? '0' : '1');
+      } catch (err) {
+        // storage blocked: the choice lasts until the page closes
+      }
+      return !v;
+    });
+  };
 
   // The stop in the middle of the screen is the current one.
   useEffect(() => {
@@ -234,7 +289,7 @@ const Nav = () => {
       <Capsule>
         <Brand href="#top">
           <img src={withPrefix('/sea/fx/bubble.webp')} alt="" width="34" height="34" />
-          Peter Shamoun
+          <span translate="no">Peter Shamoun</span>
         </Brand>
         <Links>
           {STOPS.map(s => (
@@ -243,6 +298,22 @@ const Nav = () => {
             </li>
           ))}
         </Links>
+        <Still
+          aria-pressed={still}
+          aria-label="Pause motion"
+          title={still ? 'Motion paused' : 'Pause motion'}
+          onClick={toggleStill}>
+          {still ? (
+            <svg viewBox="0 0 16 16" aria-hidden="true">
+              <path d="M4 2.5v11l9-5.5z" fill="currentColor" />
+            </svg>
+          ) : (
+            <svg viewBox="0 0 16 16" aria-hidden="true">
+              <rect x="3" y="2.5" width="3.4" height="11" rx="1" fill="currentColor" />
+              <rect x="9.6" y="2.5" width="3.4" height="11" rx="1" fill="currentColor" />
+            </svg>
+          )}
+        </Still>
         <MenuButton
           data-menu
           ref={button}

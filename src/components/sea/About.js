@@ -108,12 +108,12 @@ const About = () => (
           </picture>
         </Porthole>
         <div>
-          <Hello>Hi, I&apos;m Peter.</Hello>
+          <Hello>Hi, I’m Peter.</Hello>
           <Body>
-            I&apos;m an AI engineer at Xifin in San Diego, building agents that keep insurance
-            claims from being denied and appeal the ones that are. I also do AI research at UC San
-            Diego: small language models, AI safety, and whether sleep patterns can stand in for
-            epoch training.
+            I’m an AI engineer at Xifin in San Diego, building agents that keep insurance claims
+            from being denied and appeal the ones that are. I also do AI research at UC San Diego:
+            small language models, AI safety, and whether sleep patterns can stand in for epoch
+            training.
           </Body>
         </div>
       </Card>

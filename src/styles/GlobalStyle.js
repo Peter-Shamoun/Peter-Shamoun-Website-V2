@@ -130,6 +130,13 @@ const GlobalStyle = createGlobalStyle`
     }
   }
 
+  /* The visitor paused motion (the button in the nav). */
+  html[data-still] *,
+  html[data-still] *::before,
+  html[data-still] *::after {
+    animation-play-state: paused !important;
+  }
+
   /* keep this the last rule */
   [hidden] {
     display: none !important;

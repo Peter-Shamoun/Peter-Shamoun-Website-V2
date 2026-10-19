@@ -10,7 +10,7 @@ import { recordGameOpen } from '../tracking';
 // A game opens in a glass dialog over the page. The game's code loads the first time it opens;
 // the game exists only while the dialog is open, so a closed game does nothing.
 
-const RESERVE = { wide: 168, phone: 92 }; // title bar, padding and margins, px
+const RESERVE = { wide: 168, phone: 124 }; // title bar, padding and margins, px
 
 const appear = keyframes`
   from { opacity: 0; transform: translateY(18px) scale(0.97); }
@@ -33,10 +33,12 @@ const Veil = styled.div`
   background: radial-gradient(80% 70% at 50% 40%, rgba(6, 60, 130, 0.45), rgba(2, 20, 60, 0.78));
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
+  overscroll-behavior: contain;
   animation: ${fade} 0.25s ease;
 
   ${media.phone} {
-    padding: 0;
+    padding: 10px;
+    padding-bottom: max(10px, env(safe-area-inset-bottom));
   }
 `;
 
@@ -57,10 +59,8 @@ const Panel = styled.div`
 
   ${media.phone} {
     width: 100%;
-    height: 100%;
-    border-radius: 0;
-    padding: 0 10px 10px;
-    padding-bottom: max(10px, env(safe-area-inset-bottom));
+    border-radius: 22px;
+    padding: 0 8px 8px;
   }
 `;
 
@@ -118,10 +118,6 @@ const Body = styled.div`
   box-shadow: inset 0 0 0 1px rgba(10, 95, 168, 0.22), inset 0 2px 6px rgba(0, 40, 90, 0.12);
 
   ${media.phone} {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
     padding: 6px;
   }
 `;

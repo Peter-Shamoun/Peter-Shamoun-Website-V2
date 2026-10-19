@@ -119,7 +119,7 @@ const Experience = () => {
     <Stop
       id="experience"
       plate="shallows"
-      focus="40% 50%"
+      focus="24% 50%"
       caustics={0.55}
       bubbles={10}
       labelledBy="experience-title">

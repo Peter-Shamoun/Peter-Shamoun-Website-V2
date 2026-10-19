@@ -87,7 +87,7 @@ const HeroOrb = () => {
         return;
       }
       frame = 0;
-      if (!visible || !onScreen) {
+      if (!visible || !onScreen || document.documentElement.hasAttribute('data-still')) {
         return;
       }
       if (!start) {
@@ -162,6 +162,7 @@ const HeroOrb = () => {
     });
 
     document.addEventListener('visibilitychange', onVisibility);
+    window.addEventListener('ps-still', wake);
     if (window.matchMedia('(pointer: fine)').matches) {
       window.addEventListener('pointermove', onPointer, { passive: true });
     }
@@ -178,6 +179,7 @@ const HeroOrb = () => {
       cancelIdle();
       window.cancelAnimationFrame(frame);
       document.removeEventListener('visibilitychange', onVisibility);
+      window.removeEventListener('ps-still', wake);
       window.removeEventListener('pointermove', onPointer);
       if (io) {
         io.disconnect();

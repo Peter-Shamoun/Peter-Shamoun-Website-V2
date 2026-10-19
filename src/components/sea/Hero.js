@@ -84,7 +84,7 @@ const Line = styled.p`
   color: #ffffff;
   text-shadow: 0 1px 2px rgba(0, 35, 100, 0.7), 0 0 16px rgba(0, 40, 120, 0.55);
 
-  ${media.tablet} {
+  ${media.phone} {
     max-width: 30em;
   }
 `;
@@ -110,15 +110,15 @@ const Hero = () => (
     <HeroOrb />
     <Waterline aria-hidden="true" />
     <Copy>
-      <Name>Peter Shamoun</Name>
+      <Name translate="no">Peter Shamoun</Name>
       <Line>
         AI engineer in San Diego. I build agents for healthcare at Xifin and research small language
         models at UC San Diego.
       </Line>
       <Actions>
-        <GelLink href="#about">Dive in</GelLink>
+        <GelLink href="#about">Dive In</GelLink>
         <GelLink href="#games" $tone="lime">
-          Play a game
+          Play a Game
         </GelLink>
       </Actions>
     </Copy>

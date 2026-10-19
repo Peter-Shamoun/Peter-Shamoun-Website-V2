@@ -21,6 +21,8 @@ export const Plate = styled.div`
 
 // A section title set straight on the water: big, light, white, lit from above.
 export const WaterTitle = styled.h2`
+  position: relative;
+  width: fit-content;
   font-size: clamp(4rem, 6.4vw, 8rem);
   font-weight: 300;
   letter-spacing: -0.02em;
@@ -28,6 +30,16 @@ export const WaterTitle = styled.h2`
   /* a soft pool of deeper water behind the letters keeps them legible on the brightest light */
   text-shadow: 0 2px 3px rgba(0, 30, 90, 0.55), 0 0 24px rgba(0, 40, 120, 0.6),
     0 0 60px rgba(0, 40, 120, 0.45);
+
+  /* a pool of deeper water behind the word, for the stops whose light is brightest */
+  &::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: -45% -18%;
+    background: radial-gradient(closest-side, rgba(0, 62, 128, 0.55), rgba(0, 62, 128, 0));
+    pointer-events: none;
+  }
 `;
 
 // The line under a WaterTitle.

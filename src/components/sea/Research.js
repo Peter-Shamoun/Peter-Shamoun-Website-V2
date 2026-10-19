@@ -62,16 +62,22 @@ const Notes = styled.p`
 `;
 
 const Research = () => (
-  <Stop id="research" plate="dolphins" focus="55% 40%" bubbles={8} labelledBy="research-title">
+  <Stop
+    id="research"
+    plate="dolphins"
+    focus="55% 40%"
+    rays={0.8}
+    bubbles={8}
+    labelledBy="research-title">
     <Inner>
       <WaterTitle id="research-title">Research</WaterTitle>
       <Card>
         <Paper>Sleep patterns as an alternative to epoch training</Paper>
         <Status>Publication coming soon</Status>
         <Notes>
-          At UC San Diego&apos;s data science institute I study small language models. At the AI
-          Smith Lab I work on AI safety: using task vector algebra to fine-tune large language
-          models so they hold up against jailbreak attempts.
+          At UC San Diego’s data science institute I study small language models. At the AI Smith
+          Lab I work on AI safety: using task vector algebra to fine-tune large language models so
+          they hold up against jailbreak attempts.
         </Notes>
       </Card>
     </Inner>

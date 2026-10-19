@@ -84,7 +84,6 @@ const variables = css`
 
     /* ---- motion ---- */
     --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-    --ease-spring: cubic-bezier(0.22, 1.25, 0.36, 1);
     --dur-hover: 180ms;
 
     /* ---- layers ---- */

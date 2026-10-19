@@ -24,6 +24,52 @@ const shimmerB = keyframes`
   to { transform: translate3d(384px, -512px, 0) scale(1.5); }
 `;
 
+const sway = keyframes`
+  from { transform: rotate(var(--a)) scaleX(1); opacity: var(--o); }
+  to { transform: rotate(calc(var(--a) + 4deg)) scaleX(1.25); opacity: calc(var(--o) * 0.55); }
+`;
+
+// Shafts of sunlight from the surface, swaying slowly.
+const Rays = styled.div`
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  mix-blend-mode: screen;
+
+  i {
+    position: absolute;
+    top: -12%;
+    left: var(--x);
+    width: var(--w);
+    height: 125%;
+    transform-origin: 50% 0;
+    transform: rotate(var(--a));
+    opacity: var(--o);
+    background: linear-gradient(
+      180deg,
+      rgba(225, 252, 255, 0.85) 0%,
+      rgba(160, 235, 255, 0.35) 45%,
+      rgba(160, 235, 255, 0) 85%
+    );
+    filter: blur(14px);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    &[data-awake='true'] i {
+      animation: ${sway} var(--d) ease-in-out infinite alternate;
+    }
+  }
+`;
+
+const RAYS = [
+  { x: '18%', w: '7%', a: '18deg', o: 0.34, d: '9s' },
+  { x: '30%', w: '3%', a: '12deg', o: 0.42, d: '7s' },
+  { x: '41%', w: '10%', a: '6deg', o: 0.26, d: '11s' },
+  { x: '55%', w: '4%', a: '-2deg', o: 0.4, d: '8s' },
+  { x: '64%', w: '8%', a: '-9deg', o: 0.28, d: '12s' },
+  { x: '78%', w: '3%', a: '-15deg', o: 0.36, d: '10s' },
+];
+
 const Section = styled.section`
   --seam: 14vh;
   position: relative;
@@ -116,7 +162,18 @@ const TINT = {
 const srcSet = (name, ext) =>
   [960, 1600, 2400].map(w => `${withPrefix(`/sea/plates/${name}-${w}.${ext}`)} ${w}w`).join(', ');
 
-const Stop = ({ id, plate, focus, caustics, bubbles, first, labelledBy, children, className }) => {
+const Stop = ({
+  id,
+  plate,
+  focus,
+  caustics,
+  rays,
+  bubbles,
+  first,
+  labelledBy,
+  children,
+  className,
+}) => {
   const [ref, awake] = useAwake();
   return (
     <Section
@@ -138,6 +195,16 @@ const Stop = ({ id, plate, focus, caustics, bubbles, first, labelledBy, children
             style={{ objectPosition: focus }}
           />
         </picture>
+        {rays ? (
+          <Rays data-awake={awake}>
+            {RAYS.map(r => (
+              <i
+                key={r.x}
+                style={{ '--x': r.x, '--w': r.w, '--a': r.a, '--o': r.o * rays, '--d': r.d }}
+              />
+            ))}
+          </Rays>
+        ) : null}
         {caustics ? <Caustics $strength={caustics} data-awake={awake} /> : null}
         {bubbles ? <Bubbles count={bubbles} awake={awake} seed={id.length * 7} /> : null}
       </Backdrop>
@@ -151,6 +218,7 @@ Stop.propTypes = {
   plate: PropTypes.string.isRequired,
   focus: PropTypes.string,
   caustics: PropTypes.number,
+  rays: PropTypes.number,
   bubbles: PropTypes.number,
   first: PropTypes.bool,
   labelledBy: PropTypes.string,

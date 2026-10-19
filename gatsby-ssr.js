@@ -15,28 +15,35 @@ const NO_JS_CSS = [
   '[data-arcade-tile]{pointer-events:none;opacity:.55}',
 ].join('');
 
-exports.onRenderBody = ({ setHeadComponents }) => {
-  setHeadComponents([
-    <noscript key="no-js-fallback">
-      <style dangerouslySetInnerHTML={{ __html: NO_JS_CSS }} />
-    </noscript>,
-    <link
-      key="hero-preload"
-      rel="preload"
-      as="image"
-      type="image/webp"
-      imageSrcSet="/sea/hero/wide-1440.webp 1440w, /sea/hero/wide-1920.webp 1920w, /sea/hero/wide-2880.webp 2880w"
-      imageSizes="100vw"
-      media="(min-width: 720px)"
-    />,
-    <link
-      key="hero-preload-phone"
-      rel="preload"
-      as="image"
-      type="image/webp"
-      imageSrcSet="/sea/hero/phone-780.webp 780w, /sea/hero/phone-1170.webp 1170w"
-      imageSizes="100vw"
-      media="(max-width: 719px)"
-    />,
-  ]);
+exports.onRenderBody = ({ setHeadComponents, pathname }) => {
+  const home = pathname === '/';
+  setHeadComponents(
+    [
+      <noscript key="no-js-fallback">
+        <style dangerouslySetInnerHTML={{ __html: NO_JS_CSS }} />
+      </noscript>,
+      home && (
+        <link
+          key="hero-preload"
+          rel="preload"
+          as="image"
+          type="image/webp"
+          imageSrcSet="/sea/hero/wide-1440.webp 1440w, /sea/hero/wide-1920.webp 1920w, /sea/hero/wide-2880.webp 2880w"
+          imageSizes="100vw"
+          media="(min-width: 720px)"
+        />
+      ),
+      home && (
+        <link
+          key="hero-preload-phone"
+          rel="preload"
+          as="image"
+          type="image/webp"
+          imageSrcSet="/sea/hero/phone-780.webp 780w, /sea/hero/phone-1170.webp 1170w"
+          imageSizes="100vw"
+          media="(max-width: 719px)"
+        />
+      ),
+    ].filter(Boolean),
+  );
 };

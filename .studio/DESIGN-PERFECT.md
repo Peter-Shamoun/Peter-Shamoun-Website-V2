@@ -70,9 +70,11 @@ lime accent for "play".
 
 ## Type
 
-Segoe UI first (Windows), then **Selawik** (Microsoft's open-source Segoe UI stand-in, OFL,
-self-hosted) everywhere else. Display in Light (300) at large sizes like the Vista/7 launch pages;
-UI and body in Regular and Semibold.
+Segoe UI first (Windows has it), then **Open Sans**, self-hosted (OFL): a humanist sans by Steve
+Matteson, who also drew Segoe. Selawik, Microsoft's open Segoe stand-in, was the first pick and
+was dropped because it ships without kerning. Display sizes in Light (300), like the Vista and
+Windows 7 launch pages; UI and body in Regular and Semibold. Section titles sit straight on the
+water in white with a soft pool of deeper blue behind them so they hold up on the brightest light.
 
 ## Motion
 
@@ -82,9 +84,40 @@ UI and body in Regular and Semibold.
   supported), sections' glass rises in on first view.
 - Bubbles rise in the underwater layer; caustics shimmer.
 - `prefers-reduced-motion`: the static hero render, no parallax, no loops.
+- A pause button in the nav stops every loop on the page and the orb, and is remembered.
 
 ## Assets and sources
 
 All photographs are CC0 (Unsplash photos re-hosted on Wikimedia Commons). Full list in
 `static/sea/CREDITS.md`. Plates: `design/sea/plates.py`. Hero stills: `design/sea/render-hero.js`
 (renders the live shader in Chrome).
+
+## Direction contract
+
+THESIS: the page is one continuous dive; each section is a place in the water, not a window.
+Refuses the OS metaphor and the centred card over a gradient.
+
+OWN-WORLD: graded CC0 sea photography; one WebGL glass orb; frosted white plates with a hard top
+sheen and a cyan bottom glow; aqua and lime gel pills; Segoe/Open Sans Light at display sizes.
+
+STORY: the visitor meets Peter in the air, follows the light down through his work, plays a game
+in the deep, and surfaces at the contact links.
+
+FIRST VIEWPORT: name, one line and two gel buttons top left over the sky; the orb fills the right
+half over the reef; the waterline crosses the bottom of the screen; the nav capsule on top.
+
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the
+verdict, DESIGN.md, and every shipping raster carrying its provenance.
+
+## Finish review (2026-10-19)
+
+Checked at 1440x900, 1920x1080, 768x1024 and 390x844, with WebGL and with reduced motion. All
+seven games open, play and close with focus returning to their tile. Lighthouse (mobile):
+accessibility 100, SEO 100, best practices 96 (the only failure is the Vercel analytics script,
+which 404s when the build is served locally). Lab LCP on Fast 4G with 4x CPU: 1.7 s, CLS 0.
+Initial JS 108 kB gzip; the orb's code and its 2400 px texture load after the page is idle.
+
+Verdict: ships. Known limits are in the hand-off report: the orb is a still on devices with
+fewer than four cores and on save-data connections, the plates are lazy so a very fast scroll
+shows each plate's average colour for a moment, and the Firefox build gets no scroll parallax.
+Every raster in `static/sea/` is listed with its source in `static/sea/CREDITS.md`.

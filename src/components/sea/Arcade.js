@@ -77,7 +77,7 @@ const Case = styled.span`
   box-shadow: inset 0 0 0 1px rgba(10, 95, 168, 0.25),
     inset 0 -10px 22px -10px rgba(170, 255, 90, 0.9), 0 18px 36px -14px rgba(0, 10, 40, 0.8),
     0 24px 40px -18px rgba(155, 226, 45, 0.55);
-  transition: transform 0.45s var(--ease-spring), box-shadow 0.45s var(--ease-out);
+  transition: transform 0.45s var(--ease-out), box-shadow 0.45s var(--ease-out);
 
   img {
     display: block;
@@ -132,7 +132,7 @@ const How = styled.span`
 `;
 
 const Arcade = ({ onPlay }) => (
-  <Stop id="games" plate="deep" focus="40% 40%" bubbles={16} labelledBy="games-title">
+  <Stop id="games" plate="deep" focus="40% 40%" rays={1} bubbles={16} labelledBy="games-title">
     <Inner>
       <WaterTitle id="games-title">Games</WaterTitle>
       <WaterLede>

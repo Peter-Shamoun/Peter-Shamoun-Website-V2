@@ -175,7 +175,13 @@ const Projects = () => {
   `);
 
   return (
-    <Stop id="projects" plate="rays" focus="50% 30%" bubbles={12} labelledBy="projects-title">
+    <Stop
+      id="projects"
+      plate="rays"
+      focus="50% 30%"
+      rays={0.6}
+      bubbles={12}
+      labelledBy="projects-title">
       <Inner>
         <WaterTitle id="projects-title">Projects</WaterTitle>
         <Grid>

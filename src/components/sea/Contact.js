@@ -92,7 +92,7 @@ const Foot = styled.footer`
 const Contact = () => (
   <Stop id="contact" plate="school" focus="50% 60%" bubbles={18} labelledBy="contact-title">
     <Inner>
-      <WaterTitle id="contact-title">Say hello</WaterTitle>
+      <WaterTitle id="contact-title">Say Hello</WaterTitle>
       <WaterLede>Email is the quickest way to reach me.</WaterLede>
       <Rows>
         {ROWS.map(r => (

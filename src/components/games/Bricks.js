@@ -19,6 +19,7 @@ import {
   useBest,
   report,
 } from './kit';
+import { FONT, bake, glossCircle, glossRect, nightSky } from './gloss';
 
 // Bricks: a ball-and-paddle brick breaker. The playing field is 396 x 300 natural pixels.
 
@@ -54,7 +55,8 @@ const SUB_STEP = 3; // the ball moves at most this many px at a time
 const MAX_ANGLE = Math.PI / 3; // 60 degrees either side of straight up, at the paddle edges
 const LAUNCH_SPREAD = 0.35; // radians, about 20 degrees either side of straight up
 const FLASH_MS = 2000; // how long "Level n" shows after a level is cleared
-const FONT = '16px "Web437 ANK16", "Courier New", monospace';
+const SILVER = '#e9f1f8'; // the paddle
+const AQUA = '#16b8d4'; // the ball
 
 // Every brick as a rectangle, indexed row * COLS + col.
 const BRICK_RECTS = Array.from({ length: COLS * ROWS }, (_, i) => {
@@ -224,23 +226,36 @@ const snapshotOf = g => ({
   paddleX: g.paddleX,
 });
 
+// The night sky is painted once and copied in each frame.
+let sky = null;
+const skyArt = () => {
+  if (!sky) {
+    sky = bake(FIELD_W, FIELD_H, c => nightSky(c, FIELD_W, FIELD_H, 7));
+  }
+  return sky;
+};
+
 const drawBoard = (ctx, g) => {
-  ctx.fillStyle = COLORS.black;
-  ctx.fillRect(0, 0, FIELD_W, FIELD_H);
+  ctx.drawImage(skyArt(), 0, 0, FIELD_W, FIELD_H);
   for (let b = 0; b < BRICK_RECTS.length; b += 1) {
     if (g.alive[b]) {
       const rect = BRICK_RECTS[b];
-      ctx.fillStyle = ROW_COLORS[rect.r];
-      ctx.fillRect(rect.x, rect.y, BRICK_W, BRICK_H);
+      glossRect(ctx, rect.x, rect.y, BRICK_W, BRICK_H, ROW_COLORS[rect.r], 2);
     }
   }
-  ctx.fillStyle = COLORS.white;
-  ctx.fillRect(Math.round(g.paddleX - PADDLE_W / 2), PADDLE_Y, PADDLE_W, PADDLE_H);
-  ctx.fillRect(Math.round(g.ball.x), Math.round(g.ball.y), BALL, BALL);
+  glossRect(ctx, Math.round(g.paddleX - PADDLE_W / 2), PADDLE_Y, PADDLE_W, PADDLE_H, SILVER, 2);
+  glossCircle(
+    ctx,
+    Math.round(g.ball.x) + BALL / 2,
+    Math.round(g.ball.y) + BALL / 2,
+    BALL / 2,
+    AQUA,
+  );
   if (g.state === 'ready') {
     ctx.font = FONT;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
+    ctx.fillStyle = COLORS.white;
     ctx.fillText('Press Space or tap to launch', FIELD_W / 2, 200);
   }
 };

@@ -18,6 +18,7 @@ import {
   useBest,
   report,
 } from './kit';
+import { FONT, bake, glossCircle, grass } from './gloss';
 
 const COLS = 19;
 const ROWS = 15;
@@ -32,7 +33,6 @@ const SWIPE_PX = 20;
 const TAP_PX = 10; // a press that moved less than this is a tap
 // The "ready" line is drawn over these rows, so the first food is never put there.
 const NOTE_ROWS = [2, 3];
-const FONT = '16px "Web437 ANK16", "Courier New", monospace';
 
 const DIRS = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
 const OPPOSITE = { up: 'down', down: 'up', left: 'right', right: 'left' };
@@ -149,31 +149,34 @@ const advance = g => {
   return food ? 'ok' : 'won';
 };
 
+// The lawn is painted once and copied in each frame.
+let lawn = null;
+const lawnArt = () => {
+  if (!lawn) {
+    lawn = bake(CW, CH, c => grass(c, CW, CH, CELL));
+  }
+  return lawn;
+};
+
 const paint = (ctx, g) => {
-  ctx.fillStyle = COLORS.black;
-  ctx.fillRect(0, 0, CW, CH);
+  ctx.drawImage(lawnArt(), 0, 0, CW, CH);
   if (g.food) {
-    ctx.fillStyle = COLORS.red;
-    ctx.fillRect(g.food[0] * CELL + 3, g.food[1] * CELL + 3, CELL - 6, CELL - 6);
+    glossCircle(ctx, g.food[0] * CELL + CELL / 2, g.food[1] * CELL + CELL / 2, 7.5, COLORS.red);
   }
   g.snake.forEach(([x, y], i) => {
-    const px = x * CELL;
-    const py = y * CELL;
+    const cx = x * CELL + CELL / 2;
+    const cy = y * CELL + CELL / 2;
     if (i === 0) {
-      ctx.fillStyle = COLORS.white;
-      ctx.fillRect(px, py, CELL - 1, CELL - 1);
-      ctx.fillStyle = COLORS.lime;
-      ctx.fillRect(px + 2, py + 2, CELL - 5, CELL - 5);
+      glossCircle(ctx, cx, cy, 8.5, COLORS.green);
       const [ex, ey] = EYE[g.dir];
       ctx.fillStyle = COLORS.black;
-      ctx.fillRect(px + ex, py + ey, 3, 3);
+      ctx.fillRect(x * CELL + ex, y * CELL + ey, 3, 3);
     } else {
-      ctx.fillStyle = COLORS.lime;
-      ctx.fillRect(px, py, CELL - 1, CELL - 1);
+      glossCircle(ctx, cx, cy, 8.5, COLORS.lime);
     }
   });
   if (g.state === 'ready') {
-    ctx.fillStyle = COLORS.black;
+    ctx.fillStyle = 'rgba(6, 40, 80, 0.6)';
     ctx.fillRect(0, 40, CW, 24);
     ctx.font = FONT;
     ctx.textAlign = 'center';

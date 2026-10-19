@@ -38,3 +38,15 @@ merge. That is expected.
   The brief said to keep the number colours, so I left it. Mira or Theo may want `navy` for 8.
 - Minesweeper tile gloss is subtle at 1x. It reads at phone size. Stronger gloss would need a
   larger tile, which is a size change, so I did not make one.
+
+## Review fixes (branch aero/r1-games-dom-fix)
+
+- `Well`: `border-radius: 4px` now comes after `${field}`, so the computed radius is 4px.
+- `Btn`: `border-radius: 3px` moved below `${gloss}` and `${focusRing}` for clarity. The value is unchanged.
+- Left open, as the review allowed: Solitaire pips are still pixel-square paths, and
+  `DIGIT_COLORS[8]` (`COLORS.shadow`) is low contrast on opened cells. Both need a design call.
+- Re-verified: eslint passes with `NODE_ENV=test` (plain eslint hits the Gatsby Babel config
+  error on every file), `build.sh` says "Done building", and the four shots were read again. The
+  phone shot now opens the game through the Start menu (`[data-start-item=games]`), since the
+  desktop icons are off-screen at phone width.
+- Shots: `scratchpad/shots/games-dom/mines.png`, `mines-open.png`, `solitaire.png`, `mines-phone.png`.

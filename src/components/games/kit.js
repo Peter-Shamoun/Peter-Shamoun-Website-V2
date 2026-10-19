@@ -356,13 +356,13 @@ export const Btn = styled.button.attrs({ type: 'button' })`
   min-width: 28px;
   height: 28px;
   padding: 0 10px;
-  border-radius: 3px;
   color: var(--text);
   font: 400 14px/1 var(--main-font);
   white-space: nowrap;
   cursor: default;
   ${gloss};
   ${focusRing};
+  border-radius: 3px;
 
   &:active,
   &[aria-pressed='true'] {
@@ -376,8 +376,8 @@ export const Well = styled.div`
   flex: 1;
   min-height: 0;
   padding: 2px;
-  border-radius: 4px;
   ${field};
+  border-radius: 4px;
   background: ${props => props.$bg || '#ffffff'};
 `;
 

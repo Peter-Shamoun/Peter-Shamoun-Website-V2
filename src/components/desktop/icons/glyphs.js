@@ -1,3 +1,5 @@
+import React from 'react';
+import PropTypes from 'prop-types';
 import { expandRows, fromGrid, makeIcon } from './pixel';
 
 // Small glyphs for the title bar, the Start button and the Start menu. Run-length rows, see
@@ -24,26 +26,6 @@ const APP = [
   '.16',
 ];
 
-// 10 x 10 cross with 2 px arms, centred in 16 x 16.
-const CLOSE = [
-  '.16',
-  '.16',
-  '.16',
-  '.3 K2 .6 K2 .3',
-  '.4 K2 .4 K2 .4',
-  '.5 K2 .2 K2 .5',
-  '.6 K4 .6',
-  '.7 K2 .7',
-  '.7 K2 .7',
-  '.6 K4 .6',
-  '.5 K2 .2 K2 .5',
-  '.4 K2 .4 K2 .4',
-  '.3 K2 .6 K2 .3',
-  '.16',
-  '.16',
-  '.16',
-];
-
 const MENU = [
   '.16',
   '.16',
@@ -63,6 +45,28 @@ const MENU = [
   '.16',
 ];
 
+// The close X is vector, not pixels: a dark offset stroke under a white one, on a 12 x 12 box.
+export const GlyphClose = ({ size = 12, ...rest }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 12 12"
+    width={size}
+    height={size}
+    aria-hidden="true"
+    focusable="false"
+    {...rest}>
+    <g fill="none" strokeWidth="2" strokeLinecap="round">
+      <path d="M2.5 3L9.5 10M9.5 3L2.5 10" stroke="rgba(80,10,0,.55)" />
+      <path d="M2.5 2.5L9.5 9.5M9.5 2.5L2.5 9.5" stroke="#fff" />
+    </g>
+  </svg>
+);
+
+GlyphClose.displayName = 'GlyphClose';
+
+GlyphClose.propTypes = {
+  size: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+};
+
 export const GlyphApp = makeIcon('GlyphApp', [16, 16], 16, draw(APP));
-export const GlyphClose = makeIcon('GlyphClose', [16, 16], 16, draw(CLOSE));
 export const GlyphMenu = makeIcon('GlyphMenu', [16, 16], 16, draw(MENU));

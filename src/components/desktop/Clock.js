@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
-import styled from 'styled-components';
-import { bevelWindow, media } from '@styles';
+import styled, { keyframes } from 'styled-components';
+import { focusRing, glass, media } from '@styles';
 import { useMinuteNow } from '@hooks';
 import { useDesktop } from './DesktopProvider';
 
@@ -24,26 +24,50 @@ const ZONES = [
   }),
 }));
 
-// Intl puts a narrow no-break space before AM/PM; the pixel font needs a plain space.
+// Intl puts a narrow no-break space before AM/PM; the clock's text needs a plain space.
 const NARROW_SPACES = /[\u00a0\u202f]/g;
 
-// A flat button that fills the sunken tray at the right end of the taskbar.
+// The panel rises a few pixels into place as it opens.
+const worldOpen = keyframes`
+  from {
+    opacity: 0;
+    translate: 0 8px;
+  }
+`;
+
+// A flat clock inside the glass tray. It lights up like a task button on hover.
 const ClockButton = styled.button.attrs({ type: 'button' })`
   display: flex;
   align-items: center;
   justify-content: center;
   min-width: 62px;
-  height: 100%;
+  height: 30px;
   padding: 0 9px;
+  border: 1px solid transparent;
+  border-radius: 3px;
   background: none;
-  border: 0;
-  color: var(--text);
-  font: 16px/1 var(--main-font);
+  color: #fff;
+  font: 400 14px/1 var(--main-font);
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
   cursor: default;
+  transition: background 160ms cubic-bezier(0.16, 0.84, 0.3, 1),
+    border-color 160ms cubic-bezier(0.16, 0.84, 0.3, 1);
+  ${focusRing};
 
   &:focus-visible {
-    outline: 1px dotted var(--text);
-    outline-offset: -2px;
+    outline-color: #fff;
+  }
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.28);
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.22) 0,
+      rgba(255, 255, 255, 0.08) 50%,
+      rgba(255, 255, 255, 0) 51%,
+      rgba(255, 255, 255, 0.06) 100%
+    );
   }
 
   /* the touch area is the full height of the taskbar */
@@ -58,26 +82,38 @@ const ClockButton = styled.button.attrs({ type: 'button' })`
   }
 `;
 
-// Opens upward from the tray.
+// Glass panel that opens upward from the tray.
 const WorldTimePanel = styled.div`
+  ${glass};
   position: absolute;
-  right: 2px;
-  bottom: 100%;
+  right: 0;
+  bottom: calc(100% + 6px);
   display: flex;
   flex-direction: column;
-  padding: 6px 12px;
-  background: var(--chrome);
-  color: var(--text);
-  ${bevelWindow};
+  padding: 10px 14px;
+  border-radius: var(--radius-menu);
+  /* a denser tint than the other glass, so the dark text reads over bright grass */
+  background-color: rgba(220, 238, 252, 0.88);
+  box-shadow: inset 0 0 0 1px var(--glass-hi), var(--shadow-menu);
+  color: var(--text-on-glass);
+  animation: ${worldOpen} var(--dur-fast) var(--ease-out);
 `;
 
 const WorldRow = styled.div`
-  font: 16px/24px var(--main-font);
+  font: 400 14px/24px var(--main-font);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-on-glass);
+  text-shadow: var(--title-glow);
   white-space: pre;
 
   ${media.phone} {
     line-height: 32px;
   }
+`;
+
+// The place label of a row, in a heavier weight than its time.
+const WorldPlace = styled.span`
+  font-weight: 600;
 `;
 
 const formatZone = (zone, now) =>
@@ -126,7 +162,10 @@ const Clock = () => {
         aria-label="World time"
         hidden={!open}>
         {ZONES.map(zone => (
-          <WorldRow key={zone.label}>{`${zone.label}  ${formatZone(zone, now)}`}</WorldRow>
+          <WorldRow key={zone.label}>
+            <WorldPlace>{zone.label}</WorldPlace>
+            {`  ${formatZone(zone, now)}`}
+          </WorldRow>
         ))}
       </WorldTimePanel>
     </>

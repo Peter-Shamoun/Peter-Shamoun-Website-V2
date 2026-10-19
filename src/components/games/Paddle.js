@@ -18,6 +18,7 @@ import {
   useBest,
   report,
 } from './kit';
+import { FONT, bake, glossCircle, glossRect, nightSky } from './gloss';
 
 // Paddle: two-paddle table tennis against the computer. Everything is drawn on a canvas in
 // natural pixels; the game state lives in a plain object held in a ref.
@@ -47,7 +48,7 @@ const CPU_SPEED = 210;
 const CPU_DRIFT = 90;
 const CPU_ERROR = 22;
 
-const FONT = '16px "Web437 ANK16", "Courier New", monospace';
+const PIECE = '#dff3ff'; // the paddles and the ball
 
 const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
 const randomError = () => (Math.random() * 2 - 1) * CPU_ERROR;
@@ -191,22 +192,40 @@ const advance = (g, ms, held) => {
   return moveBall(g, s);
 };
 
+// The night sky is painted once and copied in each frame.
+let sky = null;
+const skyArt = () => {
+  if (!sky) {
+    sky = bake(CW, CH, c => nightSky(c, CW, CH, 11));
+  }
+  return sky;
+};
+
 const draw = (ctx, g) => {
   if (!ctx) {
     return;
   }
-  ctx.fillStyle = COLORS.black;
-  ctx.fillRect(0, 0, CW, CH);
-  ctx.fillStyle = COLORS.shadow;
+  ctx.drawImage(skyArt(), 0, 0, CW, CH);
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
   for (let y = 0; y < CH; y += 20) {
     ctx.fillRect(CW / 2 - 2, y, 4, 12);
   }
-  ctx.fillStyle = COLORS.white;
-  ctx.fillRect(PLAYER_X, Math.round(g.playerY - PAD_HALF), PAD_W, PAD_H);
-  ctx.fillRect(CPU_X, Math.round(g.cpuY - PAD_HALF), PAD_W, PAD_H);
-  ctx.fillRect(Math.round(g.ball.x), Math.round(g.ball.y), BALL, BALL);
+  // The glow is set only for the pieces, and restored after them.
+  ctx.save();
+  ctx.shadowColor = 'rgba(120, 240, 255, 0.8)';
+  ctx.shadowBlur = 10;
+  glossRect(ctx, PLAYER_X, Math.round(g.playerY - PAD_HALF), PAD_W, PAD_H, PIECE, 3);
+  glossRect(ctx, CPU_X, Math.round(g.cpuY - PAD_HALF), PAD_W, PAD_H, PIECE, 3);
+  glossCircle(
+    ctx,
+    Math.round(g.ball.x) + BALL / 2,
+    Math.round(g.ball.y) + BALL / 2,
+    BALL / 2,
+    PIECE,
+  );
+  ctx.restore();
   if (g.state === 'ready') {
-    ctx.fillStyle = COLORS.black;
+    ctx.fillStyle = 'rgba(6, 40, 80, 0.55)';
     ctx.fillRect(0, 176, CW, 24);
     ctx.fillStyle = COLORS.white;
     ctx.font = FONT;

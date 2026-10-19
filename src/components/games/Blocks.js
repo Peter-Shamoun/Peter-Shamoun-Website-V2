@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { sunken } from '@styles';
 import {
   COLORS,
   Frame,
@@ -18,6 +17,7 @@ import {
   useBest,
   report,
 } from './kit';
+import { bake, glossRect } from './gloss';
 
 // Blocks: a falling-blocks puzzle. The well is drawn on a canvas, the side panel is DOM.
 
@@ -69,20 +69,37 @@ const SHAPE_ROWS = {
   L: ['..X', 'XXX', '...'],
 };
 
-// Lighter and darker versions of each piece colour for the 1px bevel.
-const shade = (hex, target, amount) => {
-  const rgb = [1, 3, 5].map(i => {
-    const v = parseInt(hex.slice(i, i + 2), 16);
-    return Math.round(v + (target - v) * amount);
-  });
-  return `#${rgb.map(v => v.toString(16).padStart(2, '0')).join('')}`;
-};
-
 const PALETTE = {};
 TYPES.forEach(t => {
-  const base = COLORS[TYPE_COLOR[t]];
-  PALETTE[t] = { base, light: shade(base, 255, 0.5), dark: shade(base, 0, 0.4) };
+  PALETTE[t] = COLORS[TYPE_COLOR[t]];
 });
+
+// The pale sky behind the well: a soft gradient, the same for the well and the next-piece box.
+const skyFill = (ctx, h) => {
+  const sky = ctx.createLinearGradient(0, 0, 0, h);
+  sky.addColorStop(0, '#f8fcff');
+  sky.addColorStop(1, '#dfeefa');
+  return sky;
+};
+
+// The well's background, with its faint grid, painted once and copied in each frame.
+let wellSky = null;
+const wellSkyArt = () => {
+  if (!wellSky) {
+    wellSky = bake(WELL_W, WELL_H, ctx => {
+      ctx.fillStyle = skyFill(ctx, WELL_H);
+      ctx.fillRect(0, 0, WELL_W, WELL_H);
+      ctx.fillStyle = '#d3e2ef';
+      for (let x = 0; x <= COLS; x += 1) {
+        ctx.fillRect(x * CELL, 0, 1, WELL_H);
+      }
+      for (let y = 0; y <= ROWS; y += 1) {
+        ctx.fillRect(0, y * CELL, WELL_W, 1);
+      }
+    });
+  }
+  return wellSky;
+};
 
 // Rotated shapes: SHAPES[type][rot] is a list of [dx, dy] cells from the piece's top-left corner.
 const matrixCells = m => {
@@ -265,15 +282,7 @@ const landingY = (grid, p) => {
 };
 
 const drawBlock = (ctx, x, y, s, type) => {
-  const { base, light, dark } = PALETTE[type];
-  ctx.fillStyle = base;
-  ctx.fillRect(x, y, s, s);
-  ctx.fillStyle = light;
-  ctx.fillRect(x, y, s, 1);
-  ctx.fillRect(x, y, 1, s);
-  ctx.fillStyle = dark;
-  ctx.fillRect(x, y + s - 1, s, 1);
-  ctx.fillRect(x + s - 1, y, 1, s);
+  glossRect(ctx, x, y, s, s, PALETTE[type], 2);
 };
 
 const drawOutline = (ctx, x, y, s, color) => {
@@ -285,8 +294,7 @@ const drawOutline = (ctx, x, y, s, color) => {
 };
 
 const drawWell = (ctx, g) => {
-  ctx.fillStyle = COLORS.black;
-  ctx.fillRect(0, 0, WELL_W, WELL_H);
+  ctx.drawImage(wellSkyArt(), 0, 0, WELL_W, WELL_H);
   g.grid.forEach((row, y) =>
     row.forEach((cell, x) => {
       if (cell) {
@@ -301,13 +309,13 @@ const drawWell = (ctx, g) => {
   const gy = landingY(g.grid, p);
   const cells = SHAPES[p.type][p.rot];
   cells.forEach(([dx, dy]) =>
-    drawOutline(ctx, (p.x + dx) * CELL, (gy + dy) * CELL, CELL, PALETTE[p.type].base),
+    drawOutline(ctx, (p.x + dx) * CELL, (gy + dy) * CELL, CELL, PALETTE[p.type]),
   );
   cells.forEach(([dx, dy]) => drawBlock(ctx, (p.x + dx) * CELL, (p.y + dy) * CELL, CELL, p.type));
 };
 
 const drawNext = (ctx, type) => {
-  ctx.fillStyle = COLORS.black;
+  ctx.fillStyle = skyFill(ctx, NEXT);
   ctx.fillRect(0, 0, NEXT, NEXT);
   if (!type) {
     return;
@@ -387,8 +395,9 @@ const NextBox = styled.div`
   width: 72px;
   height: 72px;
   padding: 2px;
-  background: #000000;
-  ${sunken};
+  background: var(--field);
+  border: 1px solid var(--field-edge);
+  border-radius: 4px;
 
   & > canvas {
     display: block;

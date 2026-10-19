@@ -19,6 +19,7 @@ import {
   useBest,
   report,
 } from './kit';
+import { FONT, bake, glossRect, nightSky } from './gloss';
 
 // Invaders: a fixed shooter. Rows of aliens march sideways, drop a row at the edges and creep
 // down toward the cannon. Everything is kept in plain numbers in a ref and drawn on a canvas.
@@ -358,51 +359,79 @@ const updateGame = (g, dt, keys) => {
   }
 };
 
-const drawSprite = (ctx, rows, color, x, y) => {
-  ctx.fillStyle = color;
-  rows.forEach((line, r) => {
-    for (let c = 0; c < line.length; c += 1) {
-      if (line[c] === '#') {
-        ctx.fillRect(x + c * 2, y + r * 2, 2, 2);
-      }
-    }
-  });
+// The night sky is painted once and copied in each frame.
+let sky = null;
+const skyArt = () => {
+  if (!sky) {
+    sky = bake(CW, CH, c => nightSky(c, CW, CH, 23));
+  }
+  return sky;
+};
+
+// Each alien frame is drawn once as glossy gel cells, 4 px to a pixel, then scaled to 2 px.
+const artCache = {};
+const alienArt = (kind, frame) => {
+  const key = `${kind}${frame}`;
+  if (!artCache[key]) {
+    const { color, frames } = SPRITES[kind];
+    const rows = frames[frame];
+    artCache[key] = bake(
+      rows[0].length * 4,
+      rows.length * 4,
+      c => {
+        rows.forEach((line, r) => {
+          for (let col = 0; col < line.length; col += 1) {
+            if (line[col] === '#') {
+              glossRect(c, col * 4, r * 4, 4, 4, color, 1.2);
+            }
+          }
+        });
+      },
+      1,
+    );
+  }
+  return artCache[key];
 };
 
 const drawGame = (ctx, g) => {
-  ctx.fillStyle = COLORS.black;
-  ctx.fillRect(0, 0, CW, CH);
+  ctx.drawImage(skyArt(), 0, 0, CW, CH);
 
-  ctx.fillStyle = COLORS.green;
   g.shields.forEach(s =>
     s.cells.forEach((ok, idx) => {
       if (ok) {
         const b = cellBox(s, idx);
-        ctx.fillRect(b.x, b.y, b.w, b.h);
+        glossRect(ctx, b.x, b.y, b.w, b.h, COLORS.green, 1.2);
       }
     }),
   );
 
+  ctx.imageSmoothingEnabled = true;
   g.aliens.forEach((alive, i) => {
     if (!alive) {
       return;
     }
     const row = Math.floor(i / COLS);
-    const sprite = SPRITES[kindOfRow(row)];
-    drawSprite(ctx, sprite.frames[g.frame], sprite.color, alienX(g, i % COLS), alienY(g, row));
+    const art = alienArt(kindOfRow(row), g.frame);
+    ctx.drawImage(art, alienX(g, i % COLS), alienY(g, row), SPR_W, SPR_H);
   });
+  ctx.imageSmoothingEnabled = false;
 
   const cx = cannonPx(g);
-  ctx.fillStyle = COLORS.lime;
-  ctx.fillRect(cx + 9, CANNON_Y, 4, 6);
-  ctx.fillRect(cx, CANNON_Y + 6, CANNON_W, 6);
+  glossRect(ctx, cx + 9, CANNON_Y, 4, 6, COLORS.cyan, 1.5);
+  glossRect(ctx, cx, CANNON_Y + 6, CANNON_W, 6, COLORS.cyan, 2);
 
+  // The bullets carry a short glow of their own colour.
+  ctx.save();
+  ctx.shadowBlur = 6;
+  ctx.shadowColor = 'rgba(120, 240, 255, 0.9)';
   ctx.fillStyle = COLORS.white;
   g.shots.forEach(s => ctx.fillRect(s.x, s.y, SHOT_W, SHOT_H));
+  ctx.shadowColor = 'rgba(247, 197, 51, 0.8)';
   ctx.fillStyle = COLORS.yellow;
   g.alienShots.forEach(s => ctx.fillRect(s.x, s.y, SHOT_W, SHOT_H));
+  ctx.restore();
 
-  ctx.font = '16px "Web437 ANK16", "Courier New", monospace';
+  ctx.font = FONT;
   ctx.fillStyle = COLORS.white;
   ctx.textBaseline = 'top';
   ctx.fillText(`Wave ${g.wave}`, 6, 4);

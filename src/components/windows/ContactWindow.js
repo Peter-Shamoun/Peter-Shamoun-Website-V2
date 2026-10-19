@@ -23,21 +23,22 @@ const ROWS = [
 const Rows = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 8px;
 `;
 
-// A full-width bevelled link: label at the left, address at the right.
+// A full-width gloss command link, the Windows 7 style: the action name in bold blue at the
+// left, the address in muted text at the right. The whole row is the link.
 const Row = styled(BevelLink)`
   && {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    column-gap: 1rem;
+    column-gap: 12px;
     width: 100%;
     height: auto;
-    min-height: 32px;
-    padding: 0.4rem 1rem;
+    min-height: 40px;
+    padding: 6px 12px;
     text-align: left;
   }
 
@@ -48,9 +49,15 @@ const Row = styled(BevelLink)`
   }
 `;
 
-// Addresses are small and may wrap on phones, so they stay on the 16 px grid size.
+const Label = styled.span`
+  font: 600 14px/1.3 var(--main-font);
+  color: var(--heading);
+`;
+
+// Addresses wrap anywhere on narrow screens rather than push the row wider than the window.
 const Shown = styled.span`
-  font: 16px/1.2 var(--main-font);
+  font: 400 14px/1.3 var(--main-font);
+  color: var(--text-muted);
   overflow-wrap: anywhere;
   text-align: right;
 `;
@@ -62,7 +69,7 @@ const ContactWindow = () => (
     <Rows>
       {ROWS.map(row => (
         <Row key={row.label} href={row.href}>
-          <span>{row.label}</span>
+          <Label>{row.label}</Label>
           <Shown>{row.shown}</Shown>
         </Row>
       ))}

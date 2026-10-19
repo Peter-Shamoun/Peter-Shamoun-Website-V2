@@ -5,7 +5,7 @@ import { Helmet } from 'react-helmet';
 import { Layout } from '@components';
 import { BevelLink, Text } from '@components/desktop/ui';
 
-// The desktop colour with one static window. There is no desktop state on this page,
+// The Aero wallpaper with one static glass window. There is no desktop state on this page,
 // so the window is drawn with the shared window classes, not with the Window component.
 
 const Main = styled.main`
@@ -28,8 +28,9 @@ const Content = styled.div`
 `;
 
 const Code = styled.h1`
-  margin: 0 0 1.6rem;
-  font: 48px/1 var(--main-large-font);
+  margin: 0 0 12px;
+  font: 300 64px/1 var(--main-large-font);
+  color: var(--heading);
   letter-spacing: 0;
 `;
 

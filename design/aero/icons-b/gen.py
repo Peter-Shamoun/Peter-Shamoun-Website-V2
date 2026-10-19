@@ -160,7 +160,7 @@ def games():
     ]
     defs = ''.join([
         grad(f'{p}-body', [(0, '#ffffff', 1), (1, '#c4d4e3', 1)], x2=1, y2=1),
-        grad(f'{p}-pad', [(0, '#4fb0ec', 1), (1, '#0b5ca8', 1)], x2=1, y2=1),
+        grad(f'{p}-pad', [(0, '#1e88d8', 1), (1, '#0b5ca8', 1)], x2=1, y2=1),
         gloss_grad(f'{p}-gloss'),
         f'<clipPath id="{p}-clip"><path d="{pad_body}"/></clipPath>',
     ])
@@ -170,7 +170,7 @@ def games():
     btns = ''
     for cx, cy, name, _base, _light, edge in buttons:
         btns += (f'<circle cx="{cx}" cy="{cy}" r="9" fill="url(#{p}-btn-{name})" '
-                 f'stroke="{edge}" stroke-width="2"/>'
+                 f'stroke="{edge}" stroke-width="3"/>'
                  f'<ellipse cx="{cx}" cy="{cy - 4}" rx="5.5" ry="3" '
                  f'fill="url(#{p}-gloss)"/>')
     body = (
@@ -181,7 +181,7 @@ def games():
         f'<path d="{pad_body}" fill="none" stroke="#7d95ac" stroke-width="4" '
         'stroke-linejoin="round"/>'
         f'<path d="{pad}" fill="url(#{p}-pad)" stroke="#074a86" '
-        'stroke-width="2.5" stroke-linejoin="round"/>'
+        'stroke-width="3" stroke-linejoin="round"/>'
         f'<path d="M81 91H103V96H81Z" fill="#ffffff" fill-opacity=".45"/>'
         f'{btns}'
         + rim('M66 190Q128 199 190 190')
@@ -194,7 +194,7 @@ def games():
 def tidy():
     p = 'tidy'
     defs = ''.join([
-        grad(f'{p}-glass', [(0, '#dff3ff', 1), (1, '#74c6f2', 1)], x2=0.5, y2=1),
+        grad(f'{p}-glass', [(0, '#dff3ff', 1), (1, '#74c6f2', 1)], x2=0.6, y2=1),
         grad(f'{p}-band', [(0, '#74c6f2', 1), (1, '#1e88d8', 1)]),
         gloss_grad(f'{p}-gloss'),
     ])
@@ -214,7 +214,7 @@ def tidy():
             f'Q{x + w * 0.5:.1f} {y + h * 0.5 + 8:.1f} {x + 4} {y + h * 0.5:.1f}Z" '
             f'fill="url(#{p}-gloss)"/>'
             f'<path d="{rrect(x + 2, y + 2, w - 4, h - 4, 8)}" fill="none" '
-            'stroke="#ffffff" stroke-opacity=".6" stroke-width="1.2"/>'
+            'stroke="#ffffff" stroke-opacity=".35" stroke-width="1.2"/>'
         )
     # Content hints in the front pane: two pale lines.
     body += (
@@ -223,6 +223,8 @@ def tidy():
         '<path d="M42 170H102" stroke="#ffffff" stroke-opacity=".6" '
         'stroke-width="6" stroke-linecap="round"/>'
     )
+    # Bottom-edge rim on the front pane, as on the other icons.
+    body += rim('M40 213Q81 216 132 213')
     # Four-point sparkle at the top right.
     body += ('<path d="M226 10Q228 22 240 24Q228 26 226 38Q224 26 212 24'
              'Q224 22 226 10Z" fill="#ffffff"/>')

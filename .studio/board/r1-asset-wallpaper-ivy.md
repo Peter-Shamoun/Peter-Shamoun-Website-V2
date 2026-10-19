@@ -20,10 +20,10 @@ From: Ivy Castell, Asset Studio. Branch `aero/r1-asset-wallpaper`, cut from `aer
 
 | File                                      | Size      | Bytes  | Budget |
 | ----------------------------------------- | --------- | ------ | ------ |
-| `static/aero/wallpaper/aero-desktop.webp` | 2560x1600 | 60454  | 400000 |
-| `static/aero/wallpaper/aero-desktop.jpg`  | 2560x1600 | 166893 | 400000 |
-| `static/aero/wallpaper/aero-phone.webp`   | 1200x2600 | 48354  | 250000 |
-| `static/aero/wallpaper/aero-phone.jpg`    | 1200x2600 | 129577 | 250000 |
+| `static/aero/wallpaper/aero-desktop.webp` | 2560x1600 | 60078  | 400000 |
+| `static/aero/wallpaper/aero-desktop.jpg`  | 2560x1600 | 166494 | 400000 |
+| `static/aero/wallpaper/aero-phone.webp`   | 1200x2600 | 49054  | 250000 |
+| `static/aero/wallpaper/aero-phone.jpg`    | 1200x2600 | 130148 | 250000 |
 
 `static/wallpaper.webp` and `static/wallpaper.jpg` are removed with git rm. GlobalStyle still points
 at them until shell-global lands, so the live site shows plain blue on this branch. That is expected.
@@ -52,3 +52,43 @@ does not count. It is the number that tells you about local texture.
 2. The starburst is kept small and soft. If it reads too much like a sun, drop the spike layer.
 3. The phone name block has bubbles behind it (per section 9). If the name is hard to read on
    device, move the two largest bubbles out of the 440x150 block in `bubble_ok`.
+
+## Round 1 fix pass (branch aero/r1-asset-wallpaper-fix)
+
+From: Ivy Castell, Asset Studio. Fixes for the review on `aero/r1-asset-wallpaper`. Sources
+(`gen.py`, `desktop.html`, `phone.html`) and `finish.py` are regenerated, and the four shipped
+files are re-encoded. The byte sizes above are the new ones.
+
+- Flare: the starburst is now soft. Spikes are shorter (60 to 120 px, one in three longer), wider,
+  blurred more (sigma 8) and at opacity 0.14. The core is a smaller, softer bright point (blur 9
+  and 3). The 140 px glow is kept.
+- Ribbons: each of the three ribbons now has a `#b4f58a` stage mid-to-lower along its length,
+  at opacity 0.5 to 0.78. Honest note: under screen blending over the blue sky the green reads as
+  aqua-teal, not strong green. Raising it further would start to muddy the blue.
+- Desktop bokeh: two thirds of the discs now sit at x 55 to 98 percent, upper right. The rest
+  drift across x 30 to 55 percent, upper centre. The x 0 to 240 column stays clear.
+- Phone top band: the flare centre moved from 20 to 28 percent of the height. Its glow and
+  spikes now stay below y 360. Top row detail std is 1.56, down from 1.6 and unchanged in effect.
+- Bliss distance: the back hill has a steeper crest on the left (desktop and phone). The desktop
+  back hill has a faint glossy streak. The front hill has a soft specular band just below its crest.
+- Desktop ribbon start points lowered: the first ribbon starts at 80 percent of the height,
+  the third at 68 percent.
+- Phone bubbles all sit on the right 30 percent of the width (x 70 to 97 percent), down the
+  right edge and behind the name. None over the centre of the hill.
+- Static wallpaper: `static/wallpaper.webp` and `static/wallpaper.jpg` are not tracked on this
+  branch, so there was nothing to `git rm`. The site build passes with the new files.
+
+### Calm-zone numbers after the fix
+
+- Desktop left column x 0-240: detail std 2.28 (was 2.2). Luminance std 37.2 is the sky gradient
+  and the left hill edge, not texture.
+- Desktop name block 440x150: detail std 1.45, mean 126.4 (was 1.4, mean 126).
+- Phone top row y 0-360: detail std 1.56, luminance std 9.4.
+- Phone name block 440x150: detail std 8.08 (was 6.6). Bubbles are behind the name by design.
+
+### Open questions
+
+1. Should the ribbon green be pushed harder for a more obviously aqua-green aurora? It would cost
+   some of the blue depth, so I have not done it without Mira's call.
+2. Phone bubbles now all sit on the right edge. If Theo wants a few in the middle over the hill,
+   that is a one-line change in `bubble_ok`.

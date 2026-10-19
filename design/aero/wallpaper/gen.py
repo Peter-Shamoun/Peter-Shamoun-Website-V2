@@ -96,19 +96,19 @@ DESKTOP = dict(
     H=1600,
     seed=7,
     # hills: crest lines, low in the page. The front one dips lowest at x 70-85%.
-    back=[(-0.05, 0.70), (0.12, 0.67), (0.32, 0.71), (0.52, 0.69), (0.70, 0.75), (0.86, 0.76), (1.05, 0.70)],
+    back=[(-0.05, 0.66), (0.06, 0.60), (0.16, 0.66), (0.30, 0.73), (0.44, 0.71), (0.58, 0.68), (0.72, 0.74), (0.86, 0.76), (1.05, 0.70)],
     front=[(-0.05, 0.78), (0.14, 0.75), (0.38, 0.80), (0.60, 0.78), (0.74, 0.84), (0.84, 0.86), (0.95, 0.82), (1.05, 0.80)],
-    gloss_back=[(0.55, 0.73, 0.30, 0.03, 0.22)],
+    gloss_back=[(0.55, 0.73, 0.30, 0.03, 0.22), (0.40, 0.76, 0.26, 0.010, 0.24)],
     gloss_front=[(0.30, 0.84, 0.36, 0.035, 0.30), (0.86, 0.90, 0.18, 0.03, 0.16)],
     # aurora ribbons: S-curves from lower left to upper right, as chains of cubic segments
     ribbons=[
-        [[(-0.05, 0.76), (0.22, 0.80), (0.34, 0.60), (0.52, 0.50)],
+        [[(-0.05, 0.80), (0.22, 0.84), (0.34, 0.62), (0.52, 0.50)],
          [(0.52, 0.50), (0.70, 0.40), (0.74, 0.30), (0.88, 0.22)],
          [(0.88, 0.22), (0.97, 0.17), (1.00, 0.15), (1.05, 0.14)]],
         [[(-0.05, 0.88), (0.24, 0.96), (0.42, 0.74), (0.60, 0.64)],
          [(0.60, 0.64), (0.78, 0.54), (0.84, 0.42), (0.95, 0.30)],
          [(0.95, 0.30), (1.00, 0.26), (1.03, 0.24), (1.05, 0.24)]],
-        [[(-0.05, 0.62), (0.28, 0.66), (0.44, 0.40), (0.62, 0.34)],
+        [[(-0.05, 0.68), (0.28, 0.70), (0.44, 0.40), (0.62, 0.34)],
          [(0.62, 0.34), (0.80, 0.28), (0.86, 0.20), (0.94, 0.11)],
          [(0.94, 0.11), (0.98, 0.07), (1.02, 0.06), (1.05, 0.06)]],
     ],
@@ -139,9 +139,9 @@ PHONE = dict(
     W=1200,
     H=2600,
     seed=11,
-    back=[(-0.05, 0.79), (0.20, 0.76), (0.45, 0.80), (0.70, 0.77), (1.05, 0.79)],
+    back=[(-0.05, 0.76), (0.12, 0.72), (0.26, 0.79), (0.48, 0.80), (0.70, 0.77), (1.05, 0.79)],
     front=[(-0.05, 0.84), (0.25, 0.82), (0.50, 0.86), (0.74, 0.90), (0.90, 0.87), (1.05, 0.85)],
-    gloss_back=[(0.50, 0.785, 0.30, 0.008, 0.30)],
+    gloss_back=[(0.50, 0.785, 0.30, 0.008, 0.30), (0.30, 0.805, 0.26, 0.007, 0.22)],
     gloss_front=[(0.50, 0.87, 0.40, 0.010, 0.35), (0.85, 0.93, 0.12, 0.007, 0.25)],
     ribbons=[
         [[(-0.05, 0.70), (0.25, 0.66), (0.40, 0.46), (0.58, 0.42)],
@@ -154,7 +154,7 @@ PHONE = dict(
     ribbon_hw=[70, 40, 95],
     ribbon_phase=[0.0, 1.7, 3.1],
     core_index=0,
-    flare=(0.78, 0.20),
+    flare=(0.78, 0.28),
     flare_to=(0.30, 0.70),
     flare_scale=0.8,
     ghosts=[(0.42, 60, 0.10, "hex"), (0.62, 34, 0.07, "circ"), (0.83, 90, 0.05, "circ"),
@@ -206,7 +206,7 @@ def sample_bubbles(layout, rnd):
             x = W * (0.64 + 0.34 * rnd.random())
             y = H * (0.10 + 0.82 * rnd.random())
         else:
-            x = W * (0.56 + 0.41 * rnd.random())
+            x = W * (0.70 + 0.27 * rnd.random())
             y = H * (0.15 + 0.82 * rnd.random())
         r = 8 + 82 * rnd.random() ** 2.2
         if not bubble_ok(x, y, r, layout):
@@ -231,8 +231,12 @@ def bokeh_svg(layout, rnd):
     groups = {6: [], 12: [], 20: []}
     for _ in range(layout["bokeh"]):
         if layout["bubble_rule"] == "desktop":
-            x = W * (0.36 + 0.64 * rnd.random() ** 0.8)
-            y = H * 0.60 * rnd.random() ** 1.2
+            if rnd.random() < 0.67:  # two thirds sit upper right
+                x = W * (0.55 + 0.43 * rnd.random())
+                y = H * (0.03 + 0.50 * rnd.random())
+            else:  # the rest drift across the upper centre
+                x = W * (0.30 + 0.25 * rnd.random())
+                y = H * (0.05 + 0.40 * rnd.random())
             if x < 260:
                 continue
         else:
@@ -274,24 +278,24 @@ def flare_svg(layout, rnd):
     spikes = []
     for i in range(12):
         ang = i * (2 * math.pi / 12) + 0.15 * math.sin(i * 2.3)
-        length = (150 + 170 * rnd.random()) * k
+        length = (60 + 60 * rnd.random()) * k
         if i % 3 == 0:
-            length *= 1.6
-        w = 3.5 * k
+            length *= 1.35
+        w = 5.0 * k
         px, py = -math.sin(ang), math.cos(ang)
         p1 = (cx + px * w, cy + py * w)
         p2 = (cx - px * w, cy - py * w)
         tip = (cx + math.cos(ang) * length, cy + math.sin(ang) * length)
-        spikes.append('<polygon points="%s %s %s" fill="#fff6d8" opacity="0.26"/>'
+        spikes.append('<polygon points="%s %s %s" fill="#fff6d8" opacity="0.14"/>'
                       % ("%s,%s" % (fmt(p1[0]), fmt(p1[1])),
                          "%s,%s" % (fmt(p2[0]), fmt(p2[1])),
                          "%s,%s" % (fmt(tip[0]), fmt(tip[1]))))
-    out.append('<g filter="url(#sp)">%s</g>' % "".join(spikes))
+    out.append('<g filter="url(#spk)">%s</g>' % "".join(spikes))
     # white-gold core
-    out.append('<circle cx="%s" cy="%s" r="%s" fill="#fff6d8" opacity="0.7" filter="url(#sp)"/>'
-               % (fmt(cx), fmt(cy), fmt(44 * k)))
-    out.append('<circle cx="%s" cy="%s" r="%s" fill="#ffffff" opacity="0.9" filter="url(#sp)"/>'
-               % (fmt(cx), fmt(cy), fmt(12 * k)))
+    out.append('<circle cx="%s" cy="%s" r="%s" fill="#fff6d8" opacity="0.45" filter="url(#cr)"/>'
+               % (fmt(cx), fmt(cy), fmt(26 * k)))
+    out.append('<circle cx="%s" cy="%s" r="%s" fill="#ffffff" opacity="0.6" filter="url(#cp)"/>'
+               % (fmt(cx), fmt(cy), fmt(6 * k)))
     # ghosts along the line toward the target
     dx, dy = tx - cx, ty - cy
     ghosts = []
@@ -323,6 +327,10 @@ def hills_svg(layout):
         body = crest + " L%d,%d L%d,%d Z" % (1.05 * W, H + 4, -0.05 * W, H + 4)
         out.append('<path d="%s" fill="url(#%s)"/>' % (body, grad))
         out.append('<path d="%s" fill="url(#hillBase)"/>' % body)
+        if key == "front":
+            # a soft specular band just under the crest, the glossy reflection
+            out.append('<path d="%s" fill="none" stroke="#f4ffe6" stroke-width="16" opacity="0.3" '
+                       'transform="translate(0,14)" filter="url(#spec)"/>' % crest)
         # blurred white rim light along the crest, then a crisp thin line
         out.append('<path d="%s" fill="none" stroke="#ffffff" stroke-width="12" opacity="%s" '
                    'filter="url(#rim)"/>' % (crest, "%.2f" % rim_op))
@@ -400,27 +408,30 @@ DEFS = """
   </radialGradient>
   <linearGradient id="rb0" x1="0" y1="0" x2="1" y2="0">
     <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
-    <stop offset="0.2" stop-color="#ffffff" stop-opacity="0.42"/>
-    <stop offset="0.45" stop-color="#9fefff" stop-opacity="0.72"/>
-    <stop offset="0.75" stop-color="#b4f58a" stop-opacity="0.6"/>
+    <stop offset="0.18" stop-color="#ffffff" stop-opacity="0.40"/>
+    <stop offset="0.38" stop-color="#9fefff" stop-opacity="0.66"/>
+    <stop offset="0.52" stop-color="#b4f58a" stop-opacity="0.78"/>
+    <stop offset="0.80" stop-color="#9fefff" stop-opacity="0.45"/>
     <stop offset="1" stop-color="#ffffff" stop-opacity="0.15"/>
   </linearGradient>
   <linearGradient id="rb1" x1="0" y1="0" x2="1" y2="0">
     <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
-    <stop offset="0.3" stop-color="#ffffff" stop-opacity="0.35"/>
-    <stop offset="0.6" stop-color="#9fefff" stop-opacity="0.5"/>
-    <stop offset="1" stop-color="#b4f58a" stop-opacity="0.25"/>
+    <stop offset="0.25" stop-color="#ffffff" stop-opacity="0.30"/>
+    <stop offset="0.45" stop-color="#b4f58a" stop-opacity="0.66"/>
+    <stop offset="0.70" stop-color="#9fefff" stop-opacity="0.45"/>
+    <stop offset="1" stop-color="#ffffff" stop-opacity="0.15"/>
   </linearGradient>
   <linearGradient id="rb2" x1="0" y1="0" x2="1" y2="0">
     <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
-    <stop offset="0.3" stop-color="#9fefff" stop-opacity="0.22"/>
-    <stop offset="0.6" stop-color="#b4f58a" stop-opacity="0.3"/>
-    <stop offset="1" stop-color="#ffffff" stop-opacity="0.1"/>
+    <stop offset="0.30" stop-color="#9fefff" stop-opacity="0.25"/>
+    <stop offset="0.52" stop-color="#b4f58a" stop-opacity="0.62"/>
+    <stop offset="0.80" stop-color="#9fefff" stop-opacity="0.30"/>
+    <stop offset="1" stop-color="#ffffff" stop-opacity="0.10"/>
   </linearGradient>
   <linearGradient id="rbo" x1="0" y1="0" x2="1" y2="0">
     <stop offset="0" stop-color="#7fe3f0" stop-opacity="0"/>
     <stop offset="0.4" stop-color="#7fe3f0" stop-opacity="0.5"/>
-    <stop offset="0.7" stop-color="#b4f58a" stop-opacity="0.34"/>
+    <stop offset="0.7" stop-color="#b4f58a" stop-opacity="0.46"/>
     <stop offset="1" stop-color="#7fe3f0" stop-opacity="0.12"/>
   </linearGradient>
   <radialGradient id="bubFill" cx="0.5" cy="0.5" r="0.5">
@@ -442,6 +453,10 @@ DEFS = """
   </g>
   <filter id="cu" filterUnits="userSpaceOnUse" x="-600" y="-600" width="{W1200}" height="{H1200}"><feGaussianBlur stdDeviation="14"/></filter>
   <filter id="sp" filterUnits="userSpaceOnUse" x="-600" y="-600" width="{W1200}" height="{H1200}"><feGaussianBlur stdDeviation="2"/></filter>
+  <filter id="spk" filterUnits="userSpaceOnUse" x="-600" y="-600" width="{W1200}" height="{H1200}"><feGaussianBlur stdDeviation="8"/></filter>
+  <filter id="cr" filterUnits="userSpaceOnUse" x="-600" y="-600" width="{W1200}" height="{H1200}"><feGaussianBlur stdDeviation="9"/></filter>
+  <filter id="cp" filterUnits="userSpaceOnUse" x="-600" y="-600" width="{W1200}" height="{H1200}"><feGaussianBlur stdDeviation="3"/></filter>
+  <filter id="spec" filterUnits="userSpaceOnUse" x="-600" y="-600" width="{W1200}" height="{H1200}"><feGaussianBlur stdDeviation="7"/></filter>
   <filter id="rim" filterUnits="userSpaceOnUse" x="-600" y="-600" width="{W1200}" height="{H1200}"><feGaussianBlur stdDeviation="4"/></filter>
   <filter id="gl" filterUnits="userSpaceOnUse" x="-600" y="-600" width="{W1200}" height="{H1200}"><feGaussianBlur stdDeviation="22"/></filter>
   <filter id="rb1" filterUnits="userSpaceOnUse" x="-600" y="-600" width="{W1200}" height="{H1200}"><feGaussianBlur stdDeviation="1"/></filter>

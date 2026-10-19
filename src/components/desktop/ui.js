@@ -1,31 +1,29 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled, { css } from 'styled-components';
-import { media, bevel, bevelPressed, focusRect, inset } from '@styles';
+import { media, gloss, glossPressed, field, focusRing } from '@styles';
 
 // Links that leave the page (absolute http(s) addresses and PDFs) open in a new tab.
 const isExternal = href => typeof href === 'string' && /^(https?:\/\/.+|.*\.pdf)$/i.test(href);
 const externalProps = href =>
   isExternal(href) ? { target: '_blank', rel: 'noopener noreferrer' } : {};
 
-const bevelControl = css`
+const glossControl = css`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 25px;
-  padding: 0 1.2rem;
-  background: var(--chrome);
-  color: var(--text);
-  font: 16px/1 var(--main-font);
-  letter-spacing: 0.5px;
+  height: 26px;
+  padding: 0 14px;
+  font: 400 14px/1 var(--main-font);
+  letter-spacing: 0;
   text-decoration: none;
   white-space: nowrap;
   cursor: default;
-  ${bevel};
-  ${focusRect};
+  ${gloss};
+  ${focusRing};
 
   &:active {
-    ${bevelPressed};
+    ${glossPressed};
   }
 
   ${media.phone} {
@@ -33,27 +31,32 @@ const bevelControl = css`
   }
 `;
 
-/** Grey bevel button: 25px high, 44px on phones. */
-export const BevelButton = styled.button.attrs(props => ({ type: props.type || 'button' }))`
-  ${bevelControl};
+/** Windows 7 push button: 26px high, 44px on phones. */
+export const GlossButton = styled.button.attrs(props => ({ type: props.type || 'button' }))`
+  ${glossControl};
 `;
 
-const StyledBevelLink = styled.a`
-  ${bevelControl};
+const StyledGlossLink = styled.a`
+  ${glossControl};
 `;
 
 /** The same look for a link. Adds target and rel when the address leaves the page. */
-export const BevelLink = React.forwardRef(({ href, ...rest }, ref) => (
-  <StyledBevelLink ref={ref} href={href} {...externalProps(href)} {...rest} />
+export const GlossLink = React.forwardRef(({ href, ...rest }, ref) => (
+  <StyledGlossLink ref={ref} href={href} {...externalProps(href)} {...rest} />
 ));
-BevelLink.displayName = 'BevelLink';
-BevelLink.propTypes = { href: PropTypes.string };
+GlossLink.displayName = 'GlossLink';
+GlossLink.propTypes = { href: PropTypes.string };
+
+// legacy names, delete in cleanup
+export const BevelButton = GlossButton;
+export const BevelLink = GlossLink;
 
 /** Window heading. */
 export const Heading = styled.h3`
-  margin: 0 0 1rem;
-  font: 24px/1.1 var(--main-large-font);
-  letter-spacing: 1px;
+  margin: 0 0 12px;
+  font: 300 22px/1.2 var(--main-large-font);
+  color: var(--heading);
+  letter-spacing: 0;
 `;
 
 // Short lines, one thought each. A row is either one phrase, or a name with a phrase beside it.
@@ -61,7 +64,7 @@ export const Lines = styled.ul`
   margin: 0;
   padding: 0;
   list-style: none;
-  font-size: 16px;
+  font-size: 15px;
   line-height: 1.5;
 
   li {
@@ -83,23 +86,26 @@ export const Lines = styled.ul`
 `;
 
 export const SubHeading = styled.h4`
-  margin: 1.6rem 0 0.8rem;
-  padding-bottom: 0.3rem;
-  font: 16px/1.25 var(--main-font);
-  letter-spacing: 0.5px;
+  margin: 16px 0 8px;
+  padding-bottom: 3px;
+  font: 600 13px/1.25 var(--main-font);
+  color: var(--heading);
   text-transform: uppercase;
-  border-bottom: 1px solid var(--bevel-shadow);
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid;
+  border-image: linear-gradient(90deg, var(--sky-300), rgba(116, 198, 242, 0)) 1;
 `;
 
 /** Body paragraph. */
 export const Text = styled.p`
-  margin: 0 0 1.2rem;
-  font-size: 16px;
+  margin: 0 0 12px;
+  font-size: 15px;
 `;
 
-/** Sunken panel. */
+/** White content field. */
 export const Inset = styled.div`
-  ${inset};
+  ${field};
+  padding: 8px;
 `;
 
 /** Definition list in two columns (one on phones). */
@@ -111,7 +117,10 @@ export const Props = styled.dl`
   margin: 0 0 1.2rem;
 
   dt {
+    font: 600 13px/1.5 var(--main-font);
+    color: var(--text-muted);
     text-transform: uppercase;
+    letter-spacing: 0.04em;
   }
 
   dd {
@@ -140,6 +149,7 @@ export const TagList = styled.ul`
   li + li::before {
     content: ' / ';
     white-space: pre;
+    color: var(--text-muted);
   }
 `;
 
@@ -152,10 +162,17 @@ export const ButtonRow = styled.div`
 
 const StyledExtLink = styled.a`
   color: var(--link);
-  text-decoration: underline;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+    color: var(--link-hover);
+  }
+
+  ${focusRing};
 `;
 
-/** Underlined in-text link with the same external-target rule as BevelLink. */
+/** Underlined in-text link with the same external-target rule as GlossLink. */
 export const ExtLink = React.forwardRef(({ href, ...rest }, ref) => (
   <StyledExtLink ref={ref} href={href} {...externalProps(href)} {...rest} />
 ));

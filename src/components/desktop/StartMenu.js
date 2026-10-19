@@ -1,70 +1,99 @@
 import React, { useEffect, useRef } from 'react';
-import styled, { css } from 'styled-components';
-import { bevel, bevelPressed, bevelWindow, focusRect, media } from '@styles';
+import styled, { css, keyframes } from 'styled-components';
+import { withPrefix } from 'gatsby';
+import { glass, focusRing, hotTrack, visuallyHidden, media } from '@styles';
 import { useDesktop } from './DesktopProvider';
 import { DESKTOP_ICONS } from './registry';
-import { ICONS, GlyphApp, GlyphMenu } from './icons';
+import { ICONS, IconTidy } from './icons';
 
 const Root = styled.div`
   flex: none;
-  display: flex;
-`;
-
-const StartButton = styled.button.attrs({ type: 'button' })`
+  position: relative;
+  width: calc(var(--orb) + 12px);
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 0 8px 0 6px;
-  background: var(--chrome);
-  color: var(--text);
-  font: 16px/1 var(--main-font);
-  white-space: nowrap;
+  justify-content: center;
+  align-self: stretch;
+`;
+
+const Hidden = styled.span`
+  ${visuallyHidden};
+`;
+
+// The orb is an image, so the button has no text and no box of its own. It overhangs the top
+// of the bar the way the Windows 7 orb does.
+const StartButton = styled.button.attrs({ type: 'button' })`
+  flex: none;
+  width: var(--orb);
+  height: var(--orb);
+  padding: 0;
+  border: 0;
+  background: none;
+  border-radius: 50%;
+  margin-top: -8px;
   cursor: default;
-  ${bevel};
-  ${focusRect};
+  transition: filter var(--dur-hover) var(--ease-out), box-shadow var(--dur-hover) var(--ease-out);
+  ${focusRing};
+
+  &:focus-visible {
+    outline-offset: 3px;
+  }
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  &:hover {
+    filter: brightness(1.12) saturate(1.15);
+    box-shadow: 0 0 14px 4px rgba(120, 220, 255, 0.75);
+  }
 
   &:active,
   &[aria-expanded='true'] {
-    ${bevelPressed};
+    filter: brightness(0.92);
+    box-shadow: 0 0 10px 2px rgba(90, 200, 255, 0.9);
   }
 
   ${media.phone} {
-    position: relative;
-
-    &::after {
-      content: '';
-      position: absolute;
-      inset: -3px 0 -1px;
-    }
+    margin-top: 0;
   }
 `;
 
-// The two small glyphs are one colour each, so each sits on a tile it shows up on: the white
-// window on navy, the black lines on white.
-const Tile = styled.span`
-  flex: none;
-  display: block;
-  width: ${props => props.$size}px;
-  height: ${props => props.$size}px;
-  background: ${props => (props.$light ? 'var(--field)' : 'var(--title-active)')};
-  line-height: 0;
+const rise = keyframes`
+  from {
+    opacity: 0;
+    translate: 0 8px;
+  }
 `;
 
-// Opens upward from the Start button.
+// Opens upward from the Start button. The white list sits on the glass as a pseudo-element.
 const Menu = styled.div`
   position: absolute;
   left: 2px;
-  bottom: 100%;
+  bottom: calc(100% + 6px);
   display: flex;
   flex-direction: column;
-  width: min(232px, 100vw - 4px);
-  max-height: calc(100vh - var(--taskbar-total) - 4px);
+  width: min(260px, 100vw - 8px);
+  max-height: calc(100vh - var(--taskbar-total) - 16px);
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding: 3px;
-  background: var(--chrome);
+  padding: 10px;
   color: var(--text);
-  ${bevelWindow};
+  border-radius: var(--radius-menu);
+  ${glass};
+  box-shadow: inset 0 0 0 1px var(--glass-hi), var(--shadow-menu);
+  animation: ${rise} var(--dur-fast) var(--ease-out);
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 6px;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid var(--field-edge);
+    border-radius: 4px;
+  }
 
   &:focus,
   &:focus-visible {
@@ -73,29 +102,31 @@ const Menu = styled.div`
 `;
 
 const item = css`
+  position: relative;
+  z-index: 1;
   flex: none;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   width: 100%;
   min-height: 40px;
-  padding: 4px 16px 4px 8px;
+  padding: 4px 12px 4px 6px;
   background: none;
-  border: 0;
+  border: 1px solid transparent;
+  border-radius: var(--radius-ctl);
   color: var(--text);
-  font: 16px/1 var(--main-font);
+  font: 400 14px/1.2 var(--main-font);
   text-align: left;
   text-decoration: none;
   white-space: nowrap;
   cursor: default;
 
-  /* The pointer moves focus, so there is only ever one highlighted row. */
-  &:focus,
-  &:focus-visible {
-    background: var(--select);
-    color: var(--select-text);
-    outline: 1px dotted var(--select-text);
-    outline-offset: -1px;
+  /* The pointer moves focus, so there is only ever one highlighted row. The hot-track box is
+     the keyboard focus indicator. */
+  &:hover,
+  &:focus {
+    ${hotTrack};
+    outline: none;
   }
 
   svg {
@@ -116,10 +147,13 @@ const ItemLink = styled.a`
 `;
 
 const Separator = styled.div`
+  position: relative;
+  z-index: 1;
   flex: none;
-  height: 2px;
-  margin: 3px 2px;
-  box-shadow: inset 0 1px var(--bevel-shadow), inset 0 -1px var(--bevel-hi);
+  height: 1px;
+  margin: 4px 8px;
+  border: 0;
+  background: linear-gradient(90deg, transparent, rgba(30, 64, 100, 0.25), transparent);
 `;
 
 const ICON = 32;
@@ -241,10 +275,14 @@ const StartMenu = () => {
         aria-controls="start-menu"
         onClick={onButtonClick}
         onKeyDown={onButtonKeyDown}>
-        <Tile $size={16} aria-hidden="true">
-          <GlyphApp size={16} />
-        </Tile>
-        Peter Shamoun
+        <img
+          src={withPrefix('/aero/orb/start-orb.svg')}
+          width={44}
+          height={44}
+          alt=""
+          draggable={false}
+        />
+        <Hidden>Peter Shamoun</Hidden>
       </StartButton>
       <Menu
         ref={menuRef}
@@ -289,9 +327,7 @@ const StartMenu = () => {
           data-start-item="tidy"
           onClick={reset}
           onPointerMove={hover}>
-          <Tile $size={ICON} $light aria-hidden="true">
-            <GlyphMenu size={ICON} />
-          </Tile>
+          <IconTidy size={ICON} />
           Tidy desktop
         </ItemButton>
       </Menu>

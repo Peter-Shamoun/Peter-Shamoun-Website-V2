@@ -6,19 +6,13 @@
 
 const React = require('react');
 
-// Without JavaScript the desktop cannot open windows, so every window is drawn in normal
-// page flow under the name, and the desktop furniture is hidden.
-// Applies to every page; the 404 page's window is class "win", so it is not hidden.
+// Without JavaScript the page still reads top to bottom. Two things need it: the phone menu
+// button (so the menu sheet shows open instead) and the games (their tiles dim).
 const NO_JS_CSS = [
-  '[data-window],[data-window][hidden]{display:flex!important;position:static!important;transform:none!important;width:auto!important;height:auto!important;max-height:none!important;margin:16px!important}',
-  // Every <button> in a window opens or closes something with JS; the links are <a> and stay.
-  '[data-window] button{display:none!important}',
-  'body{overflow:auto!important}',
-  'main#content{position:static!important}',
-  'main#content>:not([data-window]):not(.win):not([data-wallpaper]){display:none!important}',
-  '[data-wallpaper]{position:static!important;margin:16px!important;text-align:left!important}',
-  // The taskbar holds only buttons (Start, the open windows, the clock), and none works without JS.
-  '[data-taskbar]{display:none!important}',
+  '[data-menu]{display:none!important}',
+  '#nav-sheet[hidden]{display:none!important}',
+  '@media (max-width:56em){#nav-sheet[hidden]{display:grid!important}}',
+  '[data-arcade-tile]{pointer-events:none;opacity:.55}',
 ].join('');
 
 exports.onRenderBody = ({ setHeadComponents }) => {
@@ -26,5 +20,23 @@ exports.onRenderBody = ({ setHeadComponents }) => {
     <noscript key="no-js-fallback">
       <style dangerouslySetInnerHTML={{ __html: NO_JS_CSS }} />
     </noscript>,
+    <link
+      key="hero-preload"
+      rel="preload"
+      as="image"
+      type="image/webp"
+      imageSrcSet="/sea/hero/wide-1440.webp 1440w, /sea/hero/wide-1920.webp 1920w, /sea/hero/wide-2880.webp 2880w"
+      imageSizes="100vw"
+      media="(min-width: 720px)"
+    />,
+    <link
+      key="hero-preload-phone"
+      rel="preload"
+      as="image"
+      type="image/webp"
+      imageSrcSet="/sea/hero/phone-780.webp 780w, /sea/hero/phone-1170.webp 1170w"
+      imageSizes="100vw"
+      media="(max-width: 719px)"
+    />,
   ]);
 };

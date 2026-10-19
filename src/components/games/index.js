@@ -1,4 +1,5 @@
-// One loader per game id in GAME_LIST. A game's code is fetched the first time its window opens.
+// One loader per game id in GAMES (src/components/sea/games.js). A game's code is fetched the
+// first time it is opened.
 export const LOADERS = {
   minesweeper: () => import('./Minesweeper'),
   solitaire: () => import('./Solitaire'),

@@ -1,25 +1,13 @@
 export { default as GlobalStyle } from './GlobalStyle';
 export { media } from './media';
 export {
+  plate,
   glass,
-  glassInactive,
   gloss,
   glossPressed,
-  glossAqua,
+  gel,
   field,
-  fieldThin,
-  hotTrack,
-  hotTrackStrong,
   focusRing,
-  aeroScrollbar,
+  focusOnWater,
   visuallyHidden,
-  // legacy XP names, delete in cleanup
-  bevel,
-  bevelWindow,
-  bevelPressed,
-  sunken,
-  sunkenThin,
-  inset,
-  focusRect,
-  retroScrollbar,
 } from './mixins';

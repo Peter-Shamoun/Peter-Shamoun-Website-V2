@@ -2,7 +2,7 @@ import React, { useEffect, useReducer, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled, { css } from 'styled-components';
 import { focusRing } from '@styles';
-import { useIsoLayoutEffect } from '../desktop/DesktopProvider';
+import { useIsoLayoutEffect } from '@hooks';
 import {
   COLORS,
   Frame,
@@ -622,7 +622,7 @@ const Minesweeper = ({ active, w, h }) => {
             </div>
           ))}
         </Board>
-        {shown === 'paused' ? <Message title="Paused">Click the window to resume.</Message> : null}
+        {shown === 'paused' ? <Message title="Paused">Click the board to resume.</Message> : null}
       </Pit>
       <Row>
         <Btn aria-pressed={flagMode} onClick={() => setFlagMode(v => !v)}>

@@ -2,8 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { gloss, glossPressed, field, focusRing, glass } from '@styles';
-import { useIsoLayoutEffect } from '../desktop/DesktopProvider';
-import { getBounds } from '../desktop/Window';
+import { useIsoLayoutEffect } from '@hooks';
 import { record } from '../tracking';
 
 // Shared parts for the games. Every game is drawn in a box of a fixed "natural" size (w x h CSS
@@ -31,10 +30,9 @@ export const COLORS = {
   purple: '#c2449a',
 };
 
-const FRAME = 8; // the window frame, left and right or top and bottom
-const AREA_PAD = 12; // the padding of the game area, both sides
-const MARGIN = 16; // room left around a window that is not full screen
 const MAX_SCALE = 1.5;
+// Room the game dialog keeps for its own title bar and padding when nothing says otherwise.
+const DEFAULT_RESERVE = 140;
 
 const StageOuter = styled.div`
   position: relative;
@@ -56,8 +54,9 @@ const StageInner = styled.div`
 `;
 
 /**
- * Holds a game at its natural size and scales it to fit the window: down when there is less
- * room, and up (to MAX_SCALE) in a full-screen phone window that has room to spare.
+ * Holds a game at its natural size and scales it to fit: down when there is less room, and up
+ * (to MAX_SCALE) when there is room to spare. The height it may use is the window's height less
+ * the data-reserve px of the nearest [data-game-host] (the dialog's title bar and padding).
  */
 export const Stage = ({ w, h, children }) => {
   const outer = useRef(null);
@@ -69,10 +68,10 @@ export const Stage = ({ w, h, children }) => {
       return undefined;
     }
     const measure = () => {
-      const win = el.closest('[data-window]');
-      const bar = win ? win.querySelector('.win__titlebar') : null;
+      const host = el.closest('[data-game-host]');
+      const reserve = host ? Number(host.getAttribute('data-reserve')) : DEFAULT_RESERVE;
       const availW = el.clientWidth;
-      const availH = getBounds().bottom - (bar ? bar.offsetHeight : 24) - FRAME - AREA_PAD - MARGIN;
+      const availH = window.innerHeight - (Number.isFinite(reserve) ? reserve : DEFAULT_RESERVE);
       if (!availW) {
         return;
       }
@@ -179,18 +178,18 @@ export const useLoop = (step, running) => {
   }, [running]);
 };
 
-const fromChrome = target =>
-  !!(target && target.closest && target.closest('[data-taskbar], [data-start-menu]'));
+// Presses inside the dialog's title bar (its close button) are not the game's.
+const fromChrome = target => !!(target && target.closest && target.closest('[data-game-chrome]'));
 
 const onControl = (e, target) =>
   (e.key === ' ' || e.key === 'Enter') &&
   !!(target && target.closest && target.closest('button, a, input, select, textarea'));
 
 /**
- * Calls onKey(event) for key presses while `active` is true. Presses that belong to the taskbar
- * or the Start menu, presses with Ctrl, Alt or Cmd held, and Space or Enter on a focused button
+ * Calls onKey(event) for key presses while `active` is true. Presses in the dialog's title bar,
+ * presses with Ctrl, Alt or Cmd held, and Space or Enter on a focused button
  * are left alone. Call event.preventDefault() for the keys the game uses (the arrows and Space
- * scroll the page otherwise). Escape is never passed on: it closes the window.
+ * scroll the page otherwise). Escape is never passed on: it closes the dialog.
  */
 export const useKeys = (onKey, active) => {
   const saved = useRef(onKey);

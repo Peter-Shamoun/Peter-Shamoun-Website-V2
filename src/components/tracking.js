@@ -5,7 +5,7 @@ import { track, pageview } from '@vercel/analytics';
 // Visitor analytics. Everything goes to Vercel Web Analytics, which sets no cookies. Nothing in
 // this file stores anything on the visitor's device. Each interaction is sent twice:
 //   1. as a custom event (name + properties), which the Vercel dashboard shows on paid plans;
-//   2. as a virtual page view under a made-up path such as /window/projects, which shows up in
+//   2. as a virtual page view under a made-up path such as /game/snake, which shows up in
 //      the Pages panel on every plan. Set VIRTUAL_PAGEVIEWS to false to stop these.
 // Nothing here changes the address bar. Do not call track() or pageview() anywhere else: a call
 // made before Vercel's script has loaded replaces the path of the first real page view.
@@ -17,7 +17,6 @@ const ENGAGED_AT = [15, 60, 180]; // seconds with the tab visible
 const MAX_QUEUE = 200; // records held while the analytics script has not loaded yet
 const MAX_LOG = 200; // length of the window.__psTrack debug log
 const SOURCE_PARAMS = ['from', 'ref', 'source', 'utm_source'];
-const SCROLL_DEPTHS = [50, 100]; // percent of a window's content scrolled
 const FILE_LINK = /\.(pdf|zip|docx?|txt|csv|md|png|jpe?g|gif|svg|mp3|mp4|mov)$/i;
 
 const isBrowser = typeof window !== 'undefined';
@@ -97,7 +96,7 @@ const waitForScript = () => {
   }, 500);
 };
 
-// record('window_open', { path: '/window/about', props: { window: 'about' } })
+// record('game_open', { path: '/game/snake', props: { game: 'snake' } })
 // `once` sends the event a single time per page load; virtual paths are always sent once.
 export const record = (name, { path, props, once = false } = {}) => {
   if (!isBrowser) {
@@ -125,33 +124,20 @@ export const record = (name, { path, props, once = false } = {}) => {
   }
 };
 
-// Where a click happened: 'window:<id>' or 'desktop'.
+// Where a click happened: 'section:<id>', 'game' (inside the game dialog) or 'page'.
 const contextOf = el => {
   if (!el || !el.closest) {
-    return 'desktop';
+    return 'page';
   }
-  const win = el.closest('[data-window]');
-  if (win) {
-    return `window:${win.getAttribute('data-window')}`;
+  if (el.closest('[data-game-host]')) {
+    return 'game';
   }
-  return 'desktop';
+  const section = el.closest('section[id]');
+  return section ? `section:${section.id}` : 'page';
 };
 
-export const recordWindowOpen = (id, from) => {
-  let via = 'other';
-  if (from && from.closest) {
-    if (from.closest('[data-window]')) {
-      via = 'tab'; // a button inside another window
-    } else if (from.hasAttribute('data-icon-for')) {
-      via = 'icon';
-    } else if (from.closest('[data-start-menu]')) {
-      via = 'start';
-    }
-  }
-  record('window_open', {
-    path: `/window/${slug(id)}`,
-    props: { window: id, via },
-  });
+export const recordGameOpen = id => {
+  record('game_open', { path: `/game/${slug(id)}`, props: { game: id } });
 };
 
 const recordLink = (link, button) => {
@@ -291,24 +277,23 @@ const startEngagementTimer = () => {
   return () => clearInterval(timer);
 };
 
-// How far a window's content has been scrolled (the window scrolls, not the page).
-const onScroll = e => {
-  const el = e.target;
-  if (!el || !el.closest || !el.scrollHeight) {
-    return;
+// How far down the dive a visitor got: the stop in the middle of the screen, once per stop.
+const watchStops = () => {
+  if (typeof IntersectionObserver === 'undefined') {
+    return () => {};
   }
-  const win = el.closest('[data-window]');
-  const max = el.scrollHeight - el.clientHeight;
-  if (!win || max < 40) {
-    return;
-  }
-  const seen = Math.round((el.scrollTop / max) * 100);
-  const id = win.getAttribute('data-window');
-  SCROLL_DEPTHS.forEach(depth => {
-    if (seen >= depth) {
-      record('window_scroll', { props: { window: id, depth }, once: true });
-    }
-  });
+  const io = new IntersectionObserver(
+    entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          record('stop_reached', { props: { stop: e.target.id }, once: true });
+        }
+      });
+    },
+    { rootMargin: '-45% 0px -50% 0px' },
+  );
+  document.querySelectorAll('main section[id]').forEach(el => io.observe(el));
+  return () => io.disconnect();
 };
 
 // Copying text: only how much was copied (in size bands) and where, never the text itself.
@@ -429,22 +414,22 @@ const SiteAnalytics = () => {
     recordArrival();
     const stopTimer = startEngagementTimer();
     const stopLayout = watchLayout();
+    const stopStops = watchStops();
     document.addEventListener('click', onClick, true);
     document.addEventListener('auxclick', onClick, true);
     document.addEventListener('copy', onCopy, true);
     document.addEventListener('keydown', onKeyDown, true);
-    document.addEventListener('scroll', onScroll, true);
     window.addEventListener('error', onError);
     window.addEventListener('error', onResourceError, true);
     window.addEventListener('unhandledrejection', onRejection);
     return () => {
       stopTimer();
       stopLayout();
+      stopStops();
       document.removeEventListener('click', onClick, true);
       document.removeEventListener('auxclick', onClick, true);
       document.removeEventListener('copy', onCopy, true);
       document.removeEventListener('keydown', onKeyDown, true);
-      document.removeEventListener('scroll', onScroll, true);
       window.removeEventListener('error', onError);
       window.removeEventListener('error', onResourceError, true);
       window.removeEventListener('unhandledrejection', onRejection);

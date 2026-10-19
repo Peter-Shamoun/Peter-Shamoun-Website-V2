@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Layout, Desktop } from '@components';
+import { Layout, Sea } from '@components';
 
 const IndexPage = ({ location }) => (
   <Layout location={location}>
-    <Desktop />
+    <Sea />
   </Layout>
 );
 

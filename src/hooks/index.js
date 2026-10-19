@@ -1,1 +1,1 @@
-export { default as useMinuteNow } from './useMinuteNow';
+export { default as useIsoLayoutEffect } from './useIsoLayoutEffect';

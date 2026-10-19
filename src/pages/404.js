@@ -2,63 +2,66 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Helmet } from 'react-helmet';
+import { withPrefix } from 'gatsby';
 import { Layout } from '@components';
-import { BevelLink, Text } from '@components/desktop/ui';
+import { Plate, GelLink } from '../components/sea/ui';
 
-// The meadow plate with one static glass pane. There is no desktop state on this page, so the
-// pane is drawn with the shared window classes, not with the Window component.
+// Lost at sea: the open-water plate and one glass plate with the way back.
 
 const Main = styled.main`
-  position: fixed;
-  inset: 0;
+  position: relative;
+  min-height: 100svh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1.6rem;
-  overflow: auto;
-  background: var(--desktop) url('/aero/scene/plate-desktop.jpg') 58% 60% / cover no-repeat;
-  background-image: image-set(
-    url('/aero/scene/plate-desktop.webp') type('image/webp'),
-    url('/aero/scene/plate-desktop.jpg') type('image/jpeg')
-  );
+  padding: 24px var(--gutter);
+
+  picture,
+  img {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 
   &:focus {
     outline: none;
   }
 `;
 
-const Content = styled.div`
-  padding: 2rem 0.5rem 1.6rem;
+const Card = styled(Plate)`
+  max-width: 520px;
   text-align: center;
 `;
 
 const Code = styled.h1`
-  margin: 0 0 12px;
-  font: 900 72px/1 var(--main-large-font);
+  font-size: clamp(7rem, 12vw, 11rem);
+  font-weight: 300;
+  letter-spacing: -0.04em;
   color: var(--heading);
-  letter-spacing: -0.02em;
+`;
+
+const Text = styled.p`
+  margin: 8px 0 26px;
+  font-size: 1.8rem;
+  color: var(--text);
 `;
 
 const NotFoundPage = ({ location }) => (
   <Layout location={location}>
     <Helmet title="Page Not Found" meta={[{ name: 'robots', content: 'noindex' }]} />
     <Main id="content" tabIndex={-1}>
-      <section className="win win--static is-active" aria-labelledby="error-window-title">
-        <header className="win__titlebar">
-          <div className="win__title" id="error-window-title">
-            Error
-          </div>
-        </header>
-        <div className="win__body">
-          <div className="win__area">
-            <Content>
-              <Code>404</Code>
-              <Text>This page drifted off. It may have moved, or it never existed.</Text>
-              <BevelLink href="/">Back to the globe</BevelLink>
-            </Content>
-          </div>
-        </div>
-      </section>
+      <picture>
+        <source type="image/webp" srcSet={withPrefix('/sea/plates/dolphins-1600.webp')} />
+        <img src={withPrefix('/sea/plates/dolphins-1600.jpg')} alt="" />
+      </picture>
+      <Card>
+        <Code>404</Code>
+        <Text>This page drifted off. It may have moved, or it never existed.</Text>
+        <GelLink href="/">Back to the surface</GelLink>
+      </Card>
     </Main>
   </Layout>
 );

@@ -1,0 +1,21 @@
+<!doctype html>
+<!-- Renders the hero's static fallback from the live shader. Served from the repo root by
+     design/sea/render-hero.js: /design/sea/render-hero.html?w=1440&h=900&t=2&img=... -->
+<meta charset="utf-8" />
+<style>html,body{margin:0;background:#000}canvas{display:block}</style>
+<canvas id="c"></canvas>
+<script type="module">
+  import { createBubbleRenderer, layoutScene } from '/src/components/sea/bubbleGL.js';
+  const q = new URLSearchParams(location.search);
+  const w = +q.get('w'), h = +q.get('h'), t = +(q.get('t') || 0), dpr = +(q.get('dpr') || 1);
+  const img = new Image();
+  img.onload = () => {
+    const c = document.getElementById('c');
+    c.style.width = w + 'px'; c.style.height = h + 'px';
+    const r = createBubbleRenderer(c, img);
+    const s = layoutScene(w, h, t);
+    r.draw({ w, h, dpr, time: t, ...s });
+    window.__done = true;
+  };
+  img.src = q.get('img');
+</script>

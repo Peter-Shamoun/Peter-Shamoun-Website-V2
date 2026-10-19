@@ -125,7 +125,7 @@ GEL = 14                # gel cell size, leaves 3-unit edge rim in darker green
 
 
 def invaders():
-    cells_edge, cells_gel, gloss, eyes = [], [], [], []
+    cells_edge, cells_gel, gloss, rims, eyes = [], [], [], [], []
     for r, row in enumerate(PAT):
         for c, ch in enumerate(row):
             if ch != 'X':
@@ -142,10 +142,13 @@ def invaders():
                 cells_gel.append(f'<rect x="{n(x + 2)}" y="{n(y + 2)}" width="{GEL}" height="{GEL}" rx="4.2"/>')
                 gloss.append(f'<rect x="{n(x + 2)}" y="{n(y + 2)}" width="{GEL}" height="7" rx="4.2" '
                              f'fill="url(#invaders-gloss)"/>')
+                # Faint white rim along the bottom edge of each gel cell (DESIGN.md section 9, rule d).
+                rims.append(f'<path d="M{n(x + 6)} {n(y + 14.5)}H{n(x + 12)}" stroke="#fff" '
+                            f'stroke-opacity=".3" stroke-width="1.5" stroke-linecap="round"/>')
     body = ('<g id="invaders-body">'
             '<g fill="#1d6b12">' + ''.join(cells_edge) + '</g>'
             '<g fill="url(#invaders-gel)">' + ''.join(cells_gel) + '</g>'
-            + ''.join(gloss) + ''.join(eyes) + '</g>')
+            + ''.join(gloss) + ''.join(rims) + ''.join(eyes) + '</g>')
     defs = ('<defs>'
             + grad('invaders-gel', [(0, '#9be85a', None), (1, '#2e8a1c', None)], 29, 36, 227, 178, 'userSpaceOnUse')
             + grad('invaders-eye', [(0, '#ffffff', None), (1, '#cdeec0', None)])

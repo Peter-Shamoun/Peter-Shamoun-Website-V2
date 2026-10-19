@@ -80,6 +80,7 @@ const TaskButton = styled.button.attrs({ type: 'button' })`
   }
 
   &:hover {
+    border-color: rgba(200, 235, 255, 0.6);
     background: linear-gradient(
       180deg,
       rgba(255, 255, 255, 0.44) 0,
@@ -87,7 +88,7 @@ const TaskButton = styled.button.attrs({ type: 'button' })`
       rgba(255, 255, 255, 0) 51%,
       rgba(255, 255, 255, 0.12) 100%
     );
-    box-shadow: inset 0 0 0 1px rgba(0, 20, 50, 0.35), 0 0 10px rgba(140, 210, 255, 0.55);
+    box-shadow: inset 0 0 0 1px rgba(0, 20, 50, 0.35), 0 0 12px rgba(140, 210, 255, 0.8);
   }
 
   /* the window in front: a lit aqua pane with a glow along the bottom */

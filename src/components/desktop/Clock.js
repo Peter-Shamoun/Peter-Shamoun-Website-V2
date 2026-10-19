@@ -63,10 +63,10 @@ const ClockButton = styled.button.attrs({ type: 'button' })`
     border-color: rgba(255, 255, 255, 0.28);
     background: linear-gradient(
       180deg,
-      rgba(255, 255, 255, 0.44) 0,
-      rgba(255, 255, 255, 0.16) 50%,
+      rgba(255, 255, 255, 0.22) 0,
+      rgba(255, 255, 255, 0.08) 50%,
       rgba(255, 255, 255, 0) 51%,
-      rgba(255, 255, 255, 0.12) 100%
+      rgba(255, 255, 255, 0.06) 100%
     );
   }
 
@@ -92,6 +92,8 @@ const WorldTimePanel = styled.div`
   flex-direction: column;
   padding: 10px 14px;
   border-radius: var(--radius-menu);
+  /* a denser tint than the other glass, so the dark text reads over bright grass */
+  background-color: rgba(220, 238, 252, 0.88);
   box-shadow: inset 0 0 0 1px var(--glass-hi), var(--shadow-menu);
   color: var(--text-on-glass);
   animation: ${worldOpen} var(--dur-fast) var(--ease-out);

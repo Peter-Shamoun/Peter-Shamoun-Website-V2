@@ -50,3 +50,15 @@ No speeds, sizes, keys, scoring, data-\* or aria values changed. `kit.js` is unt
 - Not done: no new screenshots of Snake or Pong mid-game (the ready state shows the palette well
   enough). Blocks in play is a single piece, not a full stack.
 - Asset dependencies: none. The games use no `/aero/...` paths.
+
+## Round 1 fix pass (branch `aero/r1-games-canvas-fix`)
+
+- Review item 1 and 2 (Invaders colours): every alien row now uses one green gel, `COLORS.lime`,
+  for all three sprite designs. The per-row colours (cyan, lime, yellow) are gone from `SPRITES`,
+  and `alienArt` is keyed by frame only, so there are 2 baked alien canvases instead of 6. The
+  yellow row is gone, so the olive-on-navy reading no longer applies. Row points are unchanged.
+- Shot: `shots/games-canvas-fix/invaders.png` and `invaders-zoom.png` (2x crop of the board).
+  The ready-state Message veil still dims the aliens a little, which is kit's veil, as noted above.
+- Review item 3: lint passes on `Invaders.js` (npx eslint, with NODE_ENV=test as a fallback when
+  the Gatsby babel config is present), and `tools/build.sh` prints "Done building" on this branch.
+- Still out of scope: no change to gameplay, timing, points or data-\* / aria values.

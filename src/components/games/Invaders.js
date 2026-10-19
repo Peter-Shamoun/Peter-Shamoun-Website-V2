@@ -63,7 +63,6 @@ const HELD_KEYS = ['ArrowLeft', 'ArrowRight', 'a', 'd', ' '];
 const SPRITES = {
   // A: a box robot with antennae and a row of legs
   A: {
-    color: COLORS.cyan,
     frames: [
       ['..#..#..', '.######.', '##.##.##', '########', '#.####.#', '..#..#..'],
       ['..#..#..', '.######.', '##.##.##', '########', '.#.##.#.', '#.#..#.#'],
@@ -71,7 +70,6 @@ const SPRITES = {
   },
   // B: a saucer with a dome and lights
   B: {
-    color: COLORS.lime,
     frames: [
       ['..####..', '.######.', '########', '.##..##.', '#.#..#.#', '..#..#..'],
       ['..####..', '.######.', '########', '.##..##.', '#.#..#.#', '#......#'],
@@ -79,7 +77,6 @@ const SPRITES = {
   },
   // C: a small bug with splayed legs
   C: {
-    color: COLORS.yellow,
     frames: [
       ['#......#', '.#.##.#.', '..####..', '.######.', '..#..#..', '.#.##.#.'],
       ['.#....#.', '#.#..#.#', '..####..', '.######.', '..#..#..', '#......#'],
@@ -368,13 +365,13 @@ const skyArt = () => {
   return sky;
 };
 
-// Each alien frame is drawn once as glossy gel cells, 4 px to a pixel, then scaled to 2 px.
+// Each alien frame is drawn once as glossy green gel cells, 4 px to a pixel, then scaled to 2 px.
+// Every row uses the same gel, so the sprites read as one army and the colours do not clash.
 const artCache = {};
-const alienArt = (kind, frame) => {
-  const key = `${kind}${frame}`;
+const alienArt = frame => {
+  const key = `${frame}`;
   if (!artCache[key]) {
-    const { color, frames } = SPRITES[kind];
-    const rows = frames[frame];
+    const rows = SPRITES.A.frames[frame];
     artCache[key] = bake(
       rows[0].length * 4,
       rows.length * 4,
@@ -382,7 +379,7 @@ const alienArt = (kind, frame) => {
         rows.forEach((line, r) => {
           for (let col = 0; col < line.length; col += 1) {
             if (line[col] === '#') {
-              glossRect(c, col * 4, r * 4, 4, 4, color, 1.2);
+              glossRect(c, col * 4, r * 4, 4, 4, COLORS.lime, 1.2);
             }
           }
         });
@@ -411,7 +408,7 @@ const drawGame = (ctx, g) => {
       return;
     }
     const row = Math.floor(i / COLS);
-    const art = alienArt(kindOfRow(row), g.frame);
+    const art = alienArt(g.frame);
     ctx.drawImage(art, alienX(g, i % COLS), alienY(g, row), SPR_W, SPR_H);
   });
   ctx.imageSmoothingEnabled = false;

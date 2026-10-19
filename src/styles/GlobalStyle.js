@@ -2,7 +2,8 @@ import { createGlobalStyle } from 'styled-components';
 import fonts from './fonts';
 import variables from './variables';
 import windowStyles from './windowStyles';
-import { bevel } from './mixins';
+import { gloss } from './mixins';
+import { media } from './media';
 
 const GlobalStyle = createGlobalStyle`
   ${fonts};
@@ -26,26 +27,38 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
     font-family: var(--main-font);
     font-size: var(--font-base-size);
+    font-weight: 400;
+    line-height: 1.5;
     color: var(--text);
     background-color: var(--desktop);
-    letter-spacing: 0.5px;
+    letter-spacing: 0;
     overflow: hidden;
   }
 
-  /* The wallpaper photograph, fixed behind everything. --desktop shows while it loads. */
+  /* The drawn Aero wallpaper, fixed behind everything. --desktop shows while it loads. */
   body::before {
     content: '';
     position: fixed;
     inset: 0;
     z-index: -1;
-    background-image: url('/wallpaper.jpg');
+    background-image: url('/aero/wallpaper/aero-desktop.jpg');
     background-image: image-set(
-      url('/wallpaper.webp') type('image/webp'),
-      url('/wallpaper.jpg') type('image/jpeg')
+      url('/aero/wallpaper/aero-desktop.webp') type('image/webp'),
+      url('/aero/wallpaper/aero-desktop.jpg') type('image/jpeg')
     );
-    background-position: center;
+    background-position: center bottom;
     background-size: cover;
     background-repeat: no-repeat;
+  }
+
+  ${media.phone} {
+    body::before {
+      background-image: url('/aero/wallpaper/aero-phone.jpg');
+      background-image: image-set(
+        url('/aero/wallpaper/aero-phone.webp') type('image/webp'),
+        url('/aero/wallpaper/aero-phone.jpg') type('image/jpeg')
+      );
+    }
   }
 
   p,
@@ -66,7 +79,7 @@ const GlobalStyle = createGlobalStyle`
   button {
     font: inherit;
     color: inherit;
-    letter-spacing: inherit;
+    letter-spacing: 0;
   }
 
   /* A tap gets the pressed bevel, not the browser's grey flash, and no double-tap zoom delay. */
@@ -77,11 +90,12 @@ const GlobalStyle = createGlobalStyle`
   }
 
   /*
-   * The classic dotted focus rectangle. currentColor, so it shows on the white of a window as
-   * well as on the desktop. Controls on grey chrome draw theirs inset (focusRect in mixins).
+   * The soft blue Aero focus ring, 2px outside the edge of whatever has focus. Components that
+   * need a different one (a ring inside a glass panel, a ring on a dark tile) use focusRing from
+   * mixins.
    */
   :focus-visible {
-    outline: 1px dotted currentColor;
+    outline: 2px solid var(--focus);
     outline-offset: 2px;
   }
 
@@ -92,11 +106,10 @@ const GlobalStyle = createGlobalStyle`
     top: 4px;
     left: 4px;
     z-index: var(--z-skip);
-    padding: 0.6rem 1.2rem;
-    background: var(--chrome);
-    color: var(--text);
+    padding: 6px 14px;
+    ${gloss};
+    font-size: 14px;
     text-decoration: none;
-    ${bevel};
     clip-path: inset(50%);
     width: 1px;
     height: 1px;
@@ -108,8 +121,8 @@ const GlobalStyle = createGlobalStyle`
       width: auto;
       height: auto;
       overflow: visible;
-      outline: 1px dotted var(--text);
-      outline-offset: -4px;
+      outline: 2px solid var(--focus);
+      outline-offset: 2px;
     }
   }
 

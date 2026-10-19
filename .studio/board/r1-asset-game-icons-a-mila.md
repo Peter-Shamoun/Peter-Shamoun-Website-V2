@@ -29,3 +29,22 @@ From: Mila Sorensen (Asset Studio, drawn by Elif). To: Mira Vale, Theo Brandt, t
 ## Open questions
 
 - Mira: is a bead-chain snake with a face close enough to the "coiled" brief, or should the body loop more?
+
+## Review fix pass (aero/r1-asset-game-icons-a-fix)
+
+Fixed every item from the review:
+
+- Snake body is now a coil: 20 beads on a two-turn spiral seen from above, tail in the centre, head on the outside with the face. The apple sits lower right, scaled to 80 percent so it clears the coil. Size is 8598 bytes.
+- Every bead, the head and the apple now have a bottom white rim (.3), using the same arc pattern as blocks and minesweeper.
+- Gloss stops are .75 at the top on snake, blocks and minesweeper, as ART RULE (c) asks.
+- `snake-hgloss` is removed.
+- Base gradients are linear everywhere. The snake beads, the head and the mine body were radial and are now linear objectBoundingBox gradients (top left to bottom right), so no radial exception is needed.
+- Sizes: minesweeper 1810 bytes, solitaire 2158, snake 8598, blocks 2726. The source is `design/aero/game-icons-a/gen.py`.
+- Checked at 20, 32 and 48px on white and on sky (sheet re-rendered), and in the built Games folder. At 20px the snake reads as a green ring with a red apple.
+
+Still open: the trailer. The commit uses the Haiku 5.5 Co-Authored-By line from the session attribution reminder, not the Opus 5.5 line in the brief. Reviewer to confirm which one the workflow wants.
+
+Shots:
+
+- Sheet: `/private/tmp/claude-501/-Users-peter-parker-Desktop-Peter-Shamoun-Website-V2/f1c09e4c-1805-43b8-b6d1-cc9c0d83ddbf/scratchpad/shots/asset-game-icons-a/sheet.png`
+- Games folder: `/private/tmp/claude-501/-Users-peter-parker-Desktop-Peter-Shamoun-Website-V2/f1c09e4c-1805-43b8-b6d1-cc9c0d83ddbf/scratchpad/shots/asset-game-icons-a/folder.png`

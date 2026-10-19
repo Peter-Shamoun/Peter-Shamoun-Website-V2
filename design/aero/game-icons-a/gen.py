@@ -52,7 +52,7 @@ def minesweeper():
     defs = [
         lg(p + '-tile', [(0, '#9fd6f7', None), (1, '#3b8fd6', None)], 24, 24, 232, 232, 'userSpaceOnUse'),
         lg(p + '-gloss', [(0, '#fff', .75), (1, '#fff', 0)]),
-        rg(p + '-ball', [(0, '#4d6480'), (.45, '#15283d'), (1, '#0c1d2e')]),
+        lg(p + '-ball', [(0, '#4d6480', None), (.45, '#15283d', None), (1, '#0c1d2e', None)], 0, 0, 1, 1),
     ]
     tile = ('<rect x="24" y="24" width="208" height="208" rx="40" fill="url(#%s-tile)" '
             'stroke="#1f64ad" stroke-width="4"/>' % p)
@@ -115,33 +115,60 @@ def solitaire():
 
 
 # ---------------------------------------------------------------- snake
-def snake():
-    p = 'snake'
-    # A gel-bead snake: beads run along a wave from the tail (bottom left) up to the head.
-    n = 9
+def snake_path(t):
+    # A coil seen from above: two and a bit turns, tail at the centre, head on the outside.
+    th = t * 2 * math.pi * 2.0
+    r = 30 + 34 * t
+    return 96 + r * math.cos(th), 124 + r * math.sin(th)
+
+
+def snake_beads(n=19):
+    # Sample the spiral, then place beads at equal arc length, growing towards the head.
+    samples = [snake_path(i / 4000) for i in range(4001)]
+    cum = [0.0]
+    for (x0, y0), (x1, y1) in zip(samples, samples[1:]):
+        cum.append(cum[-1] + math.hypot(x1 - x0, y1 - y0))
+    total = cum[-1]
     beads = []
     for i in range(n + 1):
-        t = i / n
-        x = 52 + 70 * t + 30 * math.sin(t * math.pi * 2.6)
-        y = 210 - 150 * t
-        beads.append((x, y, 21 + 6 * t))
+        target = total * i / n
+        j = min(range(len(cum)), key=lambda k: abs(cum[k] - target))
+        x, y = samples[j]
+        beads.append((x, y, 16.5 + 4.5 * i / n))
+    return beads
+
+
+def snake():
+    p = 'snake'
+    beads = snake_beads()
     hx, hy, hr = beads[-1]
     defs = [
-        rg(p + '-bead', [(0, '#e4fbc4'), (.4, '#7fd94c'), (1, '#23840f')], .36, .3, .72),
-        rg(p + '-head', [(0, '#e4fbc4'), (.45, '#7fd94c'), (1, '#23840f')], .36, .3, .72),
-        lg(p + '-gloss', [(0, '#fff', .8), (1, '#fff', 0)]),
-        lg(p + '-hgloss', [(0, '#fff', .8), (1, '#fff', 0)]),
-        lg(p + '-apple', [(0, '#ff8a70', None), (1, '#b3241a', None)], 150, 130, 240, 228, 'userSpaceOnUse'),
+        lg(p + '-bead', [(0, '#e4fbc4', None), (.4, '#7fd94c', None), (1, '#23840f', None)], 0, 0, 1, 1),
+        lg(p + '-head', [(0, '#e4fbc4', None), (.45, '#7fd94c', None), (1, '#23840f', None)], 0, 0, 1, 1),
+        lg(p + '-gloss', [(0, '#fff', .75), (1, '#fff', 0)]),
+        lg(p + '-apple', [(0, '#ff8a70', None), (1, '#b3241a', None)]),
         lg(p + '-leaf', [(0, '#9be85a', None), (1, '#2f9a1c', None)]),
         lg(p + '-agloss', [(0, '#fff', .75), (1, '#fff', 0)]),
     ]
+
+    def bottom_rim(x, y, r):
+        # White .3 arc along the lower edge of a bead, inset from the outline.
+        k = r * .86
+        return ('<path d="M%s,%s A%s,%s 0 0 0 %s,%s" fill="none" stroke="#fff" stroke-opacity=".3" '
+                'stroke-width="3" stroke-linecap="round"/>'
+                % (f(x - k * .7), f(y + k * .7), f(k), f(k), f(x + k * .7), f(y + k * .7)))
+
     body = ''
     for x, y, r in beads[:-1]:
         body += ('<g><circle cx="%s" cy="%s" r="%s" fill="url(#%s-bead)" stroke="#1d6a10" stroke-width="3"/>'
-                 '<ellipse cx="%s" cy="%s" rx="%s" ry="%s" fill="url(#%s-gloss)"/></g>'
-                 % (f(x), f(y), f(r), p, f(x - r * .12), f(y - r * .42), f(r * .6), f(r * .34), p))
+                 '<ellipse cx="%s" cy="%s" rx="%s" ry="%s" fill="url(#%s-gloss)"/>%s</g>'
+                 % (f(x), f(y), f(r), p, f(x - r * .12), f(y - r * .42), f(r * .6), f(r * .34), p,
+                    bottom_rim(x, y, r)))
     head = ('<circle cx="%s" cy="%s" r="%s" fill="url(#%s-head)" stroke="#1d6a10" stroke-width="3"/>'
             % (f(hx), f(hy), f(hr), p))
+    head_gloss = ('<ellipse cx="%s" cy="%s" rx="13" ry="7" fill="#fff" fill-opacity=".55" transform="rotate(-30 %s %s)"/>'
+                  % (f(hx - 2), f(hy - 15), f(hx - 2), f(hy - 15)))
+    head_rim = bottom_rim(hx, hy, hr)
     eyes = ''.join(
         '<circle cx="%s" cy="%s" r="7" fill="#fff"/><circle cx="%s" cy="%s" r="3.6" fill="#0f3d12"/>'
         '<circle cx="%s" cy="%s" r="1.4" fill="#fff"/>' % (
@@ -149,17 +176,19 @@ def snake():
         for ex in (-8, 8))
     smile = ('<path d="M%s,%s Q%s,%s %s,%s" fill="none" stroke="#0f3d12" stroke-width="2.6" stroke-linecap="round"/>'
              % (f(hx - 6), f(hy + 8), f(hx), f(hy + 13), f(hx + 6), f(hy + 8)))
-    head_gloss = ('<ellipse cx="%s" cy="%s" rx="13" ry="7" fill="#fff" fill-opacity=".55" transform="rotate(-30 %s %s)"/>'
-                  % (f(hx - 2), f(hy - 15), f(hx - 2), f(hy - 15)))
     apple = ('<path d="M196,150 C206,140 230,138 236,160 C244,186 232,222 214,222 C206,222 202,218 196,218 '
              'C188,220 180,224 170,216 C152,202 148,176 160,160 C170,146 186,152 196,150 Z" '
              'fill="url(#%s-apple)" stroke="#8a1a12" stroke-width="4"/>' % p)
     apple_gloss = ('<path d="M168,166 C170,156 180,152 190,154 C180,160 176,170 178,182 C170,180 167,174 168,166 Z" '
                    'fill="url(#%s-agloss)"/>' % p)
+    apple_rim = rim('M184,212 C192,218 204,217 212,213')
     stem = '<path d="M196,150 Q194,132 202,124" fill="none" stroke="#5b3b1b" stroke-width="5" stroke-linecap="round"/>'
     leaf = ('<path d="M200,138 Q214,116 238,120 Q228,142 200,138 Z" fill="url(#%s-leaf)" '
             'stroke="#2f7a14" stroke-width="3" stroke-linejoin="round"/>' % p)
-    write(p + '.svg', svg(defs, body + head + head_gloss + eyes + smile + apple + apple_gloss + stem + leaf))
+    # The apple sits in the lower right corner, scaled down so it clears the coil.
+    apple_group = ('<g transform="translate(36 58) scale(.8)">%s%s%s%s%s</g>'
+                   % (apple, apple_gloss, apple_rim, stem, leaf))
+    write(p + '.svg', svg(defs, body + head + head_gloss + head_rim + eyes + smile + apple_group))
 
 
 # ---------------------------------------------------------------- blocks
@@ -176,7 +205,7 @@ def blocks():
     s = 68
     # Order of cells: row of three, then the T's top cell.
     cells = [(16, 120, 'aqua'), (90, 120, 'green'), (164, 120, 'amber'), (90, 46, 'pink')]
-    defs = [lg(p + '-gloss', [(0, '#fff', .8), (1, '#fff', 0)])]
+    defs = [lg(p + '-gloss', [(0, '#fff', .75), (1, '#fff', 0)])]
     for k, (hi, lo, _) in JEWELS.items():
         defs.append(lg('%s-%s' % (p, k), [(0, hi, None), (1, lo, None)]))
     body = ''

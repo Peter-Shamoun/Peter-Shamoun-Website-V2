@@ -773,3 +773,91 @@ Shipped paths, one list: `static/aero/wallpaper/aero-desktop.{webp,jpg}`,
 - Do not change behaviour, data attributes, ARIA, or keyboard handling to make something look right.
 - Do not leave `--chrome`, `--bevel-*`, `--title-*`, `bevel*`, `sunken*`, `retroScrollbar` or
   `focusRect` in the code after the cleanup round.
+
+---
+
+## 14. Round 2 refinements (Mira, after the round 1 QA pass)
+
+Where this section and an earlier one disagree, this section wins.
+
+### 14.1 Asset quality bar (all icons)
+
+Round 1 icons are clean and on-palette, but most are 2KB drawings: one gradient, one gloss
+shape. Vista and Windows 7 icons are richer. Every icon in round 2 must have all of these:
+
+- A base fill of 3 or more stops (light top-left, saturated middle, deeper bottom-right).
+- An edge stroke in a darker shade of the object's own hue, plus a 1-1.5 unit inner light line
+  (white at .5-.7) just inside the edge on the top and left sides.
+- A crisp upper gloss (white .8 -> .05) whose lower edge is a clean curve, as on the orb.
+- One small specular hotspot (white, near-opaque) at the top-left of the main form.
+- Ambient occlusion where parts meet: a soft darker band of the same hue (opacity .2-.35).
+- A faint bottom rim light (white .3), and for glass or gel parts a coloured inner glow at the bottom.
+- A slight 3/4 view where the object allows it (front face plus a visible top or side face).
+- **Family rule: every icon is a free-standing object.** No rounded-square app tiles behind any
+  icon, and no floor reflections under any icon. CSS adds the drop shadow.
+- Budget 4-12KB per SVG. Keep coordinates to 1 decimal and merge same-fill shapes into one path.
+  The section 9 SVG rules still apply: no rasters, at most two `feGaussianBlur`, `id`s prefixed
+  with the file name.
+- Every icon must read at 32px on both the wallpaper and white.
+
+### 14.2 Wallpaper and bubbles
+
+- Bubbles are lit spheres, not hairline rings. Each one has a faint body tint (aqua, .06-.12)
+  that is clearer in the middle, a 2-4 unit iridescent rim (cyan -> violet -> leaf, .35-.6), a
+  white crescent highlight at the top-left (.7-.9), a small specular dot, and a soft bright arc
+  inside the bottom-right edge. Use 26-34 bubbles in the wallpaper, with 4-6 large ones (60-110px)
+  in the right third.
+- The front hill gets a glossy specular band: a soft white streak (.25-.4) a short way below the
+  crest that follows the crest curve. Below it the hill darkens towards the base.
+- Remove the stray hexagon near (61%, 38%). Lens ghosts are soft discs with a slightly brighter
+  rim and a faint colour (aqua, gold, leaf), opacity .05-.12.
+- Legibility zones. The hill under the icon column (x 0-240px, y 55-85%) and the name corner (the
+  bottom-right 460x170px) are a deeper leaf green, so white text has a dark ground. Mean relative
+  luminance in each zone must be 0.20 or less (for example #3a8a26 is 0.19). Keep the change
+  natural: a cloud shadow or a darker fold of the hill, not a visible box.
+
+### 14.3 Window glass (keeps the section 6 geometry)
+
+Do not change `--frame` (6px desktop), `--titlebar-h` or `--close-w`. The game windows' "+ 20"
+and `kit.js` `FRAME` depend on them. Make the glass read as glass instead:
+
+- `--glass-tint: rgba(140, 196, 238, 0.52)`, `--glass-sat: 180%`, `--glass-blur: 16px`.
+- `--glass-tint-inactive: rgba(190, 214, 236, 0.46)` (it was so clear it looked like flat grey).
+- `--glass-streaks`: raise the two streak peaks to .24 and .16.
+- `.win` box-shadow adds an outer light edge: `0 0 0 1px rgba(255,255,255,.18)` after the inset line.
+- Inactive title: `color: #2e4860; opacity: 1`. It must reach 4.5:1 on the lightest inactive glass.
+- Inactive close button: `opacity: .85; filter: saturate(.45)` (it was muddy brown-grey).
+
+### 14.4 Phone (max-width 36em)
+
+The window floats on the wallpaper instead of covering it. Inset it 6px from the top, left and
+right, and 6px above the taskbar. Use `border-radius: var(--radius-win)`, keep the glass, and
+give it a soft `--shadow-win-inactive`. `--frame` stays 0 on phone. The visible wallpaper strip
+and the glass title bar are what make it Aero. The close touch target is at least 44x44
+(`.win__close::after { inset: -7px -4px }`). In short landscape the close button gets the same
+`::after`, and `--taskbar-h: 48px; --orb: 48px` apply there too.
+
+### 14.5 Desktop labels and the name
+
+Use the Windows 7 desktop label shadow: a tight dark halo, not a soft blue glow.
+`text-shadow: 0 0 1px rgba(0,0,0,.95), 0 1px 2px rgba(0,0,0,.85), 0 0 6px rgba(0,22,48,.7)`.
+Apply it to icon labels and to the wallpaper name block. The name's Lines are weight 500. The
+icon selection box gets `border-radius: 5px`, and the keyboard focus fill is
+`linear-gradient(180deg, rgba(40,110,180,.55), rgba(10,70,130,.45))`.
+
+### 14.6 Start menu (Windows 7 two-column)
+
+`min(400px, 100vw - 8px)` wide. The left column is the existing item list on near-solid white
+(`rgba(255,255,255,.97)`). The right column is about 136px of bare glass and is purely decorative
+(`aria-hidden`). At the top sits a 64px "user picture": the About icon on a glossy white rounded
+frame (radius 6px), overhanging the menu's top edge by 22px, as on Windows 7. Under it are
+"Peter Shamoun" (14/600 `--text-on-glass` with `--title-glow`) and "AI Engineer" and
+"San Diego, CA" (13/400). On phones the right column is hidden. The accessible names become
+"Start" (button) and "Start menu" (menu).
+
+### 14.7 Taskbar clock
+
+Use Windows 7 style: no box. Show two centred lines in white, the time (14px) over the short date
+(12px, M/D/YYYY), both with the bar text shadow. Hover uses the task-button hover fill. The
+world-time flyout is an opaque glass sheet (`background-color: rgba(236,246,255,.95)` over the
+glass), so the wallpaper name does not ghost through it. It may cover the name; flyouts do that.

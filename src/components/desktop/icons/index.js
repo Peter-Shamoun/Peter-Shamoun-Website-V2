@@ -1,6 +1,11 @@
-import { IconAbout, IconContact, IconExperience, IconProjects, IconResearch } from './desktop';
 import {
+  IconAbout,
+  IconExperience,
+  IconProjects,
+  IconResearch,
+  IconContact,
   IconGames,
+  IconTidy,
   IconMines,
   IconCards,
   IconSnake,
@@ -8,11 +13,16 @@ import {
   IconBricks,
   IconPaddle,
   IconInvaders,
-} from './games';
+} from './aero';
 
-export { IconAbout, IconExperience, IconProjects, IconResearch, IconContact } from './desktop';
 export {
+  IconAbout,
+  IconExperience,
+  IconProjects,
+  IconResearch,
+  IconContact,
   IconGames,
+  IconTidy,
   IconMines,
   IconCards,
   IconSnake,
@@ -20,7 +30,7 @@ export {
   IconBricks,
   IconPaddle,
   IconInvaders,
-} from './games';
+};
 export { GlyphApp, GlyphClose, GlyphMenu } from './glyphs';
 
 // Lookup by name: the desktop and game icons.
@@ -31,6 +41,7 @@ export const ICONS = {
   IconResearch,
   IconContact,
   IconGames,
+  IconTidy,
   IconMines,
   IconCards,
   IconSnake,

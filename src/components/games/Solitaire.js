@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled, { css } from 'styled-components';
+import { focusRing } from '@styles';
 import {
   COLORS,
   Bar,
@@ -18,6 +19,9 @@ import {
 
 // Klondike, draw one card. Everything is DOM and CSS, laid out in the game's natural pixels.
 // The felt is 472 x 414 px inside the well. Column c starts at x = 2 + c * 68.
+
+// The Aero felt, and the glossy blue back of a card.
+const FELT = 'radial-gradient(ellipse at 50% 40%, #3fa34a 0%, #1d6b2a 100%)';
 
 const CARD_W = 60;
 const CARD_H = 84;
@@ -160,10 +164,11 @@ const cardCss = css`
   height: ${CARD_H}px;
   margin: 0;
   padding: 0;
-  border: 1px solid ${COLORS.black};
-  border-radius: 0;
+  border: 1px solid ${COLORS.shadow};
+  border-radius: 6px;
   background: ${COLORS.white};
   color: ${COLORS.black};
+  box-shadow: 0 1px 2px rgba(0, 30, 60, 0.35);
   font: 16px/1 var(--main-font);
   text-align: left;
   overflow: hidden;
@@ -179,19 +184,21 @@ const CardDiv = styled.div`
 const CardBtn = styled.button.attrs({ type: 'button' })`
   ${cardCss};
   cursor: default;
-
-  &:focus {
-    outline: none;
-  }
-
-  &:focus-visible {
-    outline: 1px dotted ${COLORS.black};
-    outline-offset: -4px;
-  }
+  ${focusRing};
 `;
 
-const BackCard = styled(CardDiv)`
-  background: ${COLORS.navy};
+// The blue back of a card, inset 3px so the white card edge frames it: a glossy top half over a
+// faint diagonal pattern.
+const BackFace = styled.span`
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  bottom: 3px;
+  left: 3px;
+  border-radius: 3px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0) 50%),
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.12) 0 2px, transparent 2px 6px),
+    linear-gradient(180deg, #4aa8ec 0%, #1e88d8 50%, #0b3f7a 100%);
 `;
 
 // The stock is one button in both states, so keyboard focus survives the last draw.
@@ -199,30 +206,18 @@ const StockBtn = styled(CardBtn)`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: ${props => (props.$empty ? 'transparent' : COLORS.navy)};
-  border-color: ${props => (props.$empty ? COLORS.light : COLORS.black)};
-
-  &:focus-visible {
-    outline-color: ${props => (props.$empty ? COLORS.light : COLORS.black)};
-  }
+  background: ${props => (props.$empty ? 'rgba(0, 0, 0, 0.08)' : COLORS.white)};
+  border: 1px solid ${props => (props.$empty ? 'rgba(255, 255, 255, 0.35)' : COLORS.shadow)};
 `;
 
 const Slot = styled.div`
   ${cardCss};
-  background: transparent;
-  border-color: ${COLORS.light};
+  background: rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: none;
   display: flex;
   align-items: center;
   justify-content: center;
-`;
-
-const BackBorder = styled.span`
-  position: absolute;
-  top: 3px;
-  right: 3px;
-  bottom: 3px;
-  left: 3px;
-  border: 1px solid ${COLORS.white};
 `;
 
 const Rank = styled.span`
@@ -882,7 +877,7 @@ const Game = ({ active, w, h }) => {
           {empty ? (
             <Mark kind="RING" color={COLORS.light} scale={2} />
           ) : (
-            <BackBorder aria-hidden="true" />
+            <BackFace aria-hidden="true" />
           )}
         </StockBtn>
       );
@@ -899,9 +894,9 @@ const Game = ({ active, w, h }) => {
     const { card } = entry;
     if (!card.up) {
       return (
-        <BackCard key={card.id} style={pos}>
-          <BackBorder aria-hidden="true" />
-        </BackCard>
+        <CardDiv key={card.id} style={pos}>
+          <BackFace aria-hidden="true" />
+        </CardDiv>
       );
     }
     const ink = inkOf(card.suit);
@@ -932,7 +927,7 @@ const Game = ({ active, w, h }) => {
         {g.status === 'playing' && canFinish(g) ? <Btn onClick={finish}>Finish</Btn> : null}
         <Caption>{`Time: ${formatTime(g.ms)}`}</Caption>
       </Bar>
-      <Well $bg={COLORS.green}>
+      <Well $bg={FELT}>
         <Felt
           ref={feltRef}
           onPointerMove={onFeltMove}

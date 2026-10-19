@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { bevel, bevelPressed, sunken, focusRect } from '@styles';
+import { gloss, glossPressed, field, focusRing, glass } from '@styles';
 import { useIsoLayoutEffect } from '../desktop/DesktopProvider';
 import { getBounds } from '../desktop/Window';
 import { record } from '../tracking';
@@ -10,24 +10,25 @@ import { record } from '../tracking';
 // pixels, set in the registry). Stage scales that box to fit the screen, so a game only
 // ever thinks in natural pixels.
 
-// The sixteen colours the games draw with.
+// The sixteen colours the games draw with: the Aero palette. The keys are fixed (the games use
+// them); purple is a magenta-pink. Raw hex is allowed here (DESIGN.md section 2.2).
 export const COLORS = {
-  black: '#000000',
+  black: '#0c1d2e',
   white: '#ffffff',
-  chrome: '#c0c0c0',
-  light: '#dfdfdf',
-  shadow: '#808080',
-  navy: '#000080',
-  blue: '#0000ff',
-  teal: '#008080',
-  cyan: '#00a8a8',
-  green: '#008000',
-  lime: '#60cd46',
-  red: '#cc1b1b',
-  maroon: '#800000',
-  yellow: '#f2c230',
-  orange: '#e07a1f',
-  purple: '#800080',
+  chrome: '#e9f1f8',
+  light: '#f6fafd',
+  shadow: '#9fb3c6',
+  navy: '#0b3f7a',
+  blue: '#1e88d8',
+  teal: '#0f9bb5',
+  cyan: '#16b8d4',
+  green: '#2e9a1c',
+  lime: '#7ad63a',
+  red: '#e0412a',
+  maroon: '#9c2a1a',
+  yellow: '#f7c533',
+  orange: '#f3923b',
+  purple: '#c2449a',
 };
 
 const FRAME = 8; // the window frame, left and right or top and bottom
@@ -49,9 +50,9 @@ const StageInner = styled.div`
   top: 0;
   left: 0;
   transform-origin: 0 0;
-  background: var(--chrome);
+  background: var(--game-bg);
   color: var(--text);
-  font: 16px/1 var(--main-font);
+  font: 400 14px/1 var(--main-font);
 `;
 
 /**
@@ -322,24 +323,31 @@ export const Bar = styled.div`
   gap: 8px;
   height: 36px;
   padding: 0 6px;
-  box-shadow: inset -1px -1px var(--bevel-hi), inset 1px 1px var(--bevel-shadow);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(226, 238, 248, 0.9));
+  border: 1px solid var(--field-edge);
+  border-radius: 4px;
 `;
 
-// A number on a black panel, like a calculator display.
+// A number on a dark glass LCD, like a calculator display.
 export const Readout = styled.span`
   flex: none;
   min-width: 52px;
   padding: 3px 6px 2px;
-  background: #000000;
-  color: #ff3b30;
-  font: 24px/1 var(--main-large-font);
+  background: linear-gradient(180deg, #13324f 0%, #061a2c 100%);
+  border: 1px solid #041220;
+  border-radius: 3px;
+  color: #8ff3ff;
+  text-shadow: 0 0 6px rgba(120, 240, 255, 0.8);
+  font: 600 20px/1 var(--main-font);
+  font-variant-numeric: tabular-nums;
   text-align: right;
   white-space: nowrap;
 `;
 
-// A plain caption on the grey: "Score", "Best".
+// A plain caption on the bar: "Score", "Best".
 export const Caption = styled.span`
-  font: 16px/1 var(--main-font);
+  font: 13px/1 var(--main-font);
+  color: var(--text-muted);
   white-space: nowrap;
 `;
 
@@ -348,28 +356,29 @@ export const Btn = styled.button.attrs({ type: 'button' })`
   min-width: 28px;
   height: 28px;
   padding: 0 10px;
-  background: var(--chrome);
   color: var(--text);
-  font: 16px/1 var(--main-font);
+  font: 400 14px/1 var(--main-font);
   white-space: nowrap;
   cursor: default;
-  ${bevel};
-  ${focusRect};
+  ${gloss};
+  ${focusRing};
+  border-radius: 3px;
 
   &:active,
   &[aria-pressed='true'] {
-    ${bevelPressed};
+    ${glossPressed};
   }
 `;
 
-// The sunken well the board sits in. It takes the rest of the height.
+// The field the board sits in. It takes the rest of the height.
 export const Well = styled.div`
   position: relative;
   flex: 1;
   min-height: 0;
   padding: 2px;
-  background: ${props => props.$bg || 'var(--chrome)'};
-  ${sunken};
+  ${field};
+  border-radius: 4px;
+  background: ${props => props.$bg || '#ffffff'};
 `;
 
 const Veil = styled.div`
@@ -378,7 +387,7 @@ const Veil = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.35);
+  background: rgba(6, 40, 80, 0.35);
   /* A press on the message or the dimmed board goes through to the board ("tap to start"). */
   pointer-events: none;
 `;
@@ -390,11 +399,18 @@ const Box = styled.div`
   gap: 10px;
   max-width: 86%;
   padding: 12px 16px;
-  background: var(--chrome);
-  color: var(--text);
+  border-radius: var(--radius-menu);
+  color: var(--text-on-glass);
   text-align: center;
   line-height: 1.25;
-  ${bevel};
+  ${glass};
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  background-color: var(--glass-tint-solid);
+
+  strong {
+    text-shadow: var(--title-glow);
+  }
 
   button {
     pointer-events: auto;
@@ -427,7 +443,8 @@ export const Hint = styled.p`
   flex: none;
   margin: 0;
   padding: 0 2px;
-  font: 16px/18px var(--main-font);
+  font: 13px/18px var(--main-font);
+  color: var(--text-muted);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

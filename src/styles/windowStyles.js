@@ -1,6 +1,6 @@
 import { css } from 'styled-components';
 import { media } from './media';
-import { bevel, bevelPressed, bevelWindow, retroScrollbar, sunken, sunkenThin } from './mixins';
+import { glass, glassInactive, field, fieldThin, aeroScrollbar } from './mixins';
 
 // The window frame: every .win* rule, desktop, phone and short landscape. GlobalStyle includes
 // it. Window.js writes the markup (titlebar, title, close, body, area, footer).
@@ -25,10 +25,27 @@ const windowStyles = css`
     z-index: var(--z-window-base);
     display: flex;
     flex-direction: column;
-    padding: 4px; /* 2px of bevel and 2px of chrome */
-    background: var(--chrome);
+    padding: 0 var(--frame) var(--frame);
+    border-radius: var(--radius-win);
     color: var(--text);
-    ${bevelWindow};
+    ${glass};
+    transition: background-color var(--dur-fast) var(--ease-out),
+      box-shadow var(--dur-fast) var(--ease-out);
+    animation: win-open var(--dur-open) var(--ease-spring);
+  }
+
+  .win:not(.is-active) {
+    ${glassInactive};
+  }
+
+  /* Opening: the sheet grows from 94% and rises 8px. The individual scale and translate
+     properties leave the drag transform alone. It replays whenever [hidden] is removed. */
+  @keyframes win-open {
+    from {
+      opacity: 0;
+      scale: 0.94;
+      translate: 0 8px;
+    }
   }
 
   .win {
@@ -71,74 +88,96 @@ const windowStyles = css`
     max-height: none;
   }
 
+  /* The title strip sits on the glass; no colour change between the front and back window. */
   .win__titlebar {
     flex: none;
     display: flex;
     align-items: center;
     height: var(--titlebar-h);
-    padding: 0 2px 0 4px;
-    gap: 4px;
-    background: var(--title-inactive);
-    color: var(--title-inactive-text);
+    padding: 0 0 0 10px;
+    gap: 8px;
+    background: none;
+    color: inherit;
     cursor: default;
     touch-action: none;
     user-select: none;
     -webkit-user-select: none;
   }
 
-  /* The window in front. */
-  .is-active > .win__titlebar {
-    background: var(--title-active);
-    color: var(--title-active-text);
-  }
-
   .win__title {
     flex: 1;
     min-width: 0;
     margin: 0;
-    font: 700 16px/1 var(--window-title-font);
+    font: 400 15px/1 var(--window-title-font);
     letter-spacing: 0;
+    color: var(--text-on-glass);
+    text-shadow: var(--title-glow);
     pointer-events: none;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
   }
 
+  .win:not(.is-active) .win__title {
+    color: var(--text-muted);
+    opacity: 0.8;
+  }
+
+  /* The Windows 7 close button: a red glass tab hanging from the top edge of the frame. */
   .win__close {
     position: relative;
     flex: none;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: var(--chrome-btn);
+    align-self: flex-start;
+    width: var(--close-w);
     height: var(--chrome-btn);
+    margin-top: -1px;
+    margin-right: 0;
     padding: 0;
-    background: var(--chrome);
-    color: var(--text);
+    border: 1px solid var(--close-edge);
+    border-top: 0;
+    border-radius: 0 0 5px 5px;
+    background: var(--close-face);
+    color: #fff;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.45);
     cursor: default;
-    ${bevel};
+    transition: background var(--dur-hover) var(--ease-out),
+      box-shadow var(--dur-hover) var(--ease-out), filter var(--dur-hover) var(--ease-out);
+
+    &:hover {
+      background: var(--close-face-hover);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.45), 0 0 10px rgba(255, 120, 80, 0.8);
+    }
 
     &:active {
-      ${bevelPressed};
+      background: var(--close-face-down);
     }
 
     &:focus-visible {
-      outline: 1px dotted var(--text);
-      outline-offset: -3px;
+      outline: 2px solid var(--focus);
+      outline-offset: 1px;
     }
+  }
+
+  /* Inactive: the close button fades and loses its colour until the pointer finds it. */
+  .win:not(.is-active) .win__close:not(:hover) {
+    opacity: 0.7;
+    filter: saturate(0.25);
   }
 
   /* ---------- window body ---------- */
 
   .win__body {
+    ${field};
     flex: 1;
     min-height: 0;
     display: flex;
     flex-direction: column;
-    margin-top: 2px;
-    padding: 2px;
-    background: var(--field);
-    ${sunken};
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
   }
 
   .win__area {
@@ -147,17 +186,22 @@ const windowStyles = css`
     overflow-x: hidden;
     overflow-y: auto;
     overscroll-behavior: contain;
-    padding: 1.6rem 2rem;
+    padding: 16px 20px;
     line-height: 1.5;
     text-align: left;
     overflow-wrap: break-word;
-    ${retroScrollbar};
+    ${aeroScrollbar};
   }
 
   /* :where() keeps these at the specificity of a bare element selector, so any class wins */
   :where(.win__area, .win__footer) a,
   :where(.win__area, .win__footer) a:visited {
     color: var(--link);
+    text-decoration: none;
+  }
+
+  :where(.win__area, .win__footer) a:hover {
+    color: var(--link-hover);
     text-decoration: underline;
   }
 
@@ -165,34 +209,40 @@ const windowStyles = css`
     padding: 0;
   }
 
-  /* A game window: grey all the way through, and the game does its own fitting. */
+  /* A game window: the game's own colour all the way through, and the game does its own fitting.
+     Width check: the window is the game's width + 20px. Glass border 1px x2, frame 6px x2 and
+     body edge 1px x2 are 16px, so the area padding is 2px x2 = 4px. The game is exactly its
+     natural width. */
   .win--game .win__body {
+    background: var(--game-bg);
     padding: 0;
-    background: var(--chrome);
-    box-shadow: none;
   }
 
   .win--game .win__area {
-    padding: 6px;
+    padding: 2px;
     overflow: hidden;
     line-height: 1;
   }
 
-  /* The status bar under the content. */
+  /* The status bar under the content: a thin well on the glass frame. */
   .win__footer {
     flex: none;
-    margin-top: 2px;
-    padding: 3px 8px;
-    font-size: 16px;
+    margin-top: 4px;
+    padding: 4px 10px;
+    font-size: 13px;
     line-height: 1.25;
-    ${sunkenThin};
+    color: var(--text-on-glass);
+    ${fieldThin};
+    background: rgba(255, 255, 255, 0.35);
+    border-radius: var(--radius-ctl);
   }
 
   /* ---------- phone ---------- */
 
   ${media.phone} {
-    /* Full screen: from the top of the screen down to the taskbar. */
-    .win {
+    /* Full screen: from the top of the screen down to the taskbar. Square, frameless. */
+    .win,
+    .win:not(.is-active) {
       left: 0;
       top: 0;
       bottom: var(--taskbar-total);
@@ -200,6 +250,8 @@ const windowStyles = css`
       height: auto;
       max-height: none;
       transform: none;
+      border-radius: 0;
+      box-shadow: inset 0 0 0 1px var(--glass-hi);
     }
 
     .win--static {
@@ -221,6 +273,11 @@ const windowStyles = css`
       content: '';
       position: absolute;
       inset: -4px;
+    }
+
+    .win__close svg {
+      width: 16px;
+      height: 16px;
     }
 
     .win--flush .win__area {
@@ -249,7 +306,8 @@ const windowStyles = css`
   /* ---------- short landscape phones ---------- */
 
   ${media.landscape} {
-    .win {
+    .win,
+    .win:not(.is-active) {
       left: 0;
       top: 0;
       bottom: var(--taskbar-total);
@@ -257,6 +315,8 @@ const windowStyles = css`
       height: auto;
       max-height: none;
       transform: none;
+      border-radius: 0;
+      box-shadow: inset 0 0 0 1px var(--glass-hi);
     }
 
     .win--static {

@@ -32,3 +32,11 @@ Branch `aero/r1-shell-ui`. Touched only `src/components/desktop/ui.js` and this 
 
 - Mira: is 26px right for a Windows 7 push button at 14px? I used the bible's numbers as written.
 - Theo: someone should check the phone contact shot after the merge.
+
+## Review fixes (branch aero/r1-shell-ui-fix)
+
+- **Phone contact shot replaced.** `shots/shell-ui/contact-phone.png` now shows the Contact window at 390x844. The first click on `[data-icon-for=contact]` missed because About opens on load at phone width and covers the desktop. The shot now runs `--click "[aria-label='Close About'];[data-icon-for=contact]"`.
+- **Phone row height confirmed at 44px.** A DOM measure of `[data-window=contact] a` at 390px gives 44px for all three rows. The image shows the three silver gloss rows at about 44px each.
+- **Desktop row height is 32px, not 26px.** A DOM measure at 1440px gives 32px for all three rows. `Row` in `src/components/windows/ContactWindow.js` sets `min-height: 32px` and overrides the 26px `glossControl`. ui.js is correct as briefed. Flagged to the ContactWindow owner, who should decide whether the 26px height should apply to these rows.
+- **Gloss reads flat.** The computed gradient on the contact rows runs from rgb(246,246,246) to rgb(235,235,235). That is a flat grey, not a Windows 7 silver gloss with a top highlight. The `gloss` mixin is on trunk, so this is not a ui.js defect. It goes to the bible review.
+- ESLint (`NODE_ENV=test npx eslint src/components/desktop/ui.js`) and `build.sh` pass again.
